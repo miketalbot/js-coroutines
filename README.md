@@ -1,68 +1,201 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# js-coroutines
 
-## Available Scripts
+When is the right time to sort a massive array on the main thread of a Javascript app? Well any time you
+like if you don't mind the user seeing all of your animations and effects jank to hell. Even transferring
+to a worker thread is going to hit the main thread for serialization and stutter everything.
 
-In the project directory, you can run:
+So when is the right time? Well it's in all those gaps where you animation isn't doing anything and the
+system is idle. If only you could write something to use up that time and then relinquish control to the
+system so it can animate and do the rest of the work, then resume in the next gap. Well now you can...
 
-### `npm start`
+> Get 60fps while sorting an array of 10 milllion items with `js-coroutines`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Wait there's more!
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Another super useful way of using coroutines is to animate and control complex states - js-coroutines provides this too with the powerful `update` method that runs every frame in high priority. See below.
 
-### `npm test`
+## Installation
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```sh
+npm install --save js-coroutines
+```
 
-### `npm run build`
+## Usage
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```js
+import {run, sort} from 'js-coroutines'
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+...
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+let results = await run(function*() {
+  const results = [];
+  for(let i = 0; i < 10000000; i++) {
+    results.push(Math.random() * 10000);
+    //Check how much time left every 100 entries
+    if(i % 100 === 0) yield;
+  }
+  //Pass to a yielding sort function
+  yield* sort(results, value=>value)
+  return results;
+})
 
-### `npm run eject`
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Demo
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+See the [Code Sandbox Demo](https://codesandbox.io/s/js-coroutines-demo-gc2jc?file=/src/App.js:1798-3097).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Getting Started
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+`js-coroutines` uses generator functions and `requestIdleCallback` (polyfilled) to let you easily split up
+your work with minimal effort.
 
-## Learn More
+```js
+await run(function* () {
+  const strings = [];
+  let results;
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  //Create 2 million rows of random values
+  results = new Array(2000000);
+  for (let i = 0; i < 2000000; i++) {
+    //Every 128th record, check to see if we still have time
+    //run the remainder on another tick if we don't
+    if ((i & 127) === 0) yield;
+    results[i] = (Math.random() * 10000) | 0;
+  }
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  //Double all the values
+  yield* forEach(
+    results,
+    yielding((r, i) => (results[i] = r * 2))
+  );
 
-### Code Splitting
+  //Get the square roots
+  const sqrRoot = yield* map(
+    results,
+    yielding((r) => Math.sqrt(r))
+  );
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+  //Sum all of the items
+  const sum = yield* reduce(
+    results,
+    yielding((c, a) => c + a, 64),
+    0
+  );
 
-### Analyzing the Bundle Size
+  //Join the arrays
+  yield* append(results, sqrRoot);
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+  // Sort the results
+  yield* sort(results, (a, b) => a - b);
+  return results;
+});
+```
 
-### Making a Progressive Web App
+As you can probably see, it comes ready with the most useful functions for arrays:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+- forEach
+- map
+- filter
+- reduce
+- findIndex
+- find
+- some
+- every
+- sort
+- append (array to array)
+- concat (two arrays into a new array)
 
-### Advanced Configuration
+The helper `yielding` wraps a normal function as a generator and checks remaining time
+every few iterations. You can see it in use above. It's just a helper though - if
+your `map` function needs to do more work it can just be a generator itself,
+yield when it likes and also pass on to deeper functions that can yield:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+```js
+const results =
+  yield *
+  map(inputArray, function* (element, index) {
+    //Every 200 indices give up work
+    //on this frame by yielding 'true'
+    //yield without true, checks the amount
+    //of remaining time
+    if (index % 200 === 199) yield true;
 
-### Deployment
+    //Yield out a filter operation
+    let matched = yield* filter(
+      element,
+      yielding((c) => c > 1000)
+    );
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+    //Now yield out the calculation of a sum
+    return yield* reduce(
+      matched,
+      yielding((c, a) => c + a),
+      0
+    );
+  });
+```
 
-### `npm run build` fails to minify
+`yielding(fn, [optional yieldFrequency]) -> function *`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+##
+
+## Async
+
+You may also use async generators by calling `runAsync` instead
+of `run`. These can call and await promises themselves - be aware
+though that this is a little slower, during the check for time
+remaining phase so it's better to await a `run` call
+for an inner generator when you are inbetween async calls and
+are running something that may check often - like `sort`.
+
+```js
+const results = await runAsync(async function* () {
+  const response = await fetch("http://someurl");
+  const rows = await response.json();
+  const processed = await run(function* () {
+    yield* sort(rows, (a) => a.value);
+    return rows;
+  });
+  return processed;
+});
+```
+
+# Update coroutines
+
+A great way to do stateful animation is using a coroutine running every frame.
+In this case when you `yield` you get called back on the next frame making
+stateful animations a piece of cake:
+
+```js
+import { update } from "js-coroutines";
+
+//Animate using a coroutine for state
+update(function* () {
+  while (true) {
+    //Move left to right
+    for (let x = -200; x < 200; x++) {
+      logoRef.current.style.marginLeft = `${x * multiplier}px`;
+      yield;
+      //Now we are on the next frame
+    }
+    //Move top to bottom
+    for (let y = 0; y < 200; y++) {
+      logoRef.current.style.marginTop = `${y * multiplier}px`;
+      yield;
+    }
+    //Move diagonally back
+    for (let x = 200; x > -200; x--) {
+      logoRef.current.style.marginLeft = `${x * multiplier}px`;
+      logoRef.current.style.marginTop = ((x + 200) * multiplier) / 2 + "px";
+      yield;
+    }
+  }
+});
+```
+
+## License
+
+js-coroutines - MIT (c) 2020 Mike Talbot
+
+Timsort - MIT (c) 2015 Marco Ziccardi (c) 2020 Mike Talbot (Generator modifications)
