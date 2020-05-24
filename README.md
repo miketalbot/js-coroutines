@@ -226,6 +226,12 @@ every frame.
 
 `yield` to wait for the next frame.
 
+### `yielding(fn, [optional frequency]) -> function *`
+
+Converts a normal function into one that yields every `frequency` calls.
+
+Very useful for providing map/filter functions etc.
+
 ## License
 
 js-coroutines - MIT (c) 2020 Mike Talbot
