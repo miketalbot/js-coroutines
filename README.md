@@ -212,8 +212,33 @@ parameters.
 `yield` inside your coroutine will check how much time is left and continue
 if there is enough.
 
-`yield true` will definitely abandom the current frames work. Useful if you
+`yield true` will definitely abandon the current frames work. Useful if you
 are about to/just have allocated tons of memory to give time for GC.
+
+`yield* generatorFn([param], [...param])` call a generator function which
+will take over yielding time checks and return the value it creates when done.
+
+```js
+function* myCoroutine() {
+  const results = [];
+  for (let i = 1; i < 1000000; i++) {
+    if ((i & 127) === 0) yield; //time check
+    results.push(i);
+  }
+  yield true; // end current frame processing
+  let anotherArray = new Array(results.length);
+  yield true; // give time for GC
+  // Run a for loop on the results
+  yield* forEach(
+    results,
+    yielding(
+      (result, index, collection) =>
+        (anotherArray[index] = result / collection.length)
+    )
+  );
+  return anotherArray;
+}
+```
 
 ### `runAsync(asyncCoroutineFunction, msToLeaveSpare=1, timeout=160) -> TerminatablePromise(Any)`
 
