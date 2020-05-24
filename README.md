@@ -226,7 +226,7 @@ every frame.
 
 `yield` to wait for the next frame.
 
-### `yielding(fn, [optional frequency]) -> function *`
+### `yielding(fn, [optional frequency=8]) -> function *`
 
 Converts a normal function into one that yields every `frequency` calls.
 
