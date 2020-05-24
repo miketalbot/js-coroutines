@@ -94,17 +94,17 @@ await run(function* () {
 
 As you can probably see, it comes ready with the most useful functions for arrays:
 
-- forEach
-- map
-- filter
-- reduce
-- findIndex
-- find
-- some
-- every
-- sort
-- append (array to array)
-- concat (two arrays into a new array)
+- `forEach`
+- `map`
+- `filter`
+- `reduce`
+- `findIndex`
+- `find`
+- `some`
+- `every`
+- `sort`
+- `append` (array into array)
+- `concat` (two arrays into a new array)
 
 The helper `yielding` wraps a normal function as a generator and checks remaining time
 every few iterations. You can see it in use above. It's just a helper though - if
