@@ -194,6 +194,38 @@ update(function* () {
 });
 ```
 
+# API
+
+### `run(coroutineFunction, msToLeaveSpare=1, timeout=160) -> TerminatablePromise(Any)`
+
+`coroutineFunction` must be a `function *`
+
+Run your coroutine, which will occupy up to the last amount of
+m/s specified in the `msToLeaveSpare` (0.5 is the minimum) of the idle
+time on the thread. `timeout` specifies the time before it will run
+if there is no idle time (default 1/10 frames).
+
+The promise returned has a `terminate(result)` function that can be used
+to stop the calculation early - maybe you want to go again with different
+parameters.
+
+`yield` inside your coroutine will check how much time is left and continue
+if there is enough.
+
+`yield true` will definitely abandom the current frames work. Useful if you
+are about to/just have allocated tons of memory to give time for GC.
+
+### `runAsync(asyncCoroutineFunction, msToLeaveSpare=1, timeout=160) -> TerminatablePromise(Any)`
+
+Same as `run` but requires an `async function *` coroutine.
+
+### `update(coroutine)`
+
+Starts an animation / per frame coroutine. Your coroutine will be called
+every frame.
+
+`yield` to wait for the next frame.
+
 ## License
 
 js-coroutines - MIT (c) 2020 Mike Talbot
