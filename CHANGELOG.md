@@ -1,12 +1,16 @@
-1.1.20
+1.1.21
+
+- Documentation improvements
+
+  1.1.20
 
 - Updated the demo in the README.md to be the async one
 
-1.1.19
+  1.1.19
 
 - Fixed build issue
 
-1.1.18
+  1.1.18
 
 - Added Async function wrappers
 - Refactored project structure

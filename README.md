@@ -341,7 +341,7 @@ Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
-### `*find(array, filterFn*) -> Any`
+### `*find(array, *filterFn) -> Any`
 
 Finds this first item in an array which matches a filter function.
 
@@ -351,7 +351,7 @@ Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
-### `*findIndex(array, filterFn*) -> Number`
+### `*findIndex(array, *filterFn) -> Number`
 
 Finds the index of the first item in an array which matches a filter function.
 
@@ -361,7 +361,7 @@ Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
-### `*filter(array, filterFn*) -> []`
+### `*filter(array, *filterFn) -> []`
 
 Filters an array by calling a filter function which may yield.
 
@@ -455,15 +455,15 @@ Concatenates two arrays into a new array as a coroutine.
 
 Returns true if all items in the array match the filter.
 
-### `findAsync(array, filterFn*) -> Promise(Any)`
+### `findAsync(array, filterFn) -> Promise(Any)`
 
 Finds this first item in an array which matches a filter function.
 
-### `findIndexAsync(array, filterFn*) -> Promise(Number)`
+### `findIndexAsync(array, filterFn) -> Promise(Number)`
 
 Finds the index of the first item in an array which matches a filter function.
 
-### `filterAsync(array, filterFn*) -> Promise([])`
+### `filterAsync(array, filterFn) -> Promise([])`
 
 Filters an array by calling a filter function which may yield.
 
@@ -471,7 +471,7 @@ Filters an array by calling a filter function which may yield.
 
 Calls a function on every item in an array, yielding version.
 
-### `mapAsync(array, *mapFn) -> Promise([])`
+### `mapAsync(array, mapFn) -> Promise([])`
 
 Yielding version of array map.
 
@@ -488,7 +488,7 @@ Runs a reduce as an async coroutine. First iteration
 will be initialized with the first array value if initialValue
 is not defined.
 
-### `someAsync(array, *filterFn) -> Promise(Bool)`
+### `someAsync(array, filterFn) -> Promise(Bool)`
 
 Returns true if any item in the array matches the filter.
 
