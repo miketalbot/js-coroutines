@@ -10,6 +10,11 @@ system so it can animate and do the rest of the work, then resume in the next ga
 
 > Get 60fps while sorting an array of 10 milllion items with `js-coroutines`
 
+## Now supports serializing and deserializing JSON in the "gaps"
+
+You can use `*stringify()` and `*parse()` to manipulate JSON in an idle coroutine that won't
+block the main thread.
+
 ### Wait there's more!
 
 Another super useful way of using coroutines is to animate and control complex states - js-coroutines provides this too with the powerful `update` method that runs every frame in high priority. See below.
@@ -23,11 +28,11 @@ npm install --save js-coroutines
 ## Usage
 
 ```js
-import {run, sort} from 'js-coroutines'
+import {run, sort, stringify} from 'js-coroutines'
 
 ...
 
-let results = await run(function*() {
+let json = await run(function*() {
   const results = [];
   for(let i = 0; i < 10000000; i++) {
     results.push(Math.random() * 10000);
@@ -36,7 +41,7 @@ let results = await run(function*() {
   }
   //Pass to a yielding sort function
   yield* sort(results, value=>value)
-  return results;
+  return yield* stringify(results);
 })
 
 ```
@@ -244,18 +249,134 @@ function* myCoroutine() {
 
 Same as `run` but requires an `async function *` coroutine.
 
-### `update(coroutine)`
+### `update(coroutine) -> TerminatablePromise(Any)`
 
 Starts an animation / per frame coroutine. Your coroutine will be called
 every frame.
 
 `yield` to wait for the next frame.
 
-### `yielding(fn, [optional frequency=8]) -> function *`
+### `*yielding(fn, [optional frequency=8]) -> function *`
 
 Converts a normal function into one that yields every `frequency` calls.
 
 Very useful for providing map/filter functions etc.
+
+## Provided helpers
+
+### `*append(destination, source) -> destination`
+
+Appends the contents of a source array to the desination array
+as a coroutine.
+
+### `*concat(array1, array2) -> []`
+
+Concatenates two arrays into a new array as a coroutine.
+
+### `*every(array, *filterFn) -> Bool`
+
+Returns true if all items in the array match the filter.
+
+#### CALLBACK `*filterFn(item, index, collection) -> Boolean`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*find(array, filterFn*) -> Any`
+
+Finds this first item in an array which matches a filter function.
+
+#### CALLBACK `*filterFn(item, index, collection) -> Boolean`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*findIndex(array, filterFn*) -> Number`
+
+Finds the index of the first item in an array which matches a filter function.
+
+#### CALLBACK `*filterFn(item, index, collection) -> Boolean`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*filter(array, filterFn*) -> []`
+
+Filters an array by calling a filter function which may yield.
+
+#### CALLBACK `*filterFn(item, index, collection) -> Boolean`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*forEach(array, callbackFn) -> void`
+
+Calls a function on every item in an array, yielding version.
+
+#### CALLBACK `*callbackFn(item, index, collection) -> Boolean`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*map(array, *mapFn) -> []`
+
+Yielding version of array map.
+
+#### CALLBACK `*mapFn(item, index, collection) -> Any`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*parse (JSON) -> Any`
+
+Yielding version of `JSON.parse()`. Parses JSON and returns the value.
+
+Note that although `fetch` responses have an async `json()` method,
+it actually blocks the main thread, unlike this call.
+
+### `*reduce(array, reduceFn, initialValue) -> Any`
+
+Runs a reduce as a yielding coroutine. First iteration
+will be initialized with the first array value if initialValue
+is not defined.
+
+#### CALLBACK `*reduceFn(accumulator, current, index, array) -> Any`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*some(array, *filterFn) -> Bool`
+
+Returns true if any item in the array matches the filter.
+
+#### CALLBACK `*filterFn(item, index, collection) -> Boolean`
+
+Standard callback except provided as a yielding generator. You
+may wrap a standard function in `yielding()` to get automatic
+behaviour.
+
+### `*sort(array, comparison)`
+
+Sorts an array in place while yielding. This function is a yielding
+implementation of Timsort (standard sort used in modern browsers). Timsort
+is fast and stable making it ideal for multi-key sorts. It it not as fast
+as Quicksort.
+
+#### CALLBACK `comparison(valueExtractor) -> Any | comparison(item1, item2) -> Number (< 0, 0, > 0)`
+
+Either a function to extract a value from an element or a function to compare two elements and return
+< 0 | 0 | > 0 depending on the order desired.
+
+### `*stringify (objectOrValue, replacer, spaces ) -> String`
+
+Yielding version of JSON.stringify - will work in idle time
 
 ## License
 

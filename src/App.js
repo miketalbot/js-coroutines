@@ -3,20 +3,25 @@ import logo from "./logo.svg";
 import "./App.css";
 import {
   run,
-  runAsync,
   reduce,
   yielding,
   forEach,
   map,
   append,
   update,
+  parse,
+  stringify,
+  every,
 } from "./component";
+import isEqual from "lodash/isEqual";
 import { sort } from "./component/timsort";
+import test from "./component/yastjson/test/test.json";
+const json = JSON.stringify(test);
+const referenceObject = JSON.parse(json);
 
 function App() {
   const logoRef = useRef();
   const outputRef = useRef();
-  let x = -window.innerWidth / 2;
   useEffect(() => {
     // test();
     animate().then(() => console.log("Done"));
@@ -60,6 +65,7 @@ function App() {
     const { format } = new Intl.NumberFormat();
     return await run(function* () {
       const strings = [];
+
       let results;
       results = new Array(2000000);
       for (let i = 0; i < 2000000; i++) {
@@ -83,6 +89,36 @@ function App() {
           sqrRoot.length
         )} items`
       );
+      const asAString = yield* stringify(results);
+      add(
+        `Stringified ${format(
+          sqrRoot.length
+        )} items to JSON string length ${format(asAString.length)}`
+      );
+      const copy = yield* parse(asAString);
+      add(`Parsed JSON back to a copy of ${format(copy.length)} array items`);
+
+      const ok = yield* every(
+        copy,
+        yielding((v, i) => results[i] === v)
+      );
+      add(
+        `Validated that ${format(copy.length)} parsed values matched - "${
+          ok ? "ok" : "mismatch"
+        }"`
+      );
+
+      for (let i = 0; i < 1000; i++) {
+        yield* parse(json);
+      }
+      const obj = yield* parse(json);
+      if (!isEqual(obj, referenceObject)) {
+        console.log(obj, referenceObject);
+        add(`Parsed example JSON back to an object 1000 times - "error"`);
+      } else {
+        add(`Parsed example JSON back to an object 1000 times - "matched"`);
+      }
+
       add(
         `Sum of ${format(results.length)} items is ${format(
           yield* reduce(
@@ -113,27 +149,6 @@ function App() {
         });
       }
     });
-  }
-
-  function calculate() {
-    let results;
-    for (let j = 0; j < 100; j++) {
-      results = [];
-      for (let i = 0; i < 100000; i++) {
-        results.push((Math.random() * 1000) | 0);
-      }
-      results.sort((a, b) => a - b);
-    }
-    return results;
-  }
-
-  async function test() {
-    console.time("non-merged");
-    calculate();
-    console.timeEnd("non-merged");
-    console.time("merged");
-    await calculateAsync();
-    console.timeEnd("merged");
   }
 }
 

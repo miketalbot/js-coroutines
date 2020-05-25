@@ -1,7 +1,9 @@
 import "requestidlecallback-polyfill";
 
 import { sort } from "./timsort";
-export { sort };
+import { stringify } from "./json";
+import { parse } from "./yastjson/lib/parse";
+export { sort, stringify, parse };
 
 export function* forEach(array, fn) {
   for (let index = 0, length = array.length; index < length; index++) {

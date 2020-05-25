@@ -23,11 +23,27 @@ Object.defineProperty(exports, "sort", {
     return _timsort.sort;
   }
 });
+Object.defineProperty(exports, "stringify", {
+  enumerable: true,
+  get: function get() {
+    return _json.stringify;
+  }
+});
+Object.defineProperty(exports, "parse", {
+  enumerable: true,
+  get: function get() {
+    return _parse.parse;
+  }
+});
 exports.default = void 0;
 
 require("requestidlecallback-polyfill");
 
 var _timsort = require("./timsort");
+
+var _json = require("./json");
+
+var _parse = require("./yastjson/lib/parse");
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
