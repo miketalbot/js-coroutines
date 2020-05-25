@@ -13,10 +13,21 @@ var gap;
 var indent;
 var meta;
 
-function* quote(string, yielder) {
+var yieldCount = 0
+function yielder () {
+  yieldCount++;
+  if (yieldCount > 256) {
+    yieldCount = 0;
+    return true;
+  }
+  return false;
+};
+
+
+function* quote(string) {
   let result = '"';
   for (let i = 0, l = string.length; i < l; i++) {
-    if (yielder()) yield;
+    if ((i & 7) === 0 && yielder()) yield;
     let c = string[i];
     if (rx_escapable.test(c)) {
       const r = meta[c];
@@ -29,13 +40,12 @@ function* quote(string, yielder) {
       result += c;
     }
   }
-  yield;
   return result + '"';
 }
 
 function* str(key, holder, ctrl) {
   // Produce a string from holder[key].
-  const { rep, yielder } = ctrl;
+  const { rep } = ctrl;
   if (yielder()) yield;
 
   var i; // The loop counter.
@@ -57,7 +67,7 @@ function* str(key, holder, ctrl) {
 
   switch (typeof value) {
     case "string":
-      return yield* quote(value, yielder);
+      return yield* quote(value);
 
     case "number":
       // JSON numbers must be finite. Encode non-finite numbers as null.
@@ -114,18 +124,17 @@ function* str(key, holder, ctrl) {
             k = rep[i];
             v = yield* str(k, value, ctrl);
             if (v) {
-              partial.push(quote(k) + (gap ? ": " : ":") + v);
+              partial.push((yield* quote(k)) + (gap ? ": " : ":") + v);
             }
           }
         }
       } else {
         // Otherwise, iterate through all of the keys in the object.
-
         for (k in value) {
           if (Object.prototype.hasOwnProperty.call(value, k)) {
             v = yield* str(k, value, ctrl);
             if (v) {
-              partial.push(quote(k) + (gap ? ": " : ":") + v);
+              partial.push((yield* quote(k)) + (gap ? ": " : ":") + v);
             }
           }
         }
@@ -133,7 +142,6 @@ function* str(key, holder, ctrl) {
 
       // Join all of the member texts together, separated with commas,
       // and wrap them in braces.
-
       v =
         partial.length === 0
           ? "{}"
@@ -157,7 +165,7 @@ meta = {
   '"': '\\"',
   "\\": "\\\\",
 };
-export function* stringify(value, replacer, space, yielder) {
+export function* stringify(value, replacer, space) {
   // The stringify method takes a value and an optional replacer, and an optional
   // space parameter, and returns a JSON text. The replacer can be a function
   // that can replace values, or an array of strings that will select the keys.
@@ -192,20 +200,8 @@ export function* stringify(value, replacer, space, yielder) {
     throw new Error("JSON.stringify");
   }
 
-  let yieldCount = 0;
-  yielder =
-    yielder ||
-    function () {
-      yieldCount++;
-      if (yieldCount > 256) {
-        yieldCount = 0;
-        return true;
-      }
-      return false;
-    };
-
   // Make a fake root object containing our value under the key of "".
   // Return the result of stringifying the value.
 
-  return yield* str("", { "": value }, { rep: replacer, yielder });
+  return yield* str("", { "": value }, { rep: replacer });
 }

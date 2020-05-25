@@ -23,8 +23,22 @@ var rx_dangerous = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2
 var gap;
 var indent;
 var meta;
+var yieldCount = 0;
 
-function quote(string, yielder) {
+function yielder() {
+  yieldCount++;
+
+  if (yieldCount > 256) {
+    yieldCount = 0;
+    return true;
+  }
+
+  return false;
+}
+
+;
+
+function quote(string) {
   var result, i, l, c, r;
   return regeneratorRuntime.wrap(function quote$(_context) {
     while (1) {
@@ -39,7 +53,7 @@ function quote(string, yielder) {
             break;
           }
 
-          if (!yielder()) {
+          if (!((i & 7) === 0 && yielder())) {
             _context.next = 6;
             break;
           }
@@ -68,13 +82,9 @@ function quote(string, yielder) {
           break;
 
         case 11:
-          _context.next = 13;
-          return;
-
-        case 13:
           return _context.abrupt("return", result + '"');
 
-        case 14:
+        case 12:
         case "end":
           return _context.stop();
       }
@@ -83,13 +93,13 @@ function quote(string, yielder) {
 }
 
 function str(key, holder, ctrl) {
-  var rep, yielder, i, k, v, length, mind, partial, value;
+  var rep, i, k, v, length, mind, partial, value;
   return regeneratorRuntime.wrap(function str$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           // Produce a string from holder[key].
-          rep = ctrl.rep, yielder = ctrl.yielder;
+          rep = ctrl.rep;
 
           if (!yielder()) {
             _context2.next = 4;
@@ -114,7 +124,7 @@ function str(key, holder, ctrl) {
           break;
 
         case 10:
-          return _context2.delegateYield(quote(value, yielder), "t1", 11);
+          return _context2.delegateYield(quote(value), "t1", 11);
 
         case 11:
           return _context2.abrupt("return", _context2.t1);
@@ -174,7 +184,7 @@ function str(key, holder, ctrl) {
 
         case 33:
           if (!(rep && _typeof(rep) === "object")) {
-            _context2.next = 47;
+            _context2.next = 55;
             break;
           }
 
@@ -183,12 +193,12 @@ function str(key, holder, ctrl) {
 
         case 36:
           if (!(i < length)) {
-            _context2.next = 45;
+            _context2.next = 53;
             break;
           }
 
           if (!(typeof rep[i] === "string")) {
-            _context2.next = 42;
+            _context2.next = 50;
             break;
           }
 
@@ -198,56 +208,82 @@ function str(key, holder, ctrl) {
         case 40:
           v = _context2.t7;
 
-          if (v) {
-            partial.push(quote(k) + (gap ? ": " : ":") + v);
+          if (!v) {
+            _context2.next = 50;
+            break;
           }
 
-        case 42:
+          _context2.t8 = partial;
+          return _context2.delegateYield(quote(k), "t9", 44);
+
+        case 44:
+          _context2.t10 = _context2.t9;
+          _context2.t11 = gap ? ": " : ":";
+          _context2.t12 = _context2.t10 + _context2.t11;
+          _context2.t13 = v;
+          _context2.t14 = _context2.t12 + _context2.t13;
+
+          _context2.t8.push.call(_context2.t8, _context2.t14);
+
+        case 50:
           i += 1;
           _context2.next = 36;
           break;
 
-        case 45:
+        case 53:
+          _context2.next = 72;
+          break;
+
+        case 55:
+          _context2.t15 = regeneratorRuntime.keys(value);
+
+        case 56:
+          if ((_context2.t16 = _context2.t15()).done) {
+            _context2.next = 72;
+            break;
+          }
+
+          k = _context2.t16.value;
+
+          if (!Object.prototype.hasOwnProperty.call(value, k)) {
+            _context2.next = 70;
+            break;
+          }
+
+          return _context2.delegateYield(str(k, value, ctrl), "t17", 60);
+
+        case 60:
+          v = _context2.t17;
+
+          if (!v) {
+            _context2.next = 70;
+            break;
+          }
+
+          _context2.t18 = partial;
+          return _context2.delegateYield(quote(k), "t19", 64);
+
+        case 64:
+          _context2.t20 = _context2.t19;
+          _context2.t21 = gap ? ": " : ":";
+          _context2.t22 = _context2.t20 + _context2.t21;
+          _context2.t23 = v;
+          _context2.t24 = _context2.t22 + _context2.t23;
+
+          _context2.t18.push.call(_context2.t18, _context2.t24);
+
+        case 70:
           _context2.next = 56;
           break;
 
-        case 47:
-          _context2.t8 = regeneratorRuntime.keys(value);
-
-        case 48:
-          if ((_context2.t9 = _context2.t8()).done) {
-            _context2.next = 56;
-            break;
-          }
-
-          k = _context2.t9.value;
-
-          if (!Object.prototype.hasOwnProperty.call(value, k)) {
-            _context2.next = 54;
-            break;
-          }
-
-          return _context2.delegateYield(str(k, value, ctrl), "t10", 52);
-
-        case 52:
-          v = _context2.t10;
-
-          if (v) {
-            partial.push(quote(k) + (gap ? ": " : ":") + v);
-          }
-
-        case 54:
-          _context2.next = 48;
-          break;
-
-        case 56:
+        case 72:
           // Join all of the member texts together, separated with commas,
           // and wrap them in braces.
           v = partial.length === 0 ? "{}" : gap ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}" : "{" + partial.join(",") + "}";
           gap = mind;
           return _context2.abrupt("return", v);
 
-        case 59:
+        case 75:
         case "end":
           return _context2.stop();
       }
@@ -267,8 +303,8 @@ meta = {
   "\\": "\\\\"
 };
 
-function stringify(value, replacer, space, yielder) {
-  var i, yieldCount;
+function stringify(value, replacer, space) {
+  var i;
   return regeneratorRuntime.wrap(function stringify$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
@@ -301,32 +337,16 @@ function stringify(value, replacer, space, yielder) {
           throw new Error("JSON.stringify");
 
         case 5:
-          yieldCount = 0;
-
-          yielder = yielder || function () {
-            yieldCount++;
-
-            if (yieldCount > 256) {
-              yieldCount = 0;
-              return true;
-            }
-
-            return false;
-          }; // Make a fake root object containing our value under the key of "".
-          // Return the result of stringifying the value.
-
-
           return _context3.delegateYield(str("", {
             "": value
           }, {
-            rep: replacer,
-            yielder: yielder
-          }), "t0", 8);
+            rep: replacer
+          }), "t0", 6);
 
-        case 8:
+        case 6:
           return _context3.abrupt("return", _context3.t0);
 
-        case 9:
+        case 7:
         case "end":
           return _context3.stop();
       }

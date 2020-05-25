@@ -15,6 +15,9 @@ system so it can animate and do the rest of the work, then resume in the next ga
 You can use `*stringify()` and `*parse()` to manipulate JSON in an idle coroutine that won't
 block the main thread.
 
+You can use `stringifyAsync()` and `parseAsync()` to perform JSON parsing and stringifying
+anywhere you can take a promise or `await` a reponse.
+
 ### Wait there's more!
 
 Another super useful way of using coroutines is to animate and control complex states - js-coroutines provides this too with the powerful `update` method that runs every frame in high priority. See below.
@@ -26,6 +29,9 @@ npm install --save js-coroutines
 ```
 
 ## Usage
+
+You can make your own generator functions that do anything you like and `yield` to check
+if there is time remaining this frame:
 
 ```js
 import {run, sort, stringify} from 'js-coroutines'
@@ -39,11 +45,33 @@ let json = await run(function*() {
     //Check how much time left every 100 entries
     if(i % 100 === 0) yield;
   }
-  //Pass to a yielding sort function
+  //Pass to a coroutine sort function
   yield* sort(results, value=>value)
   return yield* stringify(results);
 })
 
+```
+
+Or you can just use the Async helper functions in an async routine. This is
+less powerful, but you don't have to start writing generator functions
+or working out where to yield.
+
+```js
+import { parseAsync, mapAsync } from "js-coroutines";
+
+async function process(url) {
+  const response = await fetch("someurl");
+  //Use the coroutine version of parse, rather than blocking
+  //the main thread permanently by using .json()
+  const result = await parseAsync(await response.text());
+  //Imagining the result is some database rows, map out the
+  //desired response without blocking the main thread for paints
+  const values = await mapAsync(result, (row) => ({
+    item: row.time,
+    value: row.quantity * row.unitPrice,
+  }));
+  return values;
+}
 ```
 
 ## Demo
@@ -262,7 +290,37 @@ Converts a normal function into one that yields every `frequency` calls.
 
 Very useful for providing map/filter functions etc.
 
-## Provided helpers
+### `wrapAsPromise(coroutine) -> function([params]) -> Promise(Any)`
+
+Returns an async function that can be called with await and will call
+the passed in coroutine forwarding parameters.
+
+```js
+//Create an async function
+const toTuplesAsync = wrapAsPromise(function* (array) {
+  let output = [];
+  //Create tuples
+  for (let i = 0; i < array.length; i += 2) {
+    output.push([array[i], array[i + 1]]);
+    yield;
+  }
+  return output;
+});
+
+...
+
+async function myProcess() {
+  const data = await getDataFromSomewhere();
+  //Call your wrapped coroutine
+  const tuples = await toTuplesAsync(data);
+  //do something with the result
+  return processTuplesSomehow(tuples);
+}
+
+
+```
+
+## ARRAY HELPERS
 
 ### `*append(destination, source) -> destination`
 
@@ -279,7 +337,7 @@ Returns true if all items in the array match the filter.
 
 #### CALLBACK `*filterFn(item, index, collection) -> Boolean`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
@@ -289,7 +347,7 @@ Finds this first item in an array which matches a filter function.
 
 #### CALLBACK `*filterFn(item, index, collection) -> Boolean`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
@@ -299,7 +357,7 @@ Finds the index of the first item in an array which matches a filter function.
 
 #### CALLBACK `*filterFn(item, index, collection) -> Boolean`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
@@ -309,7 +367,7 @@ Filters an array by calling a filter function which may yield.
 
 #### CALLBACK `*filterFn(item, index, collection) -> Boolean`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
@@ -319,7 +377,7 @@ Calls a function on every item in an array, yielding version.
 
 #### CALLBACK `*callbackFn(item, index, collection) -> void`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
@@ -329,7 +387,7 @@ Yielding version of array map.
 
 #### CALLBACK `*mapFn(item, index, collection) -> Any`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
@@ -348,7 +406,7 @@ is not defined.
 
 #### CALLBACK `*reduceFn(accumulator, current, index, array) -> Any`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
@@ -358,13 +416,13 @@ Returns true if any item in the array matches the filter.
 
 #### CALLBACK `*filterFn(item, index, collection) -> Boolean`
 
-Standard callback except provided as a yielding generator. You
+Standard callback except provided as a coroutine. You
 may wrap a standard function in `yielding()` to get automatic
 behaviour.
 
 ### `*sort(array, comparison)`
 
-Sorts an array in place while yielding. This function is a yielding
+Sorts an array in place while yielding. This function is a coroutine
 implementation of Timsort (standard sort used in modern browsers). Timsort
 is fast and stable making it ideal for multi-key sorts. It it not as fast
 as Quicksort.
@@ -377,6 +435,78 @@ Either a function to extract a value from an element or a function to compare tw
 ### `*stringify (objectOrValue, replacer, spaces ) -> String`
 
 Yielding version of JSON.stringify - will work in idle time
+
+# ASYNC API
+
+You can use the async API to perform the actions that use idle coroutine in any async function.
+This might compose better for you in simple circumstances where you just want to parse JSON or
+sort for example in between other async operations.
+
+### `appendAsync(destination, source) -> Promise([])`
+
+Appends the contents of a source array to the desination array
+as a coroutine.
+
+### `concatAsync(array1, array2) -> Promise([])`
+
+Concatenates two arrays into a new array as a coroutine.
+
+### `everyAsync(array, filterFn) -> Promise(Bool)`
+
+Returns true if all items in the array match the filter.
+
+### `findAsync(array, filterFn*) -> Promise(Any)`
+
+Finds this first item in an array which matches a filter function.
+
+### `findIndexAsync(array, filterFn*) -> Promise(Number)`
+
+Finds the index of the first item in an array which matches a filter function.
+
+### `filterAsync(array, filterFn*) -> Promise([])`
+
+Filters an array by calling a filter function which may yield.
+
+### `forEachAsync(array, callbackFn) -> Promise(void)`
+
+Calls a function on every item in an array, yielding version.
+
+### `mapAsync(array, *mapFn) -> Promise([])`
+
+Yielding version of array map.
+
+### `parseAsync(JSON) -> Promise(Any)`
+
+Async version of `JSON.parse()`. Parses JSON and returns the value.
+
+Note that although `fetch` responses have an async `json()` method,
+it actually blocks the main thread, unlike this call.
+
+### `reduceAync(Array, reduceFn, initialValue) -> Promise(Any)`
+
+Runs a reduce as an async coroutine. First iteration
+will be initialized with the first array value if initialValue
+is not defined.
+
+### `someAsync(array, *filterFn) -> Promise(Bool)`
+
+Returns true if any item in the array matches the filter.
+
+### `sortAsync(array, comparison) -> Promise()`
+
+Sorts an array in place asynchronously. This function is a yielding
+implementation of Timsort (standard sort used in modern browsers). Timsort
+is fast and stable making it ideal for multi-key sorts. It it not as fast
+as Quicksort.
+
+#### CALLBACK `comparison(valueExtractor) -> Any | comparison(item1, item2) -> Number (< 0, 0, > 0)`
+
+Either a function to extract a value from an element or a function to compare two elements and return
+< 0 | 0 | > 0 depending on the order desired.
+
+### `stringifyAsync (objectOrValue, replacer, spaces ) -> Promise(String)`
+
+Async version of JSON.stringify - will work in idle time
 
 ## License
 
