@@ -76,7 +76,7 @@ async function process(url) {
 
 ## Demo
 
-See the [Code Sandbox Demo](https://codesandbox.io/s/js-coroutines-demo-gc2jc?file=/src/App.js:1798-3097).
+See the [Code Sandbox Demo](https://codesandbox.io/s/js-coroutines-json-demo-etyft?file=/src/App.js).
 
 ## Getting Started
 

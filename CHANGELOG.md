@@ -1,3 +1,7 @@
+1.1.20
+
+- Updated the demo in the README.md to be the async one
+
 1.1.19
 
 - Fixed build issue

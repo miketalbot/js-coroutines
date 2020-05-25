@@ -60,6 +60,7 @@ function App() {
     }
 
     async function asyncFunctions() {
+        //Parse the JSON async
         let o = await parseAsync(json)
         add(`ASYNC: parsed JSON to array of ${format(o.length)} items`)
         for (let i = 1; i < 12; i++) {
@@ -72,6 +73,7 @@ function App() {
         add(`ASYNC: mapped the ids from objects in the array to a new array of ${format(justIds.length)} items`)
         output = await stringifyAsync(justIds)
         add(`ASYNC: stringified just the ids in the array to a ${format(output.length)} character string`)
+
     }
 
     async function calculateAsync() {
