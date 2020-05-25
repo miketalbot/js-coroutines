@@ -1,4 +1,4 @@
-1.1.16
+1.1.18
 
 - Added Async function wrappers
 - Refactored project structure
