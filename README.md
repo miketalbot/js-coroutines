@@ -317,7 +317,7 @@ behaviour.
 
 Calls a function on every item in an array, yielding version.
 
-#### CALLBACK `*callbackFn(item, index, collection) -> Boolean`
+#### CALLBACK `*callbackFn(item, index, collection) -> void`
 
 Standard callback except provided as a yielding generator. You
 may wrap a standard function in `yielding()` to get automatic
@@ -383,3 +383,7 @@ Yielding version of JSON.stringify - will work in idle time
 js-coroutines - MIT (c) 2020 Mike Talbot
 
 Timsort - MIT (c) 2015 Marco Ziccardi (c) 2020 Mike Talbot (Generator modifications)
+
+JSON stringify - Public Domain (c) 2017 Douglas Crockford (c) 2020 Mike Talbot (Generator modifications)
+
+JSON Parse - yastjson - MIT (c) 2020 5u9ar (zhuyingda) (c) 2020 Mike Talbot (Optimisations and generator modifications)
