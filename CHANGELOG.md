@@ -1,3 +1,7 @@
+1.1.19
+
+- Fixed build issue
+
 1.1.18
 
 - Added Async function wrappers
