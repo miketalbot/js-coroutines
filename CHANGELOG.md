@@ -1,4 +1,8 @@
-1.1.21
+1.1.22
+
+- Link article on how it works
+
+  1.1.21
 
 - Documentation improvements
 

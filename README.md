@@ -8,7 +8,11 @@ So when is the right time? Well it's in all those gaps where you animation isn't
 system is idle. If only you could write something to use up that time and then relinquish control to the
 system so it can animate and do the rest of the work, then resume in the next gap. Well now you can...
 
-> Get 60fps while sorting an array of 10 milllion items with `js-coroutines`
+> Get 60fps while sorting an array of 10 million items with `js-coroutines`
+
+## How it works?
+
+[This dev.to article goes into detail about how js-coutines works](https://dev.to/miketalbot/60fps-javascript-while-stringfying-and-parsing-100mbs-of-json-84l).
 
 ## Now supports serializing and deserializing JSON in the "gaps"
 
