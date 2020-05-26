@@ -3,7 +3,7 @@ import { yielder } from "./yielder";
 export function* unescapeJsonString(text) {
   // NOTE: We don't use JSON.parse('"' + text + '"") or similar
   //       because we want to support input that may not be valid JSON.
-
+  if (text.length < 32000 && !text.includes("\\")) return text;
   // Holds the unescaped string as we build it.
   let plain = "";
 
@@ -11,8 +11,9 @@ export function* unescapeJsonString(text) {
   const iter = text[Symbol.iterator]();
 
   let cur;
+  let i = 0;
   while (!(cur = iter.next()).done) {
-    if (yielder()) yield;
+    if ((i++ & 7) == 0 && yielder()) yield;
     if (cur.value === "\\") {
       cur = iter.next();
       if (cur.done) {

@@ -20,10 +20,10 @@ exports.ExprType = void 0;
  * SOFTWARE.
  */
 var ExprType = {
-  Json: "json",
-  Array: "array",
-  Object: "object",
-  Prop: "prop",
-  Value: "value"
+  Json: "j",
+  Array: "a",
+  Object: "o",
+  Prop: "p",
+  Value: "v"
 };
 exports.ExprType = ExprType;

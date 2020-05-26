@@ -13,9 +13,9 @@
  * SOFTWARE.
  */
 export const ExprType = {
-  Json: "json",
-  Array: "array",
-  Object: "object",
-  Prop: "prop",
-  Value: "value",
+  Json: "j",
+  Array: "a",
+  Object: "o",
+  Prop: "p",
+  Value: "v",
 };

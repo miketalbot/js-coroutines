@@ -11,49 +11,56 @@ var _yielder = require("./yielder");
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(unescapeJsonString);
 
 function unescapeJsonString(text) {
-  var plain, iter, cur, one, two, three, four;
+  var plain, iter, cur, i, one, two, three, four;
   return regeneratorRuntime.wrap(function unescapeJsonString$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          // NOTE: We don't use JSON.parse('"' + text + '"") or similar
-          //       because we want to support input that may not be valid JSON.
+          if (!(text.length < 32000 && !text.includes("\\"))) {
+            _context.next = 2;
+            break;
+          }
+
+          return _context.abrupt("return", text);
+
+        case 2:
           // Holds the unescaped string as we build it.
           plain = ""; // Use a string iterator over code points for proper unicode support.
 
           iter = text[Symbol.iterator]();
+          i = 0;
 
-        case 2:
+        case 5:
           if ((cur = iter.next()).done) {
-            _context.next = 19;
+            _context.next = 22;
             break;
           }
 
-          if (!(0, _yielder.yielder)()) {
-            _context.next = 6;
+          if (!((i++ & 7) == 0 && (0, _yielder.yielder)())) {
+            _context.next = 9;
             break;
           }
 
-          _context.next = 6;
+          _context.next = 9;
           return;
 
-        case 6:
+        case 9:
           if (!(cur.value === "\\")) {
-            _context.next = 16;
+            _context.next = 19;
             break;
           }
 
           cur = iter.next();
 
           if (!cur.done) {
-            _context.next = 13;
+            _context.next = 16;
             break;
           }
 
           plain += "\\";
-          return _context.abrupt("break", 19);
+          return _context.abrupt("break", 22);
 
-        case 13:
+        case 16:
           if (cur.value === '"') {
             plain += '"';
           } else if (cur.value === "\\") {
@@ -113,21 +120,21 @@ function unescapeJsonString(text) {
             plain += cur.value;
           }
 
-        case 14:
-          _context.next = 17;
-          break;
-
-        case 16:
-          plain += cur.value;
-
         case 17:
-          _context.next = 2;
+          _context.next = 20;
           break;
 
         case 19:
-          return _context.abrupt("return", plain);
+          plain += cur.value;
 
         case 20:
+          _context.next = 5;
+          break;
+
+        case 22:
+          return _context.abrupt("return", plain);
+
+        case 23:
         case "end":
           return _context.stop();
       }

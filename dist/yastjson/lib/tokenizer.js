@@ -23,6 +23,38 @@ var STATE_KW_TRUE = "boolean_true";
 var STATE_KW_FALSE = "boolean_false";
 var STATE_NUMBER = "number";
 var STATE_STRING = "string";
+var STATE_STRING_ESCAPE = "escape";
+var INITIAL_STATE = {
+  "[": _token.TokenType.LeftBracket,
+  "]": _token.TokenType.RightBracket,
+  "{": _token.TokenType.LeftBrace,
+  "}": _token.TokenType.RightBrace,
+  ":": _token.TokenType.Colon,
+  ",": _token.TokenType.Comma
+};
+var MOVE_TO = {
+  "[": STATE_INIT,
+  "]": STATE_INIT,
+  "{": STATE_INIT,
+  "}": STATE_INIT,
+  ":": STATE_INIT,
+  ",": STATE_INIT,
+  n: STATE_KW_NULL,
+  t: STATE_KW_TRUE,
+  f: STATE_KW_FALSE,
+  "0": STATE_NUMBER,
+  "1": STATE_NUMBER,
+  "2": STATE_NUMBER,
+  "3": STATE_NUMBER,
+  "4": STATE_NUMBER,
+  "5": STATE_NUMBER,
+  "6": STATE_NUMBER,
+  "7": STATE_NUMBER,
+  "8": STATE_NUMBER,
+  "9": STATE_NUMBER,
+  "-": STATE_NUMBER,
+  '"': STATE_STRING
+};
 
 var Tokenizer = /*#__PURE__*/function () {
   function Tokenizer() {
@@ -38,69 +70,74 @@ var Tokenizer = /*#__PURE__*/function () {
   _createClass(Tokenizer, [{
     key: "tokenize",
     value: /*#__PURE__*/regeneratorRuntime.mark(function tokenize(src) {
-      var text, state;
+      var length, text, state;
       return regeneratorRuntime.wrap(function tokenize$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               this.sourceCode = src;
+              length = src.length;
 
-            case 1:
-              if (!this.shouldContinue()) {
-                _context.next = 25;
+            case 2:
+              if (!(this.pos < length)) {
+                _context.next = 28;
                 break;
               }
 
               if (!(0, _yielder.yielder)()) {
-                _context.next = 5;
+                _context.next = 6;
                 break;
               }
 
-              _context.next = 5;
+              _context.next = 6;
               return;
 
-            case 5:
+            case 6:
               text = this.read();
               state = this.state;
               _context.t0 = state;
-              _context.next = _context.t0 === STATE_INIT ? 10 : _context.t0 === STATE_KW_NULL ? 12 : _context.t0 === STATE_KW_TRUE ? 14 : _context.t0 === STATE_KW_FALSE ? 16 : _context.t0 === STATE_NUMBER ? 18 : _context.t0 === STATE_STRING ? 20 : 22;
+              _context.next = _context.t0 === STATE_INIT ? 11 : _context.t0 === STATE_KW_NULL ? 13 : _context.t0 === STATE_KW_TRUE ? 15 : _context.t0 === STATE_KW_FALSE ? 17 : _context.t0 === STATE_NUMBER ? 19 : _context.t0 === STATE_STRING ? 21 : _context.t0 === STATE_STRING_ESCAPE ? 23 : 25;
               break;
 
-            case 10:
+            case 11:
               this.initToken(text);
-              return _context.abrupt("break", 23);
+              return _context.abrupt("break", 26);
 
-            case 12:
+            case 13:
               this.handleTokenNull(text);
-              return _context.abrupt("break", 23);
+              return _context.abrupt("break", 26);
 
-            case 14:
+            case 15:
               this.handleTokenTrue(text);
-              return _context.abrupt("break", 23);
+              return _context.abrupt("break", 26);
 
-            case 16:
+            case 17:
               this.handleTokenFalse(text);
-              return _context.abrupt("break", 23);
+              return _context.abrupt("break", 26);
 
-            case 18:
+            case 19:
               this.handleTokenNumber(text);
-              return _context.abrupt("break", 23);
+              return _context.abrupt("break", 26);
 
-            case 20:
+            case 21:
               this.handleTokenString(text);
-              return _context.abrupt("break", 23);
-
-            case 22:
-              throw new Error("finite state machine get an unexpected state: ".concat(this.state));
+              return _context.abrupt("break", 26);
 
             case 23:
-              _context.next = 1;
-              break;
+              this.handleTokenStringEscape(text);
+              return _context.abrupt("break", 26);
 
             case 25:
-              return _context.abrupt("return", this.tokens);
+              throw new Error("finite state machine get an unexpected state: ".concat(this.state));
 
             case 26:
+              _context.next = 2;
+              break;
+
+            case 28:
+              return _context.abrupt("return", this.tokens);
+
+            case 29:
             case "end":
               return _context.stop();
           }
@@ -108,16 +145,9 @@ var Tokenizer = /*#__PURE__*/function () {
       }, tokenize, this);
     })
   }, {
-    key: "shouldContinue",
-    value: function shouldContinue() {
-      return this.pos < this.sourceCode.length;
-    }
-  }, {
     key: "read",
     value: function read() {
-      var ch = this.sourceCode[this.pos];
-      this.pos++;
-      return ch;
+      return this.sourceCode[this.pos++];
     }
   }, {
     key: "peek",
@@ -128,52 +158,10 @@ var Tokenizer = /*#__PURE__*/function () {
     key: "initToken",
     value: function initToken(text) {
       if (SINGLE_CHAR_TOKEN_LIST.includes(text)) {
-        var token;
-
-        switch (text) {
-          case "[":
-            token = {
-              text: text,
-              type: _token.TokenType.LeftBracket
-            };
-            break;
-
-          case "]":
-            token = {
-              text: text,
-              type: _token.TokenType.RightBracket
-            };
-            break;
-
-          case "{":
-            token = {
-              text: text,
-              type: _token.TokenType.LeftBrace
-            };
-            break;
-
-          case "}":
-            token = {
-              text: text,
-              type: _token.TokenType.RightBrace
-            };
-            break;
-
-          case ":":
-            token = {
-              text: text,
-              type: _token.TokenType.Colon
-            };
-            break;
-
-          default:
-            token = {
-              text: text,
-              type: _token.TokenType.Comma
-            };
-            break;
-        }
-
+        var token = {
+          text: text,
+          type: INITIAL_STATE[text]
+        };
         this.tokens.push(token);
       } else if (!INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(text.charCodeAt(0))) {
         throw new Error("state INIT, unexpected token ".concat(text));
@@ -185,52 +173,10 @@ var Tokenizer = /*#__PURE__*/function () {
         return;
       }
 
-      switch (nextCh) {
-        case "[":
-        case "]":
-        case "{":
-        case "}":
-        case ":":
-        case ",":
-          this.state = STATE_INIT;
-          break;
+      this.state = MOVE_TO[nextCh];
 
-        case "n":
-          this.state = STATE_KW_NULL;
-          break;
-
-        case "t":
-          this.state = STATE_KW_TRUE;
-          break;
-
-        case "f":
-          this.state = STATE_KW_FALSE;
-          break;
-
-        case "0":
-        case "1":
-        case "2":
-        case "3":
-        case "4":
-        case "5":
-        case "6":
-        case "7":
-        case "8":
-        case "9":
-        case "-":
-          this.state = STATE_NUMBER;
-          break;
-
-        case '"':
-          this.state = STATE_STRING;
-          break;
-
-        default:
-          if (!INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(nextCh.charCodeAt(0))) {
-            throw new Error("state INIT, unexpected token ".concat(nextCh));
-          }
-
-          break;
+      if (!this.state) {
+        throw new Error("Unexpected character in JSON");
       }
     }
   }, {
@@ -238,21 +184,8 @@ var Tokenizer = /*#__PURE__*/function () {
     value: function handleTokenNull(ch) {
       switch (ch) {
         case "n":
-          if (this.curToken !== "") {
-            throw new Error("state NULL, unexpected token ".concat(ch));
-          }
-
-          this.curToken = ch;
-          this.state = STATE_KW_NULL;
-          break;
-
         case "u":
-          if (this.curToken !== "n") {
-            throw new Error("state NULL, unexpected token ".concat(ch));
-          }
-
           this.curToken += ch;
-          this.state = STATE_KW_NULL;
           break;
 
         case "l":
@@ -266,9 +199,7 @@ var Tokenizer = /*#__PURE__*/function () {
             this.tokens.push(token);
             this.curToken = "";
             this.state = STATE_INIT;
-          } else if (this.curToken === "nul") {
-            this.state = STATE_KW_NULL;
-          } else {
+          } else if (this.curToken === "nul") {} else {
             throw new Error("state NULL, unexpected token ".concat(ch));
           }
 
@@ -283,30 +214,9 @@ var Tokenizer = /*#__PURE__*/function () {
     value: function handleTokenTrue(ch) {
       switch (ch) {
         case "t":
-          if (this.curToken !== "") {
-            throw new Error("state TRUE, unexpected token ".concat(ch));
-          }
-
-          this.curToken = ch;
-          this.state = STATE_KW_TRUE;
-          break;
-
         case "r":
-          if (this.curToken !== "t") {
-            throw new Error("state TRUE, unexpected token ".concat(ch));
-          }
-
-          this.curToken += ch;
-          this.state = STATE_KW_TRUE;
-          break;
-
         case "u":
-          if (this.curToken !== "tr") {
-            throw new Error("state TRUE, unexpected token ".concat(ch));
-          }
-
           this.curToken += ch;
-          this.state = STATE_KW_TRUE;
           break;
 
         case "e":
@@ -333,23 +243,10 @@ var Tokenizer = /*#__PURE__*/function () {
     value: function handleTokenFalse(ch) {
       switch (ch) {
         case "f":
-          this.curToken = ch;
-          this.state = STATE_KW_FALSE;
-          break;
-
         case "a":
-          this.curToken += ch;
-          this.state = STATE_KW_FALSE;
-          break;
-
         case "l":
-          this.curToken += ch;
-          this.state = STATE_KW_FALSE;
-          break;
-
         case "s":
           this.curToken += ch;
-          this.state = STATE_KW_FALSE;
           break;
 
         case "e":
@@ -386,9 +283,7 @@ var Tokenizer = /*#__PURE__*/function () {
           this.curToken += ch;
           nextCh = this.peek();
 
-          if (/[0-9]|\.|-/.test(nextCh)) {
-            this.state = STATE_NUMBER;
-          } else {
+          if (!/[0-9]|\.|-/.test(nextCh)) {
             var token = {
               text: this.curToken,
               type: _token.TokenType.Number
@@ -401,35 +296,8 @@ var Tokenizer = /*#__PURE__*/function () {
           break;
 
         case "-":
-          if (!this.curToken === "") {
-            throw new Error("state NUMBER, unexpected token ".concat(ch));
-          }
-
-          this.curToken += ch;
-          nextCh = this.peek();
-
-          if (/[0-9]/.test(nextCh)) {
-            this.state = STATE_NUMBER;
-          } else {
-            throw new Error("state NUMBER, unexpected token ".concat(ch));
-          }
-
-          break;
-
         case ".":
-          if (this.curToken === "" || !/[0-9]/.test(this.curToken[this.curToken.length - 1])) {
-            throw new Error("state NUMBER, unexpected token ".concat(ch));
-          }
-
           this.curToken += ch;
-          nextCh = this.peek();
-
-          if (/[0-9]/.test(nextCh)) {
-            this.state = STATE_NUMBER;
-          } else {
-            throw new Error("state NUMBER, unexpected token ".concat(ch));
-          }
-
           break;
 
         default:
@@ -437,31 +305,30 @@ var Tokenizer = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "handleTokenStringEscape",
+    value: function handleTokenStringEscape(ch) {
+      if (ch === "u") {
+        this.curToken += JSON.parse("\"\\u".concat(this.read()).concat(this.read()).concat(this.read()).concat(this.read(), "\""));
+        this.state = STATE_STRING;
+        return;
+      }
+
+      this.curToken += JSON.parse("\"\\".concat(ch, "\""));
+      this.state = STATE_STRING;
+    }
+  }, {
     key: "handleTokenString",
     value: function handleTokenString(ch) {
       switch (ch) {
+        case "\\":
+          this.state = STATE_STRING_ESCAPE;
+          break;
+
         case '"':
           if (this.curToken === "") {
             this.curToken = ch;
-            this.state = STATE_STRING;
           } else {
             this.curToken += ch;
-
-            if (this.curToken[this.curToken.length - 2] === "\\") {
-              var pos = this.curToken.length - 3;
-              var slashCount = 1;
-
-              while (this.curToken[pos] === "\\") {
-                slashCount++;
-                pos++;
-              }
-
-              if (slashCount % 2 === 1) {
-                this.state = STATE_STRING;
-                break;
-              }
-            }
-
             var token = {
               text: this.curToken,
               type: _token.TokenType.String
@@ -474,13 +341,7 @@ var Tokenizer = /*#__PURE__*/function () {
           break;
 
         default:
-          try {
-            this.curToken += ch;
-            this.state = STATE_STRING;
-          } catch (e) {
-            throw new Error("state STRING, unexpected token ".concat(ch));
-          }
-
+          this.curToken += ch;
           break;
       }
     }

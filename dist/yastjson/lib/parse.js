@@ -47,7 +47,7 @@ var ASTParser = /*#__PURE__*/function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              return _context.delegateYield(this.handleJson(this.ast), "t0", 1);
+              return _context.delegateYield(this.handleValue(this.ast), "t0", 1);
 
             case 1:
               outputJson = _context.t0;
@@ -241,7 +241,7 @@ var ASTParser = /*#__PURE__*/function () {
 
             case 3:
               _context3.t0 = astNode.type;
-              _context3.next = _context3.t0 === _token.TokenType.Null ? 6 : _context3.t0 === _token.TokenType.Boolean ? 7 : _context3.t0 === _token.TokenType.Number ? 17 : _context3.t0 === _token.TokenType.String ? 22 : _context3.t0 === _expression.ExprType.Json ? 25 : 27;
+              _context3.next = _context3.t0 === _token.TokenType.Null ? 6 : _context3.t0 === _token.TokenType.Boolean ? 7 : _context3.t0 === _token.TokenType.Number ? 17 : _context3.t0 === _token.TokenType.String ? 22 : _context3.t0 === _expression.ExprType.Json ? 24 : 26;
               break;
 
             case 6:
@@ -284,21 +284,18 @@ var ASTParser = /*#__PURE__*/function () {
 
             case 22:
               token = astNode.tokens[0].text;
-              return _context3.delegateYield((0, _escape.unescapeJsonString)(token.slice(1, token.length - 1)), "t1", 24);
+              return _context3.abrupt("return", token.slice(1, token.length - 1));
 
             case 24:
-              return _context3.abrupt("return", _context3.t1);
+              return _context3.delegateYield(this.handleJson(astNode), "t1", 25);
 
             case 25:
-              return _context3.delegateYield(this.handleJson(astNode), "t2", 26);
+              return _context3.abrupt("return", _context3.t1);
 
             case 26:
-              return _context3.abrupt("return", _context3.t2);
-
-            case 27:
               throw new Error("[parse AST error] unexpected node type, expect a valid Value node");
 
-            case 28:
+            case 27:
             case "end":
               return _context3.stop();
           }
@@ -327,26 +324,27 @@ function parse(jsonString) {
 
         case 4:
           tokens = _context4.t0;
+          debugger;
           astInst = new _ast.AST(tokens);
-          _context4.next = 8;
+          _context4.next = 9;
           return;
-
-        case 8:
-          return _context4.delegateYield(astInst.buildTree(), "t1", 9);
 
         case 9:
+          return _context4.delegateYield(astInst.buildTree(), "t1", 10);
+
+        case 10:
           ast = _context4.t1;
           astParser = new ASTParser(ast);
-          _context4.next = 13;
+          _context4.next = 14;
           return;
 
-        case 13:
-          return _context4.delegateYield(astParser.getJson(), "t2", 14);
-
         case 14:
-          return _context4.abrupt("return", _context4.t2);
+          return _context4.delegateYield(astParser.getJson(), "t2", 15);
 
         case 15:
+          return _context4.abrupt("return", _context4.t2);
+
+        case 16:
         case "end":
           return _context4.stop();
       }

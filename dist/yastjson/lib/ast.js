@@ -23,34 +23,12 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var util = {
-  mapValue: function mapValue(obj) {
-    var out = [];
-
-    for (var key in obj) {
-      out.push(obj[key]);
-    }
-
-    return out;
-  }
-};
-var terminalSignals = util.mapValue(_token.TokenType);
-var nonTerminalSignals = util.mapValue(_expression.ExprType);
-
 var ASTNode = /*#__PURE__*/function () {
-  function ASTNode(tokens, type, parentNode) {
+  function ASTNode(tokens, type) {
     _classCallCheck(this, ASTNode);
 
     this.type = type;
-    this.parentNode = parentNode;
-
-    if (terminalSignals.includes(this.type)) {
-      this.isTerm = true;
-      this.tokens = tokens;
-    } else if (nonTerminalSignals.includes(this.type)) {
-      this.isTerm = false;
-    }
-
+    this.tokens = tokens;
     this.childNodeList = [];
   }
 
@@ -82,7 +60,7 @@ var AST = /*#__PURE__*/function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              return _context.delegateYield(this.handleExprJson(this.tokens, null), "t0", 1);
+              return _context.delegateYield(this.handleExprJson(this.tokens), "t0", 1);
 
             case 1:
               rootNode = _context.t0;
@@ -97,7 +75,7 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprJson",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprJson(tokens, parent) {
+    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprJson(tokens) {
       var node, firstToken, arrayExpr, objectExpr;
       return regeneratorRuntime.wrap(function handleExprJson$(_context2) {
         while (1) {
@@ -112,7 +90,7 @@ var AST = /*#__PURE__*/function () {
               return;
 
             case 3:
-              node = new ASTNode(tokens, _expression.ExprType.Json, parent);
+              node = new ASTNode(tokens, _expression.ExprType.Json);
               firstToken = tokens[0];
 
               if (!(firstToken.type === _token.TokenType.LeftBracket)) {
@@ -120,7 +98,7 @@ var AST = /*#__PURE__*/function () {
                 break;
               }
 
-              return _context2.delegateYield(this.handleExprArray(tokens, node), "t0", 7);
+              return _context2.delegateYield(this.handleExprArray(tokens), "t0", 7);
 
             case 7:
               arrayExpr = _context2.t0;
@@ -134,7 +112,7 @@ var AST = /*#__PURE__*/function () {
                 break;
               }
 
-              return _context2.delegateYield(this.handleExprObject(tokens, node), "t1", 13);
+              return _context2.delegateYield(this.handleExprObject(tokens), "t1", 13);
 
             case 13:
               objectExpr = _context2.t1;
@@ -157,7 +135,7 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprArray",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprArray(tokens, parent) {
+    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprArray(tokens) {
       var firstToken, lastToken, node, index, valueTokens, vfStack, expectComma, token, _valueExpr, flag, _flag, valueExpr;
 
       return regeneratorRuntime.wrap(function handleExprArray$(_context3) {
@@ -165,75 +143,67 @@ var AST = /*#__PURE__*/function () {
           switch (_context3.prev = _context3.next) {
             case 0:
               firstToken = tokens[0];
-              lastToken = tokens[tokens.length - 1];
+              lastToken = tokens[tokens.length - 1]; // empty array
 
-              if (!(firstToken.type !== _token.TokenType.LeftBracket || lastToken.type !== _token.TokenType.RightBracket)) {
+              if (!(tokens.length === 2 && tokens[0].type === _token.TokenType.LeftBracket && tokens[1].type === _token.TokenType.RightBracket)) {
                 _context3.next = 4;
                 break;
               }
 
-              throw new Error("[array expression error] wrong bracket token");
+              return _context3.abrupt("return", new ASTNode(tokens, _expression.ExprType.Array));
 
             case 4:
-              if (!(tokens.length === 2 && tokens[0].type === _token.TokenType.LeftBracket && tokens[1].type === _token.TokenType.RightBracket)) {
-                _context3.next = 6;
-                break;
-              }
-
-              return _context3.abrupt("return", new ASTNode(tokens, _expression.ExprType.Array, parent));
-
-            case 6:
-              node = new ASTNode(tokens, _expression.ExprType.Array, parent);
+              node = new ASTNode(tokens, _expression.ExprType.Array);
               index = 1;
               valueTokens = [];
               vfStack = [];
               expectComma = true;
 
-            case 11:
+            case 9:
               if (!(index < tokens.length - 1)) {
-                _context3.next = 34;
+                _context3.next = 32;
                 break;
               }
 
               if (!(0, _yielder.yielder)()) {
-                _context3.next = 15;
+                _context3.next = 13;
                 break;
               }
 
-              _context3.next = 15;
+              _context3.next = 13;
               return;
 
-            case 15:
+            case 13:
               token = tokens[index];
 
               if (!(token.type === _token.TokenType.Comma && expectComma && isValueFinish(vfStack))) {
-                _context3.next = 28;
+                _context3.next = 26;
                 break;
               }
 
               if (!(valueTokens.length === 1)) {
-                _context3.next = 21;
+                _context3.next = 19;
                 break;
               }
 
-              _context3.t0 = this.handleExprValueDirect(valueTokens, node);
-              _context3.next = 23;
+              _context3.t0 = this.handleExprValueDirect(valueTokens);
+              _context3.next = 21;
               break;
 
-            case 21:
-              return _context3.delegateYield(this.handleExprValue(valueTokens, node), "t1", 22);
+            case 19:
+              return _context3.delegateYield(this.handleExprValue(valueTokens), "t1", 20);
 
-            case 22:
+            case 20:
               _context3.t0 = _context3.t1;
 
-            case 23:
+            case 21:
               _valueExpr = _context3.t0;
               valueTokens = [];
               node.addChild(_valueExpr);
-              _context3.next = 31;
+              _context3.next = 29;
               break;
 
-            case 28:
+            case 26:
               if (token.type === _token.TokenType.RightBrace || token.type === _token.TokenType.RightBracket) {
                 flag = token.type;
                 vfStack.push(flag);
@@ -250,33 +220,33 @@ var AST = /*#__PURE__*/function () {
                 vfStack = [];
               }
 
-            case 31:
+            case 29:
               index++;
-              _context3.next = 11;
+              _context3.next = 9;
               break;
 
-            case 34:
+            case 32:
               if (!(valueTokens.length === 1)) {
-                _context3.next = 38;
+                _context3.next = 36;
                 break;
               }
 
-              _context3.t2 = this.handleExprValueDirect(valueTokens, node);
-              _context3.next = 40;
+              _context3.t2 = this.handleExprValueDirect(valueTokens);
+              _context3.next = 38;
               break;
 
-            case 38:
-              return _context3.delegateYield(this.handleExprValue(valueTokens, node), "t3", 39);
+            case 36:
+              return _context3.delegateYield(this.handleExprValue(valueTokens), "t3", 37);
 
-            case 39:
+            case 37:
               _context3.t2 = _context3.t3;
 
-            case 40:
+            case 38:
               valueExpr = _context3.t2;
               node.addChild(valueExpr);
               return _context3.abrupt("return", node);
 
-            case 43:
+            case 41:
             case "end":
               return _context3.stop();
           }
@@ -285,117 +255,98 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprObject",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprObject(tokens, parent) {
-      var firstToken, lastToken, node, index, propExprNode, propTokens, valueTokens, vfStack, state, token, _valueExpr2, flag, valueExpr;
+    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprObject(tokens) {
+      var node, index, propExprNode, propTokens, valueTokens, vfStack, state, token, _valueExpr2, flag, valueExpr;
 
       return regeneratorRuntime.wrap(function handleExprObject$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              firstToken = tokens[0];
-              lastToken = tokens[tokens.length - 1];
-
-              if (!(firstToken.type !== _token.TokenType.LeftBrace || lastToken.type !== _token.TokenType.RightBrace)) {
-                _context4.next = 4;
-                break;
-              }
-
-              throw new Error("[object expression error] wrong brace token");
-
-            case 4:
               if (!(tokens.length === 2 && tokens[0].type === _token.TokenType.LeftBrace && tokens[1].type === _token.TokenType.RightBrace)) {
-                _context4.next = 6;
+                _context4.next = 2;
                 break;
               }
 
-              return _context4.abrupt("return", new ASTNode(tokens, _expression.ExprType.Object, parent));
+              return _context4.abrupt("return", new ASTNode(tokens, _expression.ExprType.Object));
 
-            case 6:
-              node = new ASTNode(tokens, _expression.ExprType.Object, parent);
+            case 2:
+              node = new ASTNode(tokens, _expression.ExprType.Object);
               index = 1;
               propTokens = [];
               valueTokens = [];
               vfStack = [];
               state = "prop";
 
-            case 12:
+            case 8:
               if (!(index < tokens.length - 1)) {
-                _context4.next = 52;
+                _context4.next = 46;
                 break;
               }
 
               if (!(0, _yielder.yielder)()) {
-                _context4.next = 16;
+                _context4.next = 12;
                 break;
               }
 
-              _context4.next = 16;
+              _context4.next = 12;
               return;
 
-            case 16:
+            case 12:
               token = tokens[index];
 
               if (!(token.type === _token.TokenType.Colon && state === "prop")) {
-                _context4.next = 24;
+                _context4.next = 20;
                 break;
               }
 
-              return _context4.delegateYield(this.handleExprProp(propTokens, node), "t0", 19);
+              return _context4.delegateYield(this.handleExprProp(propTokens), "t0", 15);
 
-            case 19:
+            case 15:
               propExprNode = _context4.t0;
               propTokens = [];
               state = "value";
-              _context4.next = 49;
+              _context4.next = 43;
               break;
 
-            case 24:
+            case 20:
               if (!(token.type === _token.TokenType.Comma && state === "prop" && isValueFinish(vfStack))) {
-                _context4.next = 37;
+                _context4.next = 33;
                 break;
               }
 
               if (!(valueTokens.length === 1)) {
-                _context4.next = 29;
+                _context4.next = 25;
                 break;
               }
 
-              _context4.t1 = this.handleExprValueDirect(valueTokens, node);
-              _context4.next = 31;
+              _context4.t1 = this.handleExprValueDirect(valueTokens);
+              _context4.next = 27;
               break;
 
-            case 29:
-              return _context4.delegateYield(this.handleExprValue(valueTokens, node), "t2", 30);
+            case 25:
+              return _context4.delegateYield(this.handleExprValue(valueTokens), "t2", 26);
 
-            case 30:
+            case 26:
               _context4.t1 = _context4.t2;
 
-            case 31:
+            case 27:
               _valueExpr2 = _context4.t1;
               valueTokens = [];
               propExprNode.addChild(_valueExpr2);
               node.addChild(propExprNode);
-              _context4.next = 49;
+              _context4.next = 43;
               break;
 
-            case 37:
+            case 33:
               _context4.t3 = state;
-              _context4.next = _context4.t3 === "prop" ? 40 : _context4.t3 === "value" ? 44 : 48;
+              _context4.next = _context4.t3 === "prop" ? 36 : _context4.t3 === "value" ? 38 : 42;
               break;
 
-            case 40:
-              if (!(propTokens.length !== 0)) {
-                _context4.next = 42;
-                break;
-              }
-
-              throw new Error("[object expression error] prop state got unexpected token");
-
-            case 42:
+            case 36:
               propTokens.push(token);
-              return _context4.abrupt("break", 49);
+              return _context4.abrupt("break", 43);
 
-            case 44:
+            case 38:
               if (token.type === _token.TokenType.RightBracket || token.type === _token.TokenType.RightBrace || token.type === _token.TokenType.LeftBracket || token.type === _token.TokenType.LeftBrace) {
                 flag = token.type;
                 vfStack.push(flag);
@@ -407,39 +358,39 @@ var AST = /*#__PURE__*/function () {
                 state = "prop";
               }
 
-              return _context4.abrupt("break", 49);
+              return _context4.abrupt("break", 43);
 
-            case 48:
+            case 42:
               throw new Error("[object expression error] unexpected state");
 
-            case 49:
+            case 43:
               index++;
-              _context4.next = 12;
+              _context4.next = 8;
               break;
 
-            case 52:
+            case 46:
               if (!(valueTokens.length === 1)) {
-                _context4.next = 56;
+                _context4.next = 50;
                 break;
               }
 
-              _context4.t4 = this.handleExprValueDirect(valueTokens, node);
-              _context4.next = 58;
+              _context4.t4 = this.handleExprValueDirect(valueTokens);
+              _context4.next = 52;
               break;
 
-            case 56:
-              return _context4.delegateYield(this.handleExprValue(valueTokens, node), "t5", 57);
+            case 50:
+              return _context4.delegateYield(this.handleExprValue(valueTokens), "t5", 51);
 
-            case 57:
+            case 51:
               _context4.t4 = _context4.t5;
 
-            case 58:
+            case 52:
               valueExpr = _context4.t4;
               propExprNode.addChild(valueExpr);
               node.addChild(propExprNode);
               return _context4.abrupt("return", node);
 
-            case 62:
+            case 56:
             case "end":
               return _context4.stop();
           }
@@ -448,7 +399,7 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprProp",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprProp(tokens, parent) {
+    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprProp(tokens) {
       var node, propName;
       return regeneratorRuntime.wrap(function handleExprProp$(_context5) {
         while (1) {
@@ -463,21 +414,13 @@ var AST = /*#__PURE__*/function () {
               return;
 
             case 3:
-              if (!(tokens.length !== 1 || tokens[0].type !== _token.TokenType.String)) {
-                _context5.next = 5;
-                break;
-              }
-
-              throw new Error("[prop expression error] invalid tokens input");
-
-            case 5:
-              node = new ASTNode(tokens, _expression.ExprType.Prop, parent);
+              node = new ASTNode(tokens, _expression.ExprType.Prop);
               propName = tokens[0].text;
               propName = propName.slice(1, propName.length - 1);
               node.propName = propName;
               return _context5.abrupt("return", node);
 
-            case 10:
+            case 8:
             case "end":
               return _context5.stop();
           }
@@ -486,8 +429,8 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprValueDirect",
-    value: function handleExprValueDirect(tokens, parent) {
-      var node = new ASTNode(tokens, _expression.ExprType.Value, parent);
+    value: function handleExprValueDirect(tokens) {
+      var node = new ASTNode(tokens, _expression.ExprType.Value);
       var tokenType = tokens[0].type;
 
       switch (tokenType) {
@@ -495,7 +438,7 @@ var AST = /*#__PURE__*/function () {
         case _token.TokenType.Boolean:
         case _token.TokenType.Number:
         case _token.TokenType.String:
-          node.value = new ASTNode(tokens, tokenType, node);
+          node.value = new ASTNode(tokens, tokenType);
           break;
 
         default:
@@ -506,7 +449,7 @@ var AST = /*#__PURE__*/function () {
     }
   }, {
     key: "handleExprValue",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprValue(tokens, parent) {
+    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprValue(tokens) {
       var node;
       return regeneratorRuntime.wrap(function handleExprValue$(_context6) {
         while (1) {
@@ -521,30 +464,14 @@ var AST = /*#__PURE__*/function () {
               return;
 
             case 3:
-              if (!(tokens.length === 0)) {
-                _context6.next = 5;
-                break;
-              }
-
-              throw new Error("[value expression error] empty value expr");
+              node = new ASTNode(tokens, _expression.ExprType.Value);
+              return _context6.delegateYield(this.handleExprJson(tokens), "t0", 5);
 
             case 5:
-              if (!(tokens[0].type !== _token.TokenType.LeftBracket && tokens[0].type !== _token.TokenType.LeftBrace)) {
-                _context6.next = 7;
-                break;
-              }
-
-              throw new Error("[value expression error] invalid tokens input");
-
-            case 7:
-              node = new ASTNode(tokens, _expression.ExprType.Value, parent);
-              return _context6.delegateYield(this.handleExprJson(tokens, _expression.ExprType.json, node), "t0", 9);
-
-            case 9:
               node.value = _context6.t0;
               return _context6.abrupt("return", node);
 
-            case 11:
+            case 7:
             case "end":
               return _context6.stop();
           }
@@ -596,13 +523,5 @@ function isValueFinish(stack) {
     _iterator.f();
   }
 
-  if (braceCount === 0 && bracketCount === 0) {
-    return true;
-  } else if (braceCount < 0) {
-    throw new Error("[isValueFinish] got unexpected token brace '}'");
-  } else if (bracketCount < 0) {
-    throw new Error("[isValueFinish] got unexpected token bracket ']'");
-  } else {
-    return false;
-  }
+  return braceCount === 0 && bracketCount === 0;
 }

@@ -25,7 +25,7 @@ export class ASTParser {
   }
 
   *getJson() {
-    let outputJson = yield* this.handleJson(this.ast);
+    let outputJson = yield* this.handleValue(this.ast);
     return outputJson;
   }
 
@@ -96,7 +96,7 @@ export class ASTParser {
         return num;
       case TokenType.String:
         token = astNode.tokens[0].text;
-        return yield* unescapeJsonString(token.slice(1, token.length - 1));
+        return token.slice(1, token.length - 1);
 
       case ExprType.Json:
         return yield* this.handleJson(astNode);
@@ -112,6 +112,7 @@ export function* parse(jsonString) {
   const tokenizer = new Tokenizer();
   yield;
   const tokens = yield* tokenizer.tokenize(jsonString);
+  debugger;
   const astInst = new AST(tokens);
   yield;
   const ast = yield* astInst.buildTree();
