@@ -136,117 +136,121 @@ var AST = /*#__PURE__*/function () {
   }, {
     key: "handleExprArray",
     value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprArray(tokens) {
-      var firstToken, lastToken, node, index, valueTokens, vfStack, expectComma, token, _valueExpr, flag, _flag, valueExpr;
+      var node, valueTokens, brace, bracket, index, length, token, _valueExpr, valueExpr;
 
       return regeneratorRuntime.wrap(function handleExprArray$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              firstToken = tokens[0];
-              lastToken = tokens[tokens.length - 1]; // empty array
-
               if (!(tokens.length === 2 && tokens[0].type === _token.TokenType.LeftBracket && tokens[1].type === _token.TokenType.RightBracket)) {
-                _context3.next = 4;
+                _context3.next = 2;
                 break;
               }
 
               return _context3.abrupt("return", new ASTNode(tokens, _expression.ExprType.Array));
 
-            case 4:
+            case 2:
               node = new ASTNode(tokens, _expression.ExprType.Array);
-              index = 1;
               valueTokens = [];
-              vfStack = [];
-              expectComma = true;
+              brace = 0;
+              bracket = 0;
+              index = 1, length = tokens.length - 1;
 
-            case 9:
-              if (!(index < tokens.length - 1)) {
-                _context3.next = 32;
+            case 7:
+              if (!(index < length)) {
+                _context3.next = 39;
                 break;
               }
 
               if (!(0, _yielder.yielder)()) {
-                _context3.next = 13;
+                _context3.next = 11;
                 break;
               }
 
-              _context3.next = 13;
+              _context3.next = 11;
               return;
 
-            case 13:
+            case 11:
               token = tokens[index];
 
-              if (!(token.type === _token.TokenType.Comma && expectComma && isValueFinish(vfStack))) {
-                _context3.next = 26;
+              if (!(token.type === _token.TokenType.Comma && brace === 0 && bracket === 0)) {
+                _context3.next = 24;
                 break;
               }
 
               if (!(valueTokens.length === 1)) {
-                _context3.next = 19;
+                _context3.next = 17;
                 break;
               }
 
               _context3.t0 = this.handleExprValueDirect(valueTokens);
-              _context3.next = 21;
+              _context3.next = 19;
               break;
 
-            case 19:
-              return _context3.delegateYield(this.handleExprValue(valueTokens), "t1", 20);
+            case 17:
+              return _context3.delegateYield(this.handleExprValue(valueTokens), "t1", 18);
 
-            case 20:
+            case 18:
               _context3.t0 = _context3.t1;
 
-            case 21:
+            case 19:
               _valueExpr = _context3.t0;
               valueTokens = [];
               node.addChild(_valueExpr);
-              _context3.next = 29;
+              _context3.next = 36;
               break;
 
-            case 26:
-              if (token.type === _token.TokenType.RightBrace || token.type === _token.TokenType.RightBracket) {
-                flag = token.type;
-                vfStack.push(flag);
-              } else if (token.type === _token.TokenType.LeftBrace || token.type === _token.TokenType.LeftBracket) {
-                _flag = token.type;
-                vfStack.push(_flag);
-                expectComma = false;
-              }
+            case 24:
+              _context3.t2 = token.type;
+              _context3.next = _context3.t2 === _token.TokenType.RightBrace ? 27 : _context3.t2 === _token.TokenType.RightBracket ? 29 : _context3.t2 === _token.TokenType.LeftBrace ? 31 : _context3.t2 === _token.TokenType.LeftBracket ? 33 : 35;
+              break;
 
-              valueTokens.push(token);
-
-              if (isValueFinish(vfStack)) {
-                expectComma = true;
-                vfStack = [];
-              }
+            case 27:
+              brace--;
+              return _context3.abrupt("break", 35);
 
             case 29:
+              bracket--;
+              return _context3.abrupt("break", 35);
+
+            case 31:
+              brace++;
+              return _context3.abrupt("break", 35);
+
+            case 33:
+              bracket++;
+              return _context3.abrupt("break", 35);
+
+            case 35:
+              valueTokens.push(token);
+
+            case 36:
               index++;
-              _context3.next = 9;
+              _context3.next = 7;
               break;
 
-            case 32:
+            case 39:
               if (!(valueTokens.length === 1)) {
-                _context3.next = 36;
+                _context3.next = 43;
                 break;
               }
 
-              _context3.t2 = this.handleExprValueDirect(valueTokens);
-              _context3.next = 38;
+              _context3.t3 = this.handleExprValueDirect(valueTokens);
+              _context3.next = 45;
               break;
 
-            case 36:
-              return _context3.delegateYield(this.handleExprValue(valueTokens), "t3", 37);
+            case 43:
+              return _context3.delegateYield(this.handleExprValue(valueTokens), "t4", 44);
 
-            case 37:
-              _context3.t2 = _context3.t3;
+            case 44:
+              _context3.t3 = _context3.t4;
 
-            case 38:
-              valueExpr = _context3.t2;
+            case 45:
+              valueExpr = _context3.t3;
               node.addChild(valueExpr);
               return _context3.abrupt("return", node);
 
-            case 41:
+            case 48:
             case "end":
               return _context3.stop();
           }
@@ -256,7 +260,7 @@ var AST = /*#__PURE__*/function () {
   }, {
     key: "handleExprObject",
     value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprObject(tokens) {
-      var node, index, propExprNode, propTokens, valueTokens, vfStack, state, token, _valueExpr2, flag, valueExpr;
+      var node, index, propExprNode, propTokens, valueTokens, brace, bracket, state, token, _valueExpr2, valueExpr;
 
       return regeneratorRuntime.wrap(function handleExprObject$(_context4) {
         while (1) {
@@ -274,123 +278,140 @@ var AST = /*#__PURE__*/function () {
               index = 1;
               propTokens = [];
               valueTokens = [];
-              vfStack = [];
+              brace = 0;
+              bracket = 0;
               state = "prop";
 
-            case 8:
+            case 9:
               if (!(index < tokens.length - 1)) {
-                _context4.next = 46;
+                _context4.next = 57;
                 break;
               }
 
               if (!(0, _yielder.yielder)()) {
-                _context4.next = 12;
+                _context4.next = 13;
                 break;
               }
 
-              _context4.next = 12;
+              _context4.next = 13;
               return;
 
-            case 12:
+            case 13:
               token = tokens[index];
 
               if (!(token.type === _token.TokenType.Colon && state === "prop")) {
-                _context4.next = 20;
+                _context4.next = 21;
                 break;
               }
 
-              return _context4.delegateYield(this.handleExprProp(propTokens), "t0", 15);
+              return _context4.delegateYield(this.handleExprProp(propTokens), "t0", 16);
 
-            case 15:
+            case 16:
               propExprNode = _context4.t0;
               propTokens = [];
               state = "value";
-              _context4.next = 43;
+              _context4.next = 54;
               break;
 
-            case 20:
-              if (!(token.type === _token.TokenType.Comma && state === "prop" && isValueFinish(vfStack))) {
-                _context4.next = 33;
+            case 21:
+              if (!(token.type === _token.TokenType.Comma && state === "prop" && brace === 0 && bracket === 0)) {
+                _context4.next = 34;
                 break;
               }
 
               if (!(valueTokens.length === 1)) {
-                _context4.next = 25;
+                _context4.next = 26;
                 break;
               }
 
               _context4.t1 = this.handleExprValueDirect(valueTokens);
-              _context4.next = 27;
+              _context4.next = 28;
               break;
 
-            case 25:
-              return _context4.delegateYield(this.handleExprValue(valueTokens), "t2", 26);
-
             case 26:
-              _context4.t1 = _context4.t2;
+              return _context4.delegateYield(this.handleExprValue(valueTokens), "t2", 27);
 
             case 27:
+              _context4.t1 = _context4.t2;
+
+            case 28:
               _valueExpr2 = _context4.t1;
               valueTokens = [];
               propExprNode.addChild(_valueExpr2);
               node.addChild(propExprNode);
-              _context4.next = 43;
+              _context4.next = 54;
               break;
 
-            case 33:
+            case 34:
               _context4.t3 = state;
-              _context4.next = _context4.t3 === "prop" ? 36 : _context4.t3 === "value" ? 38 : 42;
+              _context4.next = _context4.t3 === "prop" ? 37 : _context4.t3 === "value" ? 39 : 53;
               break;
 
-            case 36:
+            case 37:
               propTokens.push(token);
-              return _context4.abrupt("break", 43);
+              return _context4.abrupt("break", 54);
 
-            case 38:
-              if (token.type === _token.TokenType.RightBracket || token.type === _token.TokenType.RightBrace || token.type === _token.TokenType.LeftBracket || token.type === _token.TokenType.LeftBrace) {
-                flag = token.type;
-                vfStack.push(flag);
-              }
+            case 39:
+              _context4.t4 = token.type;
+              _context4.next = _context4.t4 === _token.TokenType.RightBrace ? 42 : _context4.t4 === _token.TokenType.RightBracket ? 44 : _context4.t4 === _token.TokenType.LeftBrace ? 46 : _context4.t4 === _token.TokenType.LeftBracket ? 48 : 50;
+              break;
 
+            case 42:
+              brace--;
+              return _context4.abrupt("break", 50);
+
+            case 44:
+              bracket--;
+              return _context4.abrupt("break", 50);
+
+            case 46:
+              brace++;
+              return _context4.abrupt("break", 50);
+
+            case 48:
+              bracket++;
+              return _context4.abrupt("break", 50);
+
+            case 50:
               valueTokens.push(token);
 
-              if (isValueFinish(vfStack)) {
+              if (brace === 0 && bracket === 0) {
                 state = "prop";
               }
 
-              return _context4.abrupt("break", 43);
+              return _context4.abrupt("break", 54);
 
-            case 42:
+            case 53:
               throw new Error("[object expression error] unexpected state");
 
-            case 43:
+            case 54:
               index++;
-              _context4.next = 8;
+              _context4.next = 9;
               break;
 
-            case 46:
+            case 57:
               if (!(valueTokens.length === 1)) {
-                _context4.next = 50;
+                _context4.next = 61;
                 break;
               }
 
-              _context4.t4 = this.handleExprValueDirect(valueTokens);
-              _context4.next = 52;
+              _context4.t5 = this.handleExprValueDirect(valueTokens);
+              _context4.next = 63;
               break;
 
-            case 50:
-              return _context4.delegateYield(this.handleExprValue(valueTokens), "t5", 51);
+            case 61:
+              return _context4.delegateYield(this.handleExprValue(valueTokens), "t6", 62);
 
-            case 51:
-              _context4.t4 = _context4.t5;
+            case 62:
+              _context4.t5 = _context4.t6;
 
-            case 52:
-              valueExpr = _context4.t4;
+            case 63:
+              valueExpr = _context4.t5;
               propExprNode.addChild(valueExpr);
               node.addChild(propExprNode);
               return _context4.abrupt("return", node);
 
-            case 56:
+            case 67:
             case "end":
               return _context4.stop();
           }

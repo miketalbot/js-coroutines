@@ -1,3 +1,7 @@
+#### 1.1.28
+
+- Massively improve performance by replacing Yastjson's stack based bracket analyser with a couple of ints
+
 #### 1.1.27
 
 - Improve performance by reducing yields during the tokenise phase to 1 in every 2048 characters
