@@ -79,7 +79,7 @@ function _run() {
               terminated = true;
 
               if (resolver) {
-                resolver.resolve(result);
+                resolver(result);
               }
             };
 
@@ -141,7 +141,7 @@ function _update() {
               terminated = true;
 
               if (resolver) {
-                resolver.resolve(result);
+                resolver(result);
               }
             };
 
@@ -292,7 +292,7 @@ function _runAsync() {
               terminated = true;
 
               if (resolver) {
-                resolver.resolve(result);
+                resolver(result);
               }
             };
 
