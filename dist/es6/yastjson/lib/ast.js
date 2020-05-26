@@ -17,28 +17,10 @@ import { TokenType } from "./token";
 import { ExprType } from "./expression";
 import { yielder } from "./yielder";
 
-const util = {
-  mapValue: function (obj) {
-    let out = [];
-    for (let key in obj) {
-      out.push(obj[key]);
-    }
-    return out;
-  },
-};
-const terminalSignals = util.mapValue(TokenType);
-const nonTerminalSignals = util.mapValue(ExprType);
-
 export class ASTNode {
-  constructor(tokens, type, parentNode) {
+  constructor(tokens, type) {
     this.type = type;
-    this.parentNode = parentNode;
-    if (terminalSignals.includes(this.type)) {
-      this.isTerm = true;
-      this.tokens = tokens;
-    } else if (nonTerminalSignals.includes(this.type)) {
-      this.isTerm = false;
-    }
+    this.tokens = tokens;
     this.childNodeList = [];
   }
 
@@ -54,20 +36,20 @@ export class AST {
   }
 
   *buildTree() {
-    let rootNode = yield* this.handleExprJson(this.tokens, null);
+    let rootNode = yield* this.handleExprJson(this.tokens);
     return rootNode;
   }
 
-  *handleExprJson(tokens, parent) {
+  *handleExprJson(tokens) {
     if (yielder()) yield;
-    let node = new ASTNode(tokens, ExprType.Json, parent);
+    let node = new ASTNode(tokens, ExprType.Json);
     let firstToken = tokens[0];
 
     if (firstToken.type === TokenType.LeftBracket) {
-      let arrayExpr = yield* this.handleExprArray(tokens, node);
+      let arrayExpr = yield* this.handleExprArray(tokens);
       node.addChild(arrayExpr);
     } else if (firstToken.type === TokenType.LeftBrace) {
-      let objectExpr = yield* this.handleExprObject(tokens, node);
+      let objectExpr = yield* this.handleExprObject(tokens);
       node.addChild(objectExpr);
     } else {
       throw new Error(
@@ -78,25 +60,18 @@ export class AST {
     return node;
   }
 
-  *handleExprArray(tokens, parent) {
+  *handleExprArray(tokens) {
     let firstToken = tokens[0];
     let lastToken = tokens[tokens.length - 1];
-    if (
-      firstToken.type !== TokenType.LeftBracket ||
-      lastToken.type !== TokenType.RightBracket
-    ) {
-      throw new Error(`[array expression error] wrong bracket token`);
-    }
-
     // empty array
     if (
       tokens.length === 2 &&
       tokens[0].type === TokenType.LeftBracket &&
       tokens[1].type === TokenType.RightBracket
     ) {
-      return new ASTNode(tokens, ExprType.Array, parent);
+      return new ASTNode(tokens, ExprType.Array);
     }
-    let node = new ASTNode(tokens, ExprType.Array, parent);
+    let node = new ASTNode(tokens, ExprType.Array);
     let index = 1;
     let valueTokens = [];
     let vfStack = [];
@@ -111,8 +86,8 @@ export class AST {
       ) {
         let valueExpr =
           valueTokens.length === 1
-            ? this.handleExprValueDirect(valueTokens, node)
-            : yield* this.handleExprValue(valueTokens, node);
+            ? this.handleExprValueDirect(valueTokens)
+            : yield* this.handleExprValue(valueTokens);
         valueTokens = [];
         node.addChild(valueExpr);
       } else {
@@ -143,33 +118,24 @@ export class AST {
     // last array value
     let valueExpr =
       valueTokens.length === 1
-        ? this.handleExprValueDirect(valueTokens, node)
-        : yield* this.handleExprValue(valueTokens, node);
+        ? this.handleExprValueDirect(valueTokens)
+        : yield* this.handleExprValue(valueTokens);
     node.addChild(valueExpr);
 
     return node;
   }
 
-  *handleExprObject(tokens, parent) {
-    let firstToken = tokens[0];
-    let lastToken = tokens[tokens.length - 1];
-    if (
-      firstToken.type !== TokenType.LeftBrace ||
-      lastToken.type !== TokenType.RightBrace
-    ) {
-      throw new Error(`[object expression error] wrong brace token`);
-    }
-
+  *handleExprObject(tokens) {
     // empty object
     if (
       tokens.length === 2 &&
       tokens[0].type === TokenType.LeftBrace &&
       tokens[1].type === TokenType.RightBrace
     ) {
-      return new ASTNode(tokens, ExprType.Object, parent);
+      return new ASTNode(tokens, ExprType.Object);
     }
 
-    let node = new ASTNode(tokens, ExprType.Object, parent);
+    let node = new ASTNode(tokens, ExprType.Object);
     let index = 1;
     let propExprNode;
     let propTokens = [];
@@ -180,7 +146,7 @@ export class AST {
       if (yielder()) yield;
       let token = tokens[index];
       if (token.type === TokenType.Colon && state === "prop") {
-        propExprNode = yield* this.handleExprProp(propTokens, node);
+        propExprNode = yield* this.handleExprProp(propTokens);
         propTokens = [];
         state = "value";
       } else if (
@@ -190,19 +156,14 @@ export class AST {
       ) {
         let valueExpr =
           valueTokens.length === 1
-            ? this.handleExprValueDirect(valueTokens, node)
-            : yield* this.handleExprValue(valueTokens, node);
+            ? this.handleExprValueDirect(valueTokens)
+            : yield* this.handleExprValue(valueTokens);
         valueTokens = [];
         propExprNode.addChild(valueExpr);
         node.addChild(propExprNode);
       } else {
         switch (state) {
           case "prop":
-            if (propTokens.length !== 0) {
-              throw new Error(
-                "[object expression error] prop state got unexpected token"
-              );
-            }
             propTokens.push(token);
             break;
           case "value":
@@ -231,30 +192,25 @@ export class AST {
     // last prop value
     let valueExpr =
       valueTokens.length === 1
-        ? this.handleExprValueDirect(valueTokens, node)
-        : yield* this.handleExprValue(valueTokens, node);
+        ? this.handleExprValueDirect(valueTokens)
+        : yield* this.handleExprValue(valueTokens);
     propExprNode.addChild(valueExpr);
     node.addChild(propExprNode);
 
     return node;
   }
 
-  *handleExprProp(tokens, parent) {
+  *handleExprProp(tokens) {
     if (yielder()) yield;
-    if (tokens.length !== 1 || tokens[0].type !== TokenType.String) {
-      throw new Error("[prop expression error] invalid tokens input");
-    }
-
-    let node = new ASTNode(tokens, ExprType.Prop, parent);
+    let node = new ASTNode(tokens, ExprType.Prop);
     let propName = tokens[0].text;
     propName = propName.slice(1, propName.length - 1);
     node.propName = propName;
-
     return node;
   }
 
-  handleExprValueDirect(tokens, parent) {
-    let node = new ASTNode(tokens, ExprType.Value, parent);
+  handleExprValueDirect(tokens) {
+    let node = new ASTNode(tokens, ExprType.Value);
 
     let tokenType = tokens[0].type;
     switch (tokenType) {
@@ -262,7 +218,7 @@ export class AST {
       case TokenType.Boolean:
       case TokenType.Number:
       case TokenType.String:
-        node.value = new ASTNode(tokens, tokenType, node);
+        node.value = new ASTNode(tokens, tokenType);
         break;
       default:
         throw new Error("[value expression error] unknown single token type");
@@ -271,22 +227,10 @@ export class AST {
     return node;
   }
 
-  *handleExprValue(tokens, parent) {
+  *handleExprValue(tokens) {
     if (yielder()) yield;
-    if (tokens.length === 0) {
-      throw new Error("[value expression error] empty value expr");
-    }
-    if (
-      tokens[0].type !== TokenType.LeftBracket &&
-      tokens[0].type !== TokenType.LeftBrace
-    ) {
-      throw new Error("[value expression error] invalid tokens input");
-    }
-
-    let node = new ASTNode(tokens, ExprType.Value, parent);
-
-    node.value = yield* this.handleExprJson(tokens, ExprType.json, node);
-
+    let node = new ASTNode(tokens, ExprType.Value);
+    node.value = yield* this.handleExprJson(tokens);
     return node;
   }
 }
@@ -312,14 +256,5 @@ function isValueFinish(stack) {
         break;
     }
   }
-
-  if (braceCount === 0 && bracketCount === 0) {
-    return true;
-  } else if (braceCount < 0) {
-    throw new Error("[isValueFinish] got unexpected token brace '}'");
-  } else if (bracketCount < 0) {
-    throw new Error("[isValueFinish] got unexpected token bracket ']'");
-  } else {
-    return false;
-  }
+  return braceCount === 0 && bracketCount === 0;
 }

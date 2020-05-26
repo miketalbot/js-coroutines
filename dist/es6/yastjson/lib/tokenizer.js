@@ -23,6 +23,40 @@ const STATE_KW_TRUE = "boolean_true";
 const STATE_KW_FALSE = "boolean_false";
 const STATE_NUMBER = "number";
 const STATE_STRING = "string";
+const STATE_STRING_ESCAPE = "escape";
+
+const INITIAL_STATE = {
+  "[": TokenType.LeftBracket,
+  "]": TokenType.RightBracket,
+  "{": TokenType.LeftBrace,
+  "}": TokenType.RightBrace,
+  ":": TokenType.Colon,
+  ",": TokenType.Comma,
+};
+
+const MOVE_TO = {
+  "[": STATE_INIT,
+  "]": STATE_INIT,
+  "{": STATE_INIT,
+  "}": STATE_INIT,
+  ":": STATE_INIT,
+  ",": STATE_INIT,
+  n: STATE_KW_NULL,
+  t: STATE_KW_TRUE,
+  f: STATE_KW_FALSE,
+  "0": STATE_NUMBER,
+  "1": STATE_NUMBER,
+  "2": STATE_NUMBER,
+  "3": STATE_NUMBER,
+  "4": STATE_NUMBER,
+  "5": STATE_NUMBER,
+  "6": STATE_NUMBER,
+  "7": STATE_NUMBER,
+  "8": STATE_NUMBER,
+  "9": STATE_NUMBER,
+  "-": STATE_NUMBER,
+  '"': STATE_STRING,
+};
 
 export class Tokenizer {
   constructor() {
@@ -35,8 +69,8 @@ export class Tokenizer {
 
   *tokenize(src) {
     this.sourceCode = src;
-
-    while (this.shouldContinue()) {
+    const length = src.length;
+    while (this.pos < length) {
       if (yielder()) yield;
       let text = this.read();
       let state = this.state;
@@ -59,6 +93,9 @@ export class Tokenizer {
         case STATE_STRING:
           this.handleTokenString(text);
           break;
+        case STATE_STRING_ESCAPE:
+          this.handleTokenStringEscape(text);
+          break;
         default:
           throw new Error(
             `finite state machine get an unexpected state: ${this.state}`
@@ -68,14 +105,8 @@ export class Tokenizer {
     return this.tokens;
   }
 
-  shouldContinue() {
-    return this.pos < this.sourceCode.length;
-  }
-
   read() {
-    const ch = this.sourceCode[this.pos];
-    this.pos++;
-    return ch;
+    return this.sourceCode[this.pos++];
   }
 
   peek() {
@@ -84,27 +115,7 @@ export class Tokenizer {
 
   initToken(text) {
     if (SINGLE_CHAR_TOKEN_LIST.includes(text)) {
-      let token;
-      switch (text) {
-        case "[":
-          token = { text, type: TokenType.LeftBracket };
-          break;
-        case "]":
-          token = { text, type: TokenType.RightBracket };
-          break;
-        case "{":
-          token = { text, type: TokenType.LeftBrace };
-          break;
-        case "}":
-          token = { text, type: TokenType.RightBrace };
-          break;
-        case ":":
-          token = { text, type: TokenType.Colon };
-          break;
-        default:
-          token = { text, type: TokenType.Comma };
-          break;
-      }
+      let token = { text, type: INITIAL_STATE[text] };
       this.tokens.push(token);
     } else if (!INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(text.charCodeAt(0))) {
       throw new Error(`state INIT, unexpected token ${text}`);
@@ -113,63 +124,17 @@ export class Tokenizer {
     if (nextCh === undefined) {
       return;
     }
-    switch (nextCh) {
-      case "[":
-      case "]":
-      case "{":
-      case "}":
-      case ":":
-      case ",":
-        this.state = STATE_INIT;
-        break;
-      case "n":
-        this.state = STATE_KW_NULL;
-        break;
-      case "t":
-        this.state = STATE_KW_TRUE;
-        break;
-      case "f":
-        this.state = STATE_KW_FALSE;
-        break;
-      case "0":
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-      case "5":
-      case "6":
-      case "7":
-      case "8":
-      case "9":
-      case "-":
-        this.state = STATE_NUMBER;
-        break;
-      case '"':
-        this.state = STATE_STRING;
-        break;
-      default:
-        if (!INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(nextCh.charCodeAt(0))) {
-          throw new Error(`state INIT, unexpected token ${nextCh}`);
-        }
-        break;
+    this.state = MOVE_TO[nextCh];
+    if (!this.state) {
+      throw new Error("Unexpected character in JSON");
     }
   }
 
   handleTokenNull(ch) {
     switch (ch) {
       case "n":
-        if (this.curToken !== "") {
-          throw new Error(`state NULL, unexpected token ${ch}`);
-        }
-        this.curToken = ch;
-        this.state = STATE_KW_NULL;
-        break;
       case "u":
-        if (this.curToken !== "n") {
-          throw new Error(`state NULL, unexpected token ${ch}`);
-        }
         this.curToken += ch;
-        this.state = STATE_KW_NULL;
         break;
       case "l":
         this.curToken += ch;
@@ -179,7 +144,6 @@ export class Tokenizer {
           this.curToken = "";
           this.state = STATE_INIT;
         } else if (this.curToken === "nul") {
-          this.state = STATE_KW_NULL;
         } else {
           throw new Error(`state NULL, unexpected token ${ch}`);
         }
@@ -192,25 +156,9 @@ export class Tokenizer {
   handleTokenTrue(ch) {
     switch (ch) {
       case "t":
-        if (this.curToken !== "") {
-          throw new Error(`state TRUE, unexpected token ${ch}`);
-        }
-        this.curToken = ch;
-        this.state = STATE_KW_TRUE;
-        break;
       case "r":
-        if (this.curToken !== "t") {
-          throw new Error(`state TRUE, unexpected token ${ch}`);
-        }
-        this.curToken += ch;
-        this.state = STATE_KW_TRUE;
-        break;
       case "u":
-        if (this.curToken !== "tr") {
-          throw new Error(`state TRUE, unexpected token ${ch}`);
-        }
         this.curToken += ch;
-        this.state = STATE_KW_TRUE;
         break;
       case "e":
         if (this.curToken !== "tru") {
@@ -230,20 +178,10 @@ export class Tokenizer {
   handleTokenFalse(ch) {
     switch (ch) {
       case "f":
-        this.curToken = ch;
-        this.state = STATE_KW_FALSE;
-        break;
       case "a":
-        this.curToken += ch;
-        this.state = STATE_KW_FALSE;
-        break;
       case "l":
-        this.curToken += ch;
-        this.state = STATE_KW_FALSE;
-        break;
       case "s":
         this.curToken += ch;
-        this.state = STATE_KW_FALSE;
         break;
       case "e":
         this.curToken += ch;
@@ -271,11 +209,8 @@ export class Tokenizer {
       case "8":
       case "9":
         this.curToken += ch;
-
         nextCh = this.peek();
-        if (/[0-9]|\.|-/.test(nextCh)) {
-          this.state = STATE_NUMBER;
-        } else {
+        if (!/[0-9]|\.|-/.test(nextCh)) {
           let token = { text: this.curToken, type: TokenType.Number };
           this.tokens.push(token);
           this.curToken = "";
@@ -283,57 +218,36 @@ export class Tokenizer {
         }
         break;
       case "-":
-        if (!this.curToken === "") {
-          throw new Error(`state NUMBER, unexpected token ${ch}`);
-        }
-        this.curToken += ch;
-        nextCh = this.peek();
-        if (/[0-9]/.test(nextCh)) {
-          this.state = STATE_NUMBER;
-        } else {
-          throw new Error(`state NUMBER, unexpected token ${ch}`);
-        }
-        break;
       case ".":
-        if (
-          this.curToken === "" ||
-          !/[0-9]/.test(this.curToken[this.curToken.length - 1])
-        ) {
-          throw new Error(`state NUMBER, unexpected token ${ch}`);
-        }
         this.curToken += ch;
-        nextCh = this.peek();
-        if (/[0-9]/.test(nextCh)) {
-          this.state = STATE_NUMBER;
-        } else {
-          throw new Error(`state NUMBER, unexpected token ${ch}`);
-        }
         break;
       default:
         throw new Error(`state NUMBER, unexpected token ${ch}`);
     }
   }
 
+  handleTokenStringEscape(ch) {
+    if (ch === "u") {
+      this.curToken += JSON.parse(
+        `"\\u${this.read()}${this.read()}${this.read()}${this.read()}"`
+      );
+      this.state = STATE_STRING;
+      return;
+    }
+    this.curToken += JSON.parse(`"\\${ch}"`);
+    this.state = STATE_STRING;
+  }
+
   handleTokenString(ch) {
     switch (ch) {
+      case "\\":
+        this.state = STATE_STRING_ESCAPE;
+        break;
       case '"':
         if (this.curToken === "") {
           this.curToken = ch;
-          this.state = STATE_STRING;
         } else {
           this.curToken += ch;
-          if (this.curToken[this.curToken.length - 2] === "\\") {
-            let pos = this.curToken.length - 3;
-            let slashCount = 1;
-            while (this.curToken[pos] === "\\") {
-              slashCount++;
-              pos++;
-            }
-            if (slashCount % 2 === 1) {
-              this.state = STATE_STRING;
-              break;
-            }
-          }
           let token = { text: this.curToken, type: TokenType.String };
           this.tokens.push(token);
           this.curToken = "";
@@ -341,12 +255,7 @@ export class Tokenizer {
         }
         break;
       default:
-        try {
-          this.curToken += ch;
-          this.state = STATE_STRING;
-        } catch (e) {
-          throw new Error(`state STRING, unexpected token ${ch}`);
-        }
+        this.curToken += ch;
         break;
     }
   }
