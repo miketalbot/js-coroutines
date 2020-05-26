@@ -61,8 +61,6 @@ export class AST {
   }
 
   *handleExprArray(tokens) {
-    let firstToken = tokens[0];
-    let lastToken = tokens[tokens.length - 1];
     // empty array
     if (
       tokens.length === 2 &&
@@ -72,18 +70,15 @@ export class AST {
       return new ASTNode(tokens, ExprType.Array);
     }
     let node = new ASTNode(tokens, ExprType.Array);
-    let index = 1;
+
     let valueTokens = [];
-    let vfStack = [];
-    let expectComma = true;
-    for (; index < tokens.length - 1; index++) {
+    let brace = 0;
+    let bracket = 0;
+
+    for (let index = 1, length = tokens.length - 1; index < length; index++) {
       if (yielder()) yield;
       let token = tokens[index];
-      if (
-        token.type === TokenType.Comma &&
-        expectComma &&
-        isValueFinish(vfStack)
-      ) {
+      if (token.type === TokenType.Comma && brace === 0 && bracket === 0) {
         let valueExpr =
           valueTokens.length === 1
             ? this.handleExprValueDirect(valueTokens)
@@ -91,27 +86,22 @@ export class AST {
         valueTokens = [];
         node.addChild(valueExpr);
       } else {
-        if (
-          token.type === TokenType.RightBrace ||
-          token.type === TokenType.RightBracket
-        ) {
-          let flag = token.type;
-          vfStack.push(flag);
-        } else if (
-          token.type === TokenType.LeftBrace ||
-          token.type === TokenType.LeftBracket
-        ) {
-          let flag = token.type;
-          vfStack.push(flag);
-          expectComma = false;
+        switch (token.type) {
+          case TokenType.RightBrace:
+            brace--;
+            break;
+          case TokenType.RightBracket:
+            bracket--;
+            break;
+          case TokenType.LeftBrace:
+            brace++;
+            break;
+          case TokenType.LeftBracket:
+            bracket++;
+            break;
+          default:
         }
-
         valueTokens.push(token);
-
-        if (isValueFinish(vfStack)) {
-          expectComma = true;
-          vfStack = [];
-        }
       }
     }
 
@@ -140,7 +130,8 @@ export class AST {
     let propExprNode;
     let propTokens = [];
     let valueTokens = [];
-    let vfStack = [];
+    let brace = 0;
+    let bracket = 0;
     let state = "prop";
     for (; index < tokens.length - 1; index++) {
       if (yielder()) yield;
@@ -152,7 +143,8 @@ export class AST {
       } else if (
         token.type === TokenType.Comma &&
         state === "prop" &&
-        isValueFinish(vfStack)
+        brace === 0 &&
+        bracket === 0
       ) {
         let valueExpr =
           valueTokens.length === 1
@@ -167,19 +159,25 @@ export class AST {
             propTokens.push(token);
             break;
           case "value":
-            if (
-              token.type === TokenType.RightBracket ||
-              token.type === TokenType.RightBrace ||
-              token.type === TokenType.LeftBracket ||
-              token.type === TokenType.LeftBrace
-            ) {
-              let flag = token.type;
-              vfStack.push(flag);
+            switch (token.type) {
+              case TokenType.RightBrace:
+                brace--;
+                break;
+              case TokenType.RightBracket:
+                bracket--;
+                break;
+              case TokenType.LeftBrace:
+                brace++;
+                break;
+              case TokenType.LeftBracket:
+                bracket++;
+                break;
+              default:
             }
 
             valueTokens.push(token);
 
-            if (isValueFinish(vfStack)) {
+            if (brace === 0 && bracket === 0) {
               state = "prop";
             }
             break;
