@@ -10,10 +10,6 @@ var _coroutines = _interopRequireDefault(require("./coroutines"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function yielding(fn) {
   var frequency = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 8;
   var yieldCount = 0;
@@ -47,47 +43,27 @@ function yielding(fn) {
 }
 
 function wrapAsPromise(coroutine) {
-  return /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-    var _len,
-        params,
-        _key,
-        _args3 = arguments;
+  return function () {
+    for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
+      params[_key] = arguments[_key];
+    }
 
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            for (_len = _args3.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
-              params[_key] = _args3[_key];
-            }
+    return (0, _coroutines.default)( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              return _context2.delegateYield(coroutine.apply(void 0, params), "t0", 1);
 
-            _context3.next = 3;
-            return (0, _coroutines.default)( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-              return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                while (1) {
-                  switch (_context2.prev = _context2.next) {
-                    case 0:
-                      return _context2.delegateYield(coroutine.apply(void 0, params), "t0", 1);
+            case 1:
+              return _context2.abrupt("return", _context2.t0);
 
-                    case 1:
-                      return _context2.abrupt("return", _context2.t0);
-
-                    case 2:
-                    case "end":
-                      return _context2.stop();
-                  }
-                }
-              }, _callee2);
-            }));
-
-          case 3:
-            return _context3.abrupt("return", _context3.sent);
-
-          case 4:
-          case "end":
-            return _context3.stop();
+            case 2:
+            case "end":
+              return _context2.stop();
+          }
         }
-      }
-    }, _callee3);
-  }));
+      }, _callee2);
+    }));
+  };
 }
