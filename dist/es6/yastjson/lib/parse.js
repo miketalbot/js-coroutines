@@ -17,6 +17,7 @@ import { AST } from "./ast";
 import { ExprType } from "./expression";
 import { TokenType } from "./token";
 import { yielder } from "./yielder";
+import { unescapeJsonString } from "./escape";
 
 export class ASTParser {
   constructor(ast) {
@@ -95,7 +96,8 @@ export class ASTParser {
         return num;
       case TokenType.String:
         token = astNode.tokens[0].text;
-        return token.slice(1, token.length - 1);
+        return yield* unescapeJsonString(token.slice(1, token.length - 1));
+
       case ExprType.Json:
         return yield* this.handleJson(astNode);
       default:

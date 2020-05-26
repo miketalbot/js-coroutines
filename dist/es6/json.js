@@ -13,16 +13,15 @@ var gap;
 var indent;
 var meta;
 
-var yieldCount = 0
-function yielder () {
+var yieldCount = 0;
+function yielder() {
   yieldCount++;
   if (yieldCount > 256) {
     yieldCount = 0;
     return true;
   }
   return false;
-};
-
+}
 
 function* quote(string) {
   let result = '"';
@@ -58,6 +57,14 @@ function* str(key, holder, ctrl) {
 
   // If we were called with a replacer function, then call the replacer to
   // obtain a replacement value.
+
+  if (
+    value &&
+    typeof value === "object" &&
+    typeof value.toJSON === "function"
+  ) {
+    value = value.toJSON(key);
+  }
 
   if (typeof rep === "function") {
     value = rep.call(holder, key, value);

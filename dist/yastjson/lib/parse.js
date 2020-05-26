@@ -16,6 +16,8 @@ var _token = require("./token");
 
 var _yielder = require("./yielder");
 
+var _escape = require("./escape");
+
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(parse);
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
@@ -239,7 +241,7 @@ var ASTParser = /*#__PURE__*/function () {
 
             case 3:
               _context3.t0 = astNode.type;
-              _context3.next = _context3.t0 === _token.TokenType.Null ? 6 : _context3.t0 === _token.TokenType.Boolean ? 7 : _context3.t0 === _token.TokenType.Number ? 17 : _context3.t0 === _token.TokenType.String ? 22 : _context3.t0 === _expression.ExprType.Json ? 24 : 26;
+              _context3.next = _context3.t0 === _token.TokenType.Null ? 6 : _context3.t0 === _token.TokenType.Boolean ? 7 : _context3.t0 === _token.TokenType.Number ? 17 : _context3.t0 === _token.TokenType.String ? 22 : _context3.t0 === _expression.ExprType.Json ? 25 : 27;
               break;
 
             case 6:
@@ -282,18 +284,21 @@ var ASTParser = /*#__PURE__*/function () {
 
             case 22:
               token = astNode.tokens[0].text;
-              return _context3.abrupt("return", token.slice(1, token.length - 1));
+              return _context3.delegateYield((0, _escape.unescapeJsonString)(token.slice(1, token.length - 1)), "t1", 24);
 
             case 24:
-              return _context3.delegateYield(this.handleJson(astNode), "t1", 25);
-
-            case 25:
               return _context3.abrupt("return", _context3.t1);
 
+            case 25:
+              return _context3.delegateYield(this.handleJson(astNode), "t2", 26);
+
             case 26:
-              throw new Error("[parse AST error] unexpected node type, expect a valid Value node");
+              return _context3.abrupt("return", _context3.t2);
 
             case 27:
+              throw new Error("[parse AST error] unexpected node type, expect a valid Value node");
+
+            case 28:
             case "end":
               return _context3.stop();
           }

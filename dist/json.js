@@ -36,8 +36,6 @@ function yielder() {
   return false;
 }
 
-;
-
 function quote(string) {
   var result, i, l, c, r;
   return regeneratorRuntime.wrap(function quote$(_context) {
@@ -114,42 +112,46 @@ function str(key, holder, ctrl) {
           value = holder[key]; // If we were called with a replacer function, then call the replacer to
           // obtain a replacement value.
 
+          if (value && _typeof(value) === "object" && typeof value.toJSON === "function") {
+            value = value.toJSON(key);
+          }
+
           if (typeof rep === "function") {
             value = rep.call(holder, key, value);
           } // What happens next depends on the value's type.
 
 
           _context2.t0 = _typeof(value);
-          _context2.next = _context2.t0 === "string" ? 10 : _context2.t0 === "number" ? 12 : _context2.t0 === "boolean" ? 13 : _context2.t0 === "null" ? 13 : 14;
+          _context2.next = _context2.t0 === "string" ? 11 : _context2.t0 === "number" ? 13 : _context2.t0 === "boolean" ? 14 : _context2.t0 === "null" ? 14 : 15;
           break;
 
-        case 10:
-          return _context2.delegateYield(quote(value), "t1", 11);
-
         case 11:
-          return _context2.abrupt("return", _context2.t1);
+          return _context2.delegateYield(quote(value), "t1", 12);
 
         case 12:
-          return _context2.abrupt("return", isFinite(value) ? String(value) : "null");
+          return _context2.abrupt("return", _context2.t1);
 
         case 13:
-          return _context2.abrupt("return", String(value));
+          return _context2.abrupt("return", isFinite(value) ? String(value) : "null");
 
         case 14:
+          return _context2.abrupt("return", String(value));
+
+        case 15:
           if (value) {
-            _context2.next = 16;
+            _context2.next = 17;
             break;
           }
 
           return _context2.abrupt("return", "null");
 
-        case 16:
+        case 17:
           // Make an array to hold the partial results of stringifying this object value.
           gap += indent;
           partial = []; // Is the value an array?
 
           if (!(Object.prototype.toString.apply(value) === "[object Array]")) {
-            _context2.next = 33;
+            _context2.next = 34;
             break;
           }
 
@@ -159,64 +161,64 @@ function str(key, holder, ctrl) {
           v = "[";
           i = 0;
 
-        case 22:
+        case 23:
           if (!(i < length)) {
-            _context2.next = 32;
+            _context2.next = 33;
             break;
           }
 
           _context2.t2 = v;
-          return _context2.delegateYield(str(i, value, ctrl) || "null", "t3", 25);
+          return _context2.delegateYield(str(i, value, ctrl) || "null", "t3", 26);
 
-        case 25:
+        case 26:
           _context2.t4 = _context2.t3;
           _context2.t5 = _context2.t2 + _context2.t4;
           _context2.t6 = i !== length - 1 ? "," : "";
           v = _context2.t5 + _context2.t6;
 
-        case 29:
+        case 30:
           i += 1;
-          _context2.next = 22;
+          _context2.next = 23;
           break;
 
-        case 32:
+        case 33:
           return _context2.abrupt("return", v + "]");
 
-        case 33:
+        case 34:
           if (!(rep && _typeof(rep) === "object")) {
-            _context2.next = 55;
+            _context2.next = 56;
             break;
           }
 
           length = rep.length;
           i = 0;
 
-        case 36:
+        case 37:
           if (!(i < length)) {
-            _context2.next = 53;
+            _context2.next = 54;
             break;
           }
 
           if (!(typeof rep[i] === "string")) {
-            _context2.next = 50;
+            _context2.next = 51;
             break;
           }
 
           k = rep[i];
-          return _context2.delegateYield(str(k, value, ctrl), "t7", 40);
+          return _context2.delegateYield(str(k, value, ctrl), "t7", 41);
 
-        case 40:
+        case 41:
           v = _context2.t7;
 
           if (!v) {
-            _context2.next = 50;
+            _context2.next = 51;
             break;
           }
 
           _context2.t8 = partial;
-          return _context2.delegateYield(quote(k), "t9", 44);
+          return _context2.delegateYield(quote(k), "t9", 45);
 
-        case 44:
+        case 45:
           _context2.t10 = _context2.t9;
           _context2.t11 = gap ? ": " : ":";
           _context2.t12 = _context2.t10 + _context2.t11;
@@ -225,45 +227,45 @@ function str(key, holder, ctrl) {
 
           _context2.t8.push.call(_context2.t8, _context2.t14);
 
-        case 50:
+        case 51:
           i += 1;
-          _context2.next = 36;
+          _context2.next = 37;
           break;
 
-        case 53:
-          _context2.next = 72;
+        case 54:
+          _context2.next = 73;
           break;
-
-        case 55:
-          _context2.t15 = regeneratorRuntime.keys(value);
 
         case 56:
+          _context2.t15 = regeneratorRuntime.keys(value);
+
+        case 57:
           if ((_context2.t16 = _context2.t15()).done) {
-            _context2.next = 72;
+            _context2.next = 73;
             break;
           }
 
           k = _context2.t16.value;
 
           if (!Object.prototype.hasOwnProperty.call(value, k)) {
-            _context2.next = 70;
+            _context2.next = 71;
             break;
           }
 
-          return _context2.delegateYield(str(k, value, ctrl), "t17", 60);
+          return _context2.delegateYield(str(k, value, ctrl), "t17", 61);
 
-        case 60:
+        case 61:
           v = _context2.t17;
 
           if (!v) {
-            _context2.next = 70;
+            _context2.next = 71;
             break;
           }
 
           _context2.t18 = partial;
-          return _context2.delegateYield(quote(k), "t19", 64);
+          return _context2.delegateYield(quote(k), "t19", 65);
 
-        case 64:
+        case 65:
           _context2.t20 = _context2.t19;
           _context2.t21 = gap ? ": " : ":";
           _context2.t22 = _context2.t20 + _context2.t21;
@@ -272,18 +274,18 @@ function str(key, holder, ctrl) {
 
           _context2.t18.push.call(_context2.t18, _context2.t24);
 
-        case 70:
-          _context2.next = 56;
+        case 71:
+          _context2.next = 57;
           break;
 
-        case 72:
+        case 73:
           // Join all of the member texts together, separated with commas,
           // and wrap them in braces.
           v = partial.length === 0 ? "{}" : gap ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}" : "{" + partial.join(",") + "}";
           gap = mind;
           return _context2.abrupt("return", v);
 
-        case 75:
+        case 76:
         case "end":
           return _context2.stop();
       }
