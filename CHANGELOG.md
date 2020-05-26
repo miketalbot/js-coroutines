@@ -1,3 +1,7 @@
+#### 1.1.26
+
+- Rewrite JSON tokenizer and AST for performance (again!)
+
 #### 1.1.25
 
 - Fix a problem with escaped JSON strings not being fully handled by yastjson
