@@ -1,3 +1,8 @@
+#### 1.1.25
+
+- Fix a problem with escaped JSON strings not being fully handled by yastjson
+- Reintroduce .toJSON() in stringify
+
 #### 1.1.24
 
 - Made sure Async functions return a terminatable promise
