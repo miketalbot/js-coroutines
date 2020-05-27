@@ -73,8 +73,7 @@ export class Tokenizer {
     while (this.pos < length) {
       if ((this.pos & 15) == 0 && yielder()) yield;
       let text = this.read();
-      let state = this.state;
-      switch (state) {
+      switch (this.state) {
         case STATE_INIT:
           this.initToken(text);
           break;
@@ -113,13 +112,12 @@ export class Tokenizer {
     return this.sourceCode[this.pos];
   }
 
-  initToken(text) {
-    if (SINGLE_CHAR_TOKEN_LIST.includes(text)) {
-      let token = { text, type: INITIAL_STATE[text] };
-      this.tokens.push(token);
-    } else if (!INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(text.charCodeAt(0))) {
-      throw new Error(`state INIT, unexpected token ${text}`);
+  initToken(ch) {
+    const type = INITIAL_STATE[ch];
+    if (!type && !INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(ch.charCodeAt(0))) {
+      throw new Error(`state INIT, unexpected token ${ch}`);
     }
+    this.tokens.push({ text: ch, type });
     let nextCh = this.peek();
     if (nextCh === undefined) {
       return;
@@ -196,7 +194,6 @@ export class Tokenizer {
   }
 
   handleTokenNumber(ch) {
-    let nextCh;
     switch (ch) {
       case "0":
       case "1":
@@ -209,8 +206,7 @@ export class Tokenizer {
       case "8":
       case "9":
         this.curToken += ch;
-        nextCh = this.peek();
-        if (!/[0-9]|\.|-/.test(nextCh)) {
+        if (!/[0-9]|\.|-/.test(this.peek())) {
           let token = { text: this.curToken, type: TokenType.Number };
           this.tokens.push(token);
           this.curToken = "";

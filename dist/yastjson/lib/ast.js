@@ -11,12 +11,6 @@ var _expression = require("./expression");
 
 var _yielder = require("./yielder");
 
-function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -49,13 +43,11 @@ var AST = /*#__PURE__*/function () {
     _classCallCheck(this, AST);
 
     this.tokens = tokens;
-    this.buildTree();
   }
 
   _createClass(AST, [{
     key: "buildTree",
     value: /*#__PURE__*/regeneratorRuntime.mark(function buildTree() {
-      var rootNode;
       return regeneratorRuntime.wrap(function buildTree$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -63,10 +55,9 @@ var AST = /*#__PURE__*/function () {
               return _context.delegateYield(this.handleExprJson(this.tokens), "t0", 1);
 
             case 1:
-              rootNode = _context.t0;
-              return _context.abrupt("return", rootNode);
+              return _context.abrupt("return", _context.t0);
 
-            case 3:
+            case 2:
             case "end":
               return _context.stop();
           }
@@ -260,7 +251,7 @@ var AST = /*#__PURE__*/function () {
   }, {
     key: "handleExprObject",
     value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprObject(tokens) {
-      var node, index, propExprNode, propTokens, valueTokens, brace, bracket, state, token, _valueExpr2, valueExpr;
+      var node, propExprNode, propTokens, valueTokens, brace, bracket, state, index, length, token, _valueExpr2, valueExpr;
 
       return regeneratorRuntime.wrap(function handleExprObject$(_context4) {
         while (1) {
@@ -275,15 +266,15 @@ var AST = /*#__PURE__*/function () {
 
             case 2:
               node = new ASTNode(tokens, _expression.ExprType.Object);
-              index = 1;
               propTokens = [];
               valueTokens = [];
               brace = 0;
               bracket = 0;
               state = "prop";
+              index = 1, length = tokens.length - 1;
 
             case 9:
-              if (!(index < tokens.length - 1)) {
+              if (!(index < length)) {
                 _context4.next = 57;
                 break;
               }
@@ -421,7 +412,7 @@ var AST = /*#__PURE__*/function () {
   }, {
     key: "handleExprProp",
     value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprProp(tokens) {
-      var node, propName;
+      var node;
       return regeneratorRuntime.wrap(function handleExprProp$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -436,12 +427,10 @@ var AST = /*#__PURE__*/function () {
 
             case 3:
               node = new ASTNode(tokens, _expression.ExprType.Prop);
-              propName = tokens[0].text;
-              propName = propName.slice(1, propName.length - 1);
-              node.propName = propName;
+              node.propName = tokens[0].text.slice(1, -1);
               return _context5.abrupt("return", node);
 
-            case 8:
+            case 6:
             case "end":
               return _context5.stop();
           }
@@ -505,44 +494,3 @@ var AST = /*#__PURE__*/function () {
 }();
 
 exports.AST = AST;
-
-function isValueFinish(stack) {
-  var braceCount = 0;
-  var bracketCount = 0;
-
-  var _iterator = _createForOfIteratorHelper(stack),
-      _step;
-
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var token = _step.value;
-
-      switch (token) {
-        case _token.TokenType.LeftBrace:
-          braceCount++;
-          break;
-
-        case _token.TokenType.LeftBracket:
-          bracketCount++;
-          break;
-
-        case _token.TokenType.RightBrace:
-          braceCount--;
-          break;
-
-        case _token.TokenType.RightBracket:
-          bracketCount--;
-          break;
-
-        default:
-          break;
-      }
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-
-  return braceCount === 0 && bracketCount === 0;
-}

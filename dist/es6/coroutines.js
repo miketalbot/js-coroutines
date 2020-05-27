@@ -1,10 +1,6 @@
 import "requestidlecallback-polyfill";
 
-export async function run(
-  coroutine,
-  loopWhileMsRemains = 1,
-  timeout = 16 * 10
-) {
+export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
   const options = { timeout };
   let terminated = false;
   let resolver = null;
@@ -47,7 +43,7 @@ export async function run(
   return result;
 }
 
-export async function update(coroutine) {
+export function update(coroutine) {
   let terminated = false;
   let resolver = null;
   const result = new Promise(function (resolve, reject) {
@@ -84,11 +80,7 @@ export async function update(coroutine) {
   return result;
 }
 
-export async function runAsync(
-  coroutine,
-  loopWhileMsRemains = 1,
-  timeout = 160
-) {
+export function runAsync(coroutine, loopWhileMsRemains = 1, timeout = 160) {
   const options = { timeout };
   let terminated = false;
   let resolver = null;

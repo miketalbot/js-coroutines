@@ -70,7 +70,7 @@ var Tokenizer = /*#__PURE__*/function () {
   _createClass(Tokenizer, [{
     key: "tokenize",
     value: /*#__PURE__*/regeneratorRuntime.mark(function tokenize(src) {
-      var length, text, state;
+      var length, text;
       return regeneratorRuntime.wrap(function tokenize$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -80,7 +80,7 @@ var Tokenizer = /*#__PURE__*/function () {
 
             case 2:
               if (!(this.pos < length)) {
-                _context.next = 28;
+                _context.next = 27;
                 break;
               }
 
@@ -94,50 +94,49 @@ var Tokenizer = /*#__PURE__*/function () {
 
             case 6:
               text = this.read();
-              state = this.state;
-              _context.t0 = state;
-              _context.next = _context.t0 === STATE_INIT ? 11 : _context.t0 === STATE_KW_NULL ? 13 : _context.t0 === STATE_KW_TRUE ? 15 : _context.t0 === STATE_KW_FALSE ? 17 : _context.t0 === STATE_NUMBER ? 19 : _context.t0 === STATE_STRING ? 21 : _context.t0 === STATE_STRING_ESCAPE ? 23 : 25;
+              _context.t0 = this.state;
+              _context.next = _context.t0 === STATE_INIT ? 10 : _context.t0 === STATE_KW_NULL ? 12 : _context.t0 === STATE_KW_TRUE ? 14 : _context.t0 === STATE_KW_FALSE ? 16 : _context.t0 === STATE_NUMBER ? 18 : _context.t0 === STATE_STRING ? 20 : _context.t0 === STATE_STRING_ESCAPE ? 22 : 24;
               break;
 
-            case 11:
+            case 10:
               this.initToken(text);
-              return _context.abrupt("break", 26);
+              return _context.abrupt("break", 25);
 
-            case 13:
+            case 12:
               this.handleTokenNull(text);
-              return _context.abrupt("break", 26);
+              return _context.abrupt("break", 25);
 
-            case 15:
+            case 14:
               this.handleTokenTrue(text);
-              return _context.abrupt("break", 26);
+              return _context.abrupt("break", 25);
 
-            case 17:
+            case 16:
               this.handleTokenFalse(text);
-              return _context.abrupt("break", 26);
+              return _context.abrupt("break", 25);
 
-            case 19:
+            case 18:
               this.handleTokenNumber(text);
-              return _context.abrupt("break", 26);
+              return _context.abrupt("break", 25);
 
-            case 21:
+            case 20:
               this.handleTokenString(text);
-              return _context.abrupt("break", 26);
+              return _context.abrupt("break", 25);
 
-            case 23:
+            case 22:
               this.handleTokenStringEscape(text);
-              return _context.abrupt("break", 26);
+              return _context.abrupt("break", 25);
 
-            case 25:
+            case 24:
               throw new Error("finite state machine get an unexpected state: ".concat(this.state));
 
-            case 26:
+            case 25:
               _context.next = 2;
               break;
 
-            case 28:
+            case 27:
               return _context.abrupt("return", this.tokens);
 
-            case 29:
+            case 28:
             case "end":
               return _context.stop();
           }
@@ -156,17 +155,17 @@ var Tokenizer = /*#__PURE__*/function () {
     }
   }, {
     key: "initToken",
-    value: function initToken(text) {
-      if (SINGLE_CHAR_TOKEN_LIST.includes(text)) {
-        var token = {
-          text: text,
-          type: INITIAL_STATE[text]
-        };
-        this.tokens.push(token);
-      } else if (!INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(text.charCodeAt(0))) {
-        throw new Error("state INIT, unexpected token ".concat(text));
+    value: function initToken(ch) {
+      var type = INITIAL_STATE[ch];
+
+      if (!type && !INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(ch.charCodeAt(0))) {
+        throw new Error("state INIT, unexpected token ".concat(ch));
       }
 
+      this.tokens.push({
+        text: ch,
+        type: type
+      });
       var nextCh = this.peek();
 
       if (nextCh === undefined) {
@@ -267,8 +266,6 @@ var Tokenizer = /*#__PURE__*/function () {
   }, {
     key: "handleTokenNumber",
     value: function handleTokenNumber(ch) {
-      var nextCh;
-
       switch (ch) {
         case "0":
         case "1":
@@ -281,9 +278,8 @@ var Tokenizer = /*#__PURE__*/function () {
         case "8":
         case "9":
           this.curToken += ch;
-          nextCh = this.peek();
 
-          if (!/[0-9]|\.|-/.test(nextCh)) {
+          if (!/[0-9]|\.|-/.test(this.peek())) {
             var token = {
               text: this.curToken,
               type: _token.TokenType.Number

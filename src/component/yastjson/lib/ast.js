@@ -32,12 +32,10 @@ export class ASTNode {
 export class AST {
   constructor(tokens) {
     this.tokens = tokens;
-    this.buildTree();
   }
 
   *buildTree() {
-    let rootNode = yield* this.handleExprJson(this.tokens);
-    return rootNode;
+    return yield* this.handleExprJson(this.tokens);
   }
 
   *handleExprJson(tokens) {
@@ -99,7 +97,6 @@ export class AST {
           case TokenType.LeftBracket:
             bracket++;
             break;
-          default:
         }
         valueTokens.push(token);
       }
@@ -126,14 +123,13 @@ export class AST {
     }
 
     let node = new ASTNode(tokens, ExprType.Object);
-    let index = 1;
     let propExprNode;
     let propTokens = [];
     let valueTokens = [];
     let brace = 0;
     let bracket = 0;
     let state = "prop";
-    for (; index < tokens.length - 1; index++) {
+    for (let index = 1, length = tokens.length - 1; index < length; index++) {
       if (yielder()) yield;
       let token = tokens[index];
       if (token.type === TokenType.Colon && state === "prop") {
@@ -172,7 +168,6 @@ export class AST {
               case TokenType.LeftBracket:
                 bracket++;
                 break;
-              default:
             }
 
             valueTokens.push(token);
@@ -201,9 +196,7 @@ export class AST {
   *handleExprProp(tokens) {
     if (yielder()) yield;
     let node = new ASTNode(tokens, ExprType.Prop);
-    let propName = tokens[0].text;
-    propName = propName.slice(1, propName.length - 1);
-    node.propName = propName;
+    node.propName = tokens[0].text.slice(1, -1);
     return node;
   }
 
@@ -231,28 +224,4 @@ export class AST {
     node.value = yield* this.handleExprJson(tokens);
     return node;
   }
-}
-
-function isValueFinish(stack) {
-  let braceCount = 0;
-  let bracketCount = 0;
-  for (let token of stack) {
-    switch (token) {
-      case TokenType.LeftBrace:
-        braceCount++;
-        break;
-      case TokenType.LeftBracket:
-        bracketCount++;
-        break;
-      case TokenType.RightBrace:
-        braceCount--;
-        break;
-      case TokenType.RightBracket:
-        bracketCount--;
-        break;
-      default:
-        break;
-    }
-  }
-  return braceCount === 0 && bracketCount === 0;
 }

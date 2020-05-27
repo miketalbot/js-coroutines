@@ -1,3 +1,7 @@
+#### 1.1.29
+
+- Fix a bug where terminate on the run promise was lost due to double async wrapping
+
 #### 1.1.28
 
 - Massively improve performance by replacing Yastjson's stack based bracket analyser with a couple of ints

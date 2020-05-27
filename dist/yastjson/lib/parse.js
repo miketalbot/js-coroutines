@@ -16,8 +16,6 @@ var _token = require("./token");
 
 var _yielder = require("./yielder");
 
-var _escape = require("./escape");
-
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(parse);
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
@@ -42,7 +40,6 @@ var ASTParser = /*#__PURE__*/function () {
   _createClass(ASTParser, [{
     key: "getJson",
     value: /*#__PURE__*/regeneratorRuntime.mark(function getJson() {
-      var outputJson;
       return regeneratorRuntime.wrap(function getJson$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -50,10 +47,9 @@ var ASTParser = /*#__PURE__*/function () {
               return _context.delegateYield(this.handleValue(this.ast), "t0", 1);
 
             case 1:
-              outputJson = _context.t0;
-              return _context.abrupt("return", outputJson);
+              return _context.abrupt("return", _context.t0);
 
-            case 3:
+            case 2:
             case "end":
               return _context.stop();
           }
@@ -63,7 +59,7 @@ var ASTParser = /*#__PURE__*/function () {
   }, {
     key: "handleJson",
     value: /*#__PURE__*/regeneratorRuntime.mark(function handleJson(astNode) {
-      var output, node, _iterator, _step, item, value, _iterator2, _step2, _item, prop, _value;
+      var output, node, _iterator, _step, item, _iterator2, _step2, _item;
 
       return regeneratorRuntime.wrap(function handleJson$(_context2) {
         while (1) {
@@ -80,7 +76,7 @@ var ASTParser = /*#__PURE__*/function () {
               node = astNode.childNodeList[0];
 
               if (!(node.type === _expression.ExprType.Array)) {
-                _context2.next = 29;
+                _context2.next = 26;
                 break;
               }
 
@@ -92,136 +88,105 @@ var ASTParser = /*#__PURE__*/function () {
 
             case 8:
               if ((_step = _iterator.n()).done) {
-                _context2.next = 19;
-                break;
-              }
-
-              item = _step.value;
-
-              if (!(item.type === _expression.ExprType.Value)) {
                 _context2.next = 16;
                 break;
               }
 
-              return _context2.delegateYield(this.handleValue(item.value), "t0", 12);
+              item = _step.value;
+              _context2.t0 = output;
+              return _context2.delegateYield(this.handleValue(item.value), "t1", 12);
 
             case 12:
-              value = _context2.t0;
-              output.push(value);
-              _context2.next = 17;
-              break;
+              _context2.t2 = _context2.t1;
 
-            case 16:
-              throw new Error("[parse AST error] unexpected node type, expect Value");
+              _context2.t0.push.call(_context2.t0, _context2.t2);
 
-            case 17:
+            case 14:
               _context2.next = 8;
               break;
 
-            case 19:
-              _context2.next = 24;
+            case 16:
+              _context2.next = 21;
               break;
+
+            case 18:
+              _context2.prev = 18;
+              _context2.t3 = _context2["catch"](6);
+
+              _iterator.e(_context2.t3);
 
             case 21:
               _context2.prev = 21;
-              _context2.t1 = _context2["catch"](6);
-
-              _iterator.e(_context2.t1);
-
-            case 24:
-              _context2.prev = 24;
 
               _iterator.f();
 
-              return _context2.finish(24);
+              return _context2.finish(21);
 
-            case 27:
-              _context2.next = 59;
+            case 24:
+              _context2.next = 48;
               break;
 
-            case 29:
+            case 26:
               if (!(node.type === _expression.ExprType.Object)) {
-                _context2.next = 58;
+                _context2.next = 47;
                 break;
               }
 
               output = {};
               _iterator2 = _createForOfIteratorHelper(node.childNodeList);
-              _context2.prev = 32;
+              _context2.prev = 29;
 
               _iterator2.s();
 
-            case 34:
+            case 31:
               if ((_step2 = _iterator2.n()).done) {
-                _context2.next = 48;
+                _context2.next = 37;
                 break;
               }
 
               _item = _step2.value;
+              return _context2.delegateYield(this.handleValue(_item.childNodeList[0].value), "t4", 34);
 
-              if (!(_item.type === _expression.ExprType.Prop)) {
-                _context2.next = 45;
-                break;
-              }
+            case 34:
+              output[_item.propName] = _context2.t4;
 
-              prop = _item.propName;
-
-              if (!(_item.childNodeList[0].type !== _expression.ExprType.Value)) {
-                _context2.next = 40;
-                break;
-              }
-
-              throw new Error("[parse AST error] unexpected node type, expect Value");
-
-            case 40:
-              return _context2.delegateYield(this.handleValue(_item.childNodeList[0].value), "t2", 41);
-
-            case 41:
-              _value = _context2.t2;
-              output[prop] = _value;
-              _context2.next = 46;
+            case 35:
+              _context2.next = 31;
               break;
 
-            case 45:
-              throw new Error("[parse AST error] unexpected node type, expect Prop");
-
-            case 46:
-              _context2.next = 34;
+            case 37:
+              _context2.next = 42;
               break;
 
-            case 48:
-              _context2.next = 53;
-              break;
+            case 39:
+              _context2.prev = 39;
+              _context2.t5 = _context2["catch"](29);
 
-            case 50:
-              _context2.prev = 50;
-              _context2.t3 = _context2["catch"](32);
+              _iterator2.e(_context2.t5);
 
-              _iterator2.e(_context2.t3);
-
-            case 53:
-              _context2.prev = 53;
+            case 42:
+              _context2.prev = 42;
 
               _iterator2.f();
 
-              return _context2.finish(53);
+              return _context2.finish(42);
 
-            case 56:
-              _context2.next = 59;
+            case 45:
+              _context2.next = 48;
               break;
 
-            case 58:
+            case 47:
               throw new Error("[parse AST error] unexpected second node type");
 
-            case 59:
+            case 48:
               return _context2.abrupt("return", output);
 
-            case 60:
+            case 49:
             case "end":
               return _context2.stop();
           }
         }
-      }, handleJson, this, [[6, 21, 24, 27], [32, 50, 53, 56]]);
+      }, handleJson, this, [[6, 18, 21, 24], [29, 39, 42, 45]]);
     })
   }, {
     key: "handleValue",
@@ -241,7 +206,7 @@ var ASTParser = /*#__PURE__*/function () {
 
             case 3:
               _context3.t0 = astNode.type;
-              _context3.next = _context3.t0 === _token.TokenType.Null ? 6 : _context3.t0 === _token.TokenType.Boolean ? 7 : _context3.t0 === _token.TokenType.Number ? 17 : _context3.t0 === _token.TokenType.String ? 22 : _context3.t0 === _expression.ExprType.Json ? 24 : 26;
+              _context3.next = _context3.t0 === _token.TokenType.Null ? 6 : _context3.t0 === _token.TokenType.Boolean ? 7 : _context3.t0 === _token.TokenType.Number ? 9 : _context3.t0 === _token.TokenType.String ? 11 : _context3.t0 === _expression.ExprType.Json ? 12 : 14;
               break;
 
             case 6:
@@ -249,53 +214,25 @@ var ASTParser = /*#__PURE__*/function () {
 
             case 7:
               token = astNode.tokens[0].text;
+              return _context3.abrupt("return", token === "true");
 
-              if (!(token === "true")) {
-                _context3.next = 12;
-                break;
-              }
-
-              return _context3.abrupt("return", true);
-
-            case 12:
-              if (!(token === "false")) {
-                _context3.next = 16;
-                break;
-              }
-
-              return _context3.abrupt("return", false);
-
-            case 16:
-              throw new Error("[parse AST error] unexpected boolean node value");
-
-            case 17:
-              token = astNode.tokens[0].text;
-              num = parseFloat(token);
-
-              if (!isNaN(num)) {
-                _context3.next = 21;
-                break;
-              }
-
-              throw new Error("[parse AST error] unexpected number node value");
-
-            case 21:
+            case 9:
+              num = +astNode.tokens[0].text;
               return _context3.abrupt("return", num);
 
-            case 22:
-              token = astNode.tokens[0].text;
-              return _context3.abrupt("return", token.slice(1, token.length - 1));
+            case 11:
+              return _context3.abrupt("return", astNode.tokens[0].text.slice(1, -1));
 
-            case 24:
-              return _context3.delegateYield(this.handleJson(astNode), "t1", 25);
+            case 12:
+              return _context3.delegateYield(this.handleJson(astNode), "t1", 13);
 
-            case 25:
+            case 13:
               return _context3.abrupt("return", _context3.t1);
 
-            case 26:
+            case 14:
               throw new Error("[parse AST error] unexpected node type, expect a valid Value node");
 
-            case 27:
+            case 15:
             case "end":
               return _context3.stop();
           }
@@ -316,35 +253,22 @@ function parse(jsonString) {
       switch (_context4.prev = _context4.next) {
         case 0:
           tokenizer = new _tokenizer.Tokenizer();
-          _context4.next = 3;
-          return;
+          return _context4.delegateYield(tokenizer.tokenize(jsonString), "t0", 2);
 
-        case 3:
-          return _context4.delegateYield(tokenizer.tokenize(jsonString), "t0", 4);
-
-        case 4:
+        case 2:
           tokens = _context4.t0;
-          debugger;
           astInst = new _ast.AST(tokens);
-          _context4.next = 9;
-          return;
+          return _context4.delegateYield(astInst.buildTree(), "t1", 5);
 
-        case 9:
-          return _context4.delegateYield(astInst.buildTree(), "t1", 10);
-
-        case 10:
+        case 5:
           ast = _context4.t1;
           astParser = new ASTParser(ast);
-          _context4.next = 14;
-          return;
+          return _context4.delegateYield(astParser.getJson(), "t2", 8);
 
-        case 14:
-          return _context4.delegateYield(astParser.getJson(), "t2", 15);
-
-        case 15:
+        case 8:
           return _context4.abrupt("return", _context4.t2);
 
-        case 16:
+        case 9:
         case "end":
           return _context4.stop();
       }

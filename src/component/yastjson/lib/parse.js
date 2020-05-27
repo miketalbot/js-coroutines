@@ -17,7 +17,6 @@ import { AST } from "./ast";
 import { ExprType } from "./expression";
 import { TokenType } from "./token";
 import { yielder } from "./yielder";
-import { unescapeJsonString } from "./escape";
 
 export class ASTParser {
   constructor(ast) {
@@ -25,8 +24,7 @@ export class ASTParser {
   }
 
   *getJson() {
-    let outputJson = yield* this.handleValue(this.ast);
-    return outputJson;
+    return yield* this.handleValue(this.ast);
   }
 
   *handleJson(astNode) {
@@ -39,32 +37,14 @@ export class ASTParser {
     if (node.type === ExprType.Array) {
       output = [];
       for (let item of node.childNodeList) {
-        if (item.type === ExprType.Value) {
-          let value = yield* this.handleValue(item.value);
-          output.push(value);
-        } else {
-          throw new Error(
-            "[parse AST error] unexpected node type, expect Value"
-          );
-        }
+        output.push(yield* this.handleValue(item.value));
       }
     } else if (node.type === ExprType.Object) {
       output = {};
       for (let item of node.childNodeList) {
-        if (item.type === ExprType.Prop) {
-          let prop = item.propName;
-          if (item.childNodeList[0].type !== ExprType.Value) {
-            throw new Error(
-              "[parse AST error] unexpected node type, expect Value"
-            );
-          }
-          let value = yield* this.handleValue(item.childNodeList[0].value);
-          output[prop] = value;
-        } else {
-          throw new Error(
-            "[parse AST error] unexpected node type, expect Prop"
-          );
-        }
+        output[item.propName] = yield* this.handleValue(
+          item.childNodeList[0].value
+        );
       }
     } else {
       throw new Error("[parse AST error] unexpected second node type");
@@ -80,24 +60,12 @@ export class ASTParser {
         return null;
       case TokenType.Boolean:
         token = astNode.tokens[0].text;
-        if (token === "true") {
-          return true;
-        } else if (token === "false") {
-          return false;
-        } else {
-          throw new Error("[parse AST error] unexpected boolean node value");
-        }
+        return token === "true";
       case TokenType.Number:
-        token = astNode.tokens[0].text;
-        let num = parseFloat(token);
-        if (isNaN(num)) {
-          throw new Error("[parse AST error] unexpected number node value");
-        }
+        let num = +astNode.tokens[0].text;
         return num;
       case TokenType.String:
-        token = astNode.tokens[0].text;
-        return token.slice(1, token.length - 1);
-
+        return astNode.tokens[0].text.slice(1, -1);
       case ExprType.Json:
         return yield* this.handleJson(astNode);
       default:
@@ -110,13 +78,9 @@ export class ASTParser {
 
 export function* parse(jsonString) {
   const tokenizer = new Tokenizer();
-  yield;
   const tokens = yield* tokenizer.tokenize(jsonString);
-  debugger;
   const astInst = new AST(tokens);
-  yield;
   const ast = yield* astInst.buildTree();
   const astParser = new ASTParser(ast);
-  yield;
   return yield* astParser.getJson();
 }
