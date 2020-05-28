@@ -17,17 +17,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 function run(coroutine) {
   var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
   var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 16 * 10;
-  var options = {
-    timeout: timeout
-  };
   var terminated = false;
   var resolver = null;
   var result = new Promise(function (resolve, reject) {
     resolver = resolve;
-    var iterator = coroutine();
-    window.requestIdleCallback(run);
+    var iterator = coroutine(); // Request a callback during idle
+
+    window.requestIdleCallback(run); // Handle background processing when tab is not active
+
+    var timeOutId = setTimeout(run, timeout);
 
     function run(api) {
+      // Stop the timeout version
+      clearTimeout(timeOutId);
+
       if (terminated) {
         iterator.return();
         return;
@@ -53,9 +56,12 @@ function run(coroutine) {
       } catch (e) {
         reject(e);
         return;
-      }
+      } // Request an idle callback
 
-      window.requestIdleCallback(run, options);
+
+      window.requestIdleCallback(run); // Make sure we get at least a little time
+
+      timeOutId = setTimeout(run, timeout);
     }
   });
 

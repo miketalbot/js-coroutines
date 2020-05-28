@@ -1,3 +1,7 @@
+#### 1.1.30
+
+- Use setTimeout for run timeouts to ensure we get some background processing
+
 #### 1.1.29
 
 - Fix a bug where terminate on the run promise was lost due to double async wrapping

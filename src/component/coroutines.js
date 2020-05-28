@@ -1,15 +1,18 @@
 import "requestidlecallback-polyfill";
 
 export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
-  const options = { timeout };
   let terminated = false;
   let resolver = null;
   const result = new Promise(function (resolve, reject) {
     resolver = resolve;
     const iterator = coroutine();
+    // Request a callback during idle
     window.requestIdleCallback(run);
-
+    // Handle background processing when tab is not active
+    let timeOutId = setTimeout(run, timeout);
     function run(api) {
+      // Stop the timeout version
+      clearTimeout(timeOutId);
       if (terminated) {
         iterator.return();
         return;
@@ -30,8 +33,10 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
         reject(e);
         return;
       }
-
-      window.requestIdleCallback(run, options);
+      // Request an idle callback
+      window.requestIdleCallback(run);
+      // Make sure we get at least a little time
+      timeOutId = setTimeout(run, timeout);
     }
   });
   result.terminate = function (result) {
