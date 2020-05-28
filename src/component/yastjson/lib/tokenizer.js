@@ -14,7 +14,6 @@
  */
 import { TokenType } from "./token";
 import { yielder } from "./yielder";
-const SINGLE_CHAR_TOKEN_LIST = ["[", "]", "{", "}", ":", ","];
 const INVISIBLE_CHAR_CODE_TOKEN_LIST = [10, 13, 32];
 
 const STATE_INIT = "init";
@@ -71,7 +70,7 @@ export class Tokenizer {
     this.sourceCode = src;
     const length = src.length;
     while (this.pos < length) {
-      if ((this.pos & 15) == 0 && yielder()) yield;
+      if ((this.pos & 15) === 0 && yielder()) yield;
       let text = this.read();
       switch (this.state) {
         case STATE_INIT:

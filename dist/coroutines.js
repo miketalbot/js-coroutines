@@ -25,8 +25,11 @@ function run(coroutine) {
 
     window.requestIdleCallback(run); // Handle background processing when tab is not active
 
+    var id = setTimeout(runFromTimeout, timeout);
+
     function run(api) {
-      // Stop the timeout version
+      clearTimeout(id); // Stop the timeout version
+
       if (terminated) {
         iterator.return();
         return;
@@ -48,6 +51,11 @@ function run(coroutine) {
           if (value === true) {
             break;
           }
+
+          if (value) {
+            minTime = +value;
+            if (isNaN(minTime)) minTime = 1;
+          }
         } while (api.timeRemaining() > minTime);
       } catch (e) {
         reject(e);
@@ -55,7 +63,19 @@ function run(coroutine) {
       } // Request an idle callback
 
 
-      window.requestIdleCallback(run);
+      window.requestIdleCallback(run); // Request again on timeout
+
+      id = setTimeout(runFromTimeout, timeout);
+    }
+
+    function runFromTimeout() {
+      var budget = 8.5;
+      var start = performance.now();
+      run({
+        timeRemaining: function timeRemaining() {
+          return budget - (performance.now() - start);
+        }
+      });
     }
   });
 
@@ -172,33 +192,39 @@ function runAsync(coroutine) {
                             break;
                           }
 
-                          return _context.abrupt("break", 16);
+                          return _context.abrupt("break", 17);
 
                         case 15:
+                          if (value) {
+                            minTime = +value;
+                            if (isNaN(minTime)) minTime = 1;
+                          }
+
+                        case 16:
                           if (api.timeRemaining() > minTime) {
                             _context.next = 5;
                             break;
                           }
 
-                        case 16:
-                          _context.next = 22;
+                        case 17:
+                          _context.next = 23;
                           break;
 
-                        case 18:
-                          _context.prev = 18;
+                        case 19:
+                          _context.prev = 19;
                           _context.t0 = _context["catch"](4);
                           reject(_context.t0);
                           return _context.abrupt("return");
 
-                        case 22:
+                        case 23:
                           window.requestIdleCallback(run, options);
 
-                        case 23:
+                        case 24:
                         case "end":
                           return _context.stop();
                       }
                     }
-                  }, _callee, null, [[4, 18]]);
+                  }, _callee, null, [[4, 19]]);
                 }));
                 return _run.apply(this, arguments);
               };

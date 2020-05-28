@@ -1,3 +1,9 @@
+#### 1.1.32
+
+- setTimeout idle time background processing
+- can yield a number to request that number of m/s in the current frame (request does not carry over to the next frame)
+- added async examples to getting started
+
 #### 1.1.31
 
 - Too early for last update, reverting

@@ -97,6 +97,8 @@ export class AST {
           case TokenType.LeftBracket:
             bracket++;
             break;
+          default:
+            break;
         }
         valueTokens.push(token);
       }
@@ -167,6 +169,8 @@ export class AST {
                 break;
               case TokenType.LeftBracket:
                 bracket++;
+                break;
+              default:
                 break;
             }
 

@@ -12,7 +12,7 @@ system so it can animate and do the rest of the work, then resume in the next ga
 
 ## How it works?
 
-[This dev.to article goes into detail about how js-coutines works](https://dev.to/miketalbot/60fps-javascript-while-stringfying-and-parsing-100mbs-of-json-84l).
+[This dev.to article goes into detail about how js-coutines works](https://dev.to/miketalbot/60fps-javascript-while-stringfying-and-parsing-100mbs-of-json-84l)
 
 ## Now supports serializing and deserializing JSON in the "gaps"
 
@@ -82,7 +82,35 @@ async function process(url) {
 
 See the [Code Sandbox Demo](https://codesandbox.io/s/js-coroutines-json-demo-etyft?file=/src/App.js).
 
-## Getting Started
+## Getting Started With Async Functions
+
+Async functions are the easiest way to use js-coroutines if you just need to
+handle common functions like sorts, finds, filters and JSON parsing in the
+background. If you need to break up your own logic you will have to write
+a generator.
+
+Just import the `xxxAsync` version of the function from js-coroutines and
+use a standard Promise chain or `await` and the code will run only in the
+gaps.
+
+```js
+async function asyncFunctions() {
+  // Parse the JSON async
+  let o = await parseAsync(json);
+  // Concatenate arrays in the background
+  for (let i = 1; i < 12; i++) {
+    o = await concatAsync(o, o);
+  }
+  // Write out the arrays
+  let output = await stringifyAsync(o);
+  // Map ids from the array in the background
+  let justIds = await mapAsync(o, (v) => v.id);
+  // Return the JSON of just the ids
+  return [output, await stringifyAsync(justIds)];
+}
+```
+
+## Getting Started Writing Your Own Generators
 
 `js-coroutines` uses generator functions and `requestIdleCallback` (polyfilled) to let you easily split up
 your work with minimal effort.

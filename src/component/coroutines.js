@@ -9,14 +9,15 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
     // Request a callback during idle
     window.requestIdleCallback(run);
     // Handle background processing when tab is not active
-
+    let id = setTimeout(runFromTimeout, timeout);
     function run(api) {
+      clearTimeout(id);
       // Stop the timeout version
       if (terminated) {
         iterator.return();
         return;
       }
-      const minTime = Math.max(0.5, loopWhileMsRemains);
+      let minTime = Math.max(0.5, loopWhileMsRemains);
       try {
         do {
           const { value, done } = iterator.next();
@@ -27,6 +28,10 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
           if (value === true) {
             break;
           }
+          if (value) {
+            minTime = +value;
+            if (isNaN(minTime)) minTime = 1;
+          }
         } while (api.timeRemaining() > minTime);
       } catch (e) {
         reject(e);
@@ -34,8 +39,20 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
       }
       // Request an idle callback
       window.requestIdleCallback(run);
+      // Request again on timeout
+      id = setTimeout(runFromTimeout, timeout);
+    }
+    function runFromTimeout() {
+      const budget = 8.5;
+      const start = performance.now();
+      run({
+        timeRemaining() {
+          return budget - (performance.now() - start);
+        },
+      });
     }
   });
+
   result.terminate = function (result) {
     terminated = true;
     if (resolver) {
@@ -96,7 +113,7 @@ export function runAsync(coroutine, loopWhileMsRemains = 1, timeout = 160) {
         iterator.return();
         return;
       }
-      const minTime = Math.max(0.5, loopWhileMsRemains);
+      let minTime = Math.max(0.5, loopWhileMsRemains);
       try {
         do {
           const { value, done } = await iterator.next();
@@ -106,6 +123,10 @@ export function runAsync(coroutine, loopWhileMsRemains = 1, timeout = 160) {
           }
           if (value === true) {
             break;
+          }
+          if (value) {
+            minTime = +value;
+            if (isNaN(minTime)) minTime = 1;
           }
         } while (api.timeRemaining() > minTime);
       } catch (e) {

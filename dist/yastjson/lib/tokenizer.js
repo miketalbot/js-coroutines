@@ -15,7 +15,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var SINGLE_CHAR_TOKEN_LIST = ["[", "]", "{", "}", ":", ","];
 var INVISIBLE_CHAR_CODE_TOKEN_LIST = [10, 13, 32];
 var STATE_INIT = "init";
 var STATE_KW_NULL = "null";
@@ -84,7 +83,7 @@ var Tokenizer = /*#__PURE__*/function () {
                 break;
               }
 
-              if (!((this.pos & 15) == 0 && (0, _yielder.yielder)())) {
+              if (!((this.pos & 15) === 0 && (0, _yielder.yielder)())) {
                 _context.next = 6;
                 break;
               }

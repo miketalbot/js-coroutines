@@ -149,7 +149,7 @@ var AST = /*#__PURE__*/function () {
 
             case 7:
               if (!(index < length)) {
-                _context3.next = 39;
+                _context3.next = 40;
                 break;
               }
 
@@ -188,7 +188,7 @@ var AST = /*#__PURE__*/function () {
               _valueExpr = _context3.t0;
               valueTokens = [];
               node.addChild(_valueExpr);
-              _context3.next = 36;
+              _context3.next = 37;
               break;
 
             case 24:
@@ -198,50 +198,53 @@ var AST = /*#__PURE__*/function () {
 
             case 27:
               brace--;
-              return _context3.abrupt("break", 35);
+              return _context3.abrupt("break", 36);
 
             case 29:
               bracket--;
-              return _context3.abrupt("break", 35);
+              return _context3.abrupt("break", 36);
 
             case 31:
               brace++;
-              return _context3.abrupt("break", 35);
+              return _context3.abrupt("break", 36);
 
             case 33:
               bracket++;
-              return _context3.abrupt("break", 35);
+              return _context3.abrupt("break", 36);
 
             case 35:
-              valueTokens.push(token);
+              return _context3.abrupt("break", 36);
 
             case 36:
+              valueTokens.push(token);
+
+            case 37:
               index++;
               _context3.next = 7;
               break;
 
-            case 39:
+            case 40:
               if (!(valueTokens.length === 1)) {
-                _context3.next = 43;
+                _context3.next = 44;
                 break;
               }
 
               _context3.t3 = this.handleExprValueDirect(valueTokens);
-              _context3.next = 45;
+              _context3.next = 46;
               break;
 
-            case 43:
-              return _context3.delegateYield(this.handleExprValue(valueTokens), "t4", 44);
-
             case 44:
-              _context3.t3 = _context3.t4;
+              return _context3.delegateYield(this.handleExprValue(valueTokens), "t4", 45);
 
             case 45:
+              _context3.t3 = _context3.t4;
+
+            case 46:
               valueExpr = _context3.t3;
               node.addChild(valueExpr);
               return _context3.abrupt("return", node);
 
-            case 48:
+            case 49:
             case "end":
               return _context3.stop();
           }
@@ -275,7 +278,7 @@ var AST = /*#__PURE__*/function () {
 
             case 9:
               if (!(index < length)) {
-                _context4.next = 57;
+                _context4.next = 58;
                 break;
               }
 
@@ -301,7 +304,7 @@ var AST = /*#__PURE__*/function () {
               propExprNode = _context4.t0;
               propTokens = [];
               state = "value";
-              _context4.next = 54;
+              _context4.next = 55;
               break;
 
             case 21:
@@ -330,17 +333,17 @@ var AST = /*#__PURE__*/function () {
               valueTokens = [];
               propExprNode.addChild(_valueExpr2);
               node.addChild(propExprNode);
-              _context4.next = 54;
+              _context4.next = 55;
               break;
 
             case 34:
               _context4.t3 = state;
-              _context4.next = _context4.t3 === "prop" ? 37 : _context4.t3 === "value" ? 39 : 53;
+              _context4.next = _context4.t3 === "prop" ? 37 : _context4.t3 === "value" ? 39 : 54;
               break;
 
             case 37:
               propTokens.push(token);
-              return _context4.abrupt("break", 54);
+              return _context4.abrupt("break", 55);
 
             case 39:
               _context4.t4 = token.type;
@@ -349,60 +352,63 @@ var AST = /*#__PURE__*/function () {
 
             case 42:
               brace--;
-              return _context4.abrupt("break", 50);
+              return _context4.abrupt("break", 51);
 
             case 44:
               bracket--;
-              return _context4.abrupt("break", 50);
+              return _context4.abrupt("break", 51);
 
             case 46:
               brace++;
-              return _context4.abrupt("break", 50);
+              return _context4.abrupt("break", 51);
 
             case 48:
               bracket++;
-              return _context4.abrupt("break", 50);
+              return _context4.abrupt("break", 51);
 
             case 50:
+              return _context4.abrupt("break", 51);
+
+            case 51:
               valueTokens.push(token);
 
               if (brace === 0 && bracket === 0) {
                 state = "prop";
               }
 
-              return _context4.abrupt("break", 54);
-
-            case 53:
-              throw new Error("[object expression error] unexpected state");
+              return _context4.abrupt("break", 55);
 
             case 54:
+              throw new Error("[object expression error] unexpected state");
+
+            case 55:
               index++;
               _context4.next = 9;
               break;
 
-            case 57:
+            case 58:
               if (!(valueTokens.length === 1)) {
-                _context4.next = 61;
+                _context4.next = 62;
                 break;
               }
 
               _context4.t5 = this.handleExprValueDirect(valueTokens);
-              _context4.next = 63;
+              _context4.next = 64;
               break;
 
-            case 61:
-              return _context4.delegateYield(this.handleExprValue(valueTokens), "t6", 62);
-
             case 62:
-              _context4.t5 = _context4.t6;
+              return _context4.delegateYield(this.handleExprValue(valueTokens), "t6", 63);
 
             case 63:
+              _context4.t5 = _context4.t6;
+
+            case 64:
               valueExpr = _context4.t5;
               propExprNode.addChild(valueExpr);
               node.addChild(propExprNode);
               return _context4.abrupt("return", node);
 
-            case 67:
+            case 68:
             case "end":
               return _context4.stop();
           }
