@@ -25,12 +25,8 @@ function run(coroutine) {
 
     window.requestIdleCallback(run); // Handle background processing when tab is not active
 
-    var timeOutId = setTimeout(run, timeout);
-
     function run(api) {
       // Stop the timeout version
-      clearTimeout(timeOutId);
-
       if (terminated) {
         iterator.return();
         return;
@@ -59,9 +55,7 @@ function run(coroutine) {
       } // Request an idle callback
 
 
-      window.requestIdleCallback(run); // Make sure we get at least a little time
-
-      timeOutId = setTimeout(run, timeout);
+      window.requestIdleCallback(run);
     }
   });
 

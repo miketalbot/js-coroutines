@@ -1,3 +1,7 @@
+#### 1.1.31
+
+- Too early for last update, reverting
+
 #### 1.1.30
 
 - Use setTimeout for run timeouts to ensure we get some background processing
