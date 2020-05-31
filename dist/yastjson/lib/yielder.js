@@ -7,7 +7,7 @@ exports.yielder = yielder;
 var yieldCount = 0;
 
 function yielder() {
-  if (yieldCount++ > 128) {
+  if (yieldCount++ > 100) {
     yieldCount = 0;
     return true;
   }

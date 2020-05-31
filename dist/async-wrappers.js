@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.everyAsync = exports.someAsync = exports.forEachAsync = exports.concatAsync = exports.appendAsync = exports.reduceAsync = exports.filterAsync = exports.mapAsync = exports.findIndexAsync = exports.findAsync = exports.sortAsync = exports.parseAsync = exports.stringifyAsync = void 0;
+exports.base64Decompress = exports.base64decompressFromUTF16Async = exports.decompressAsync = exports.decompressFromEncodeURIComponent = exports.decompressFromUint8Array = exports.decompressFromUTF16 = exports.decompressFromBase64Async = exports.base64Compress = exports.base64CompressToUTF16Async = exports.compressAsync = exports.compressToEncodeURIComponent = exports.compressToUint8Array = exports.compressToUTF16 = exports.compressToBase64Async = exports.everyAsync = exports.someAsync = exports.forEachAsync = exports.concatAsync = exports.appendAsync = exports.reduceAsync = exports.filterAsync = exports.mapAsync = exports.findIndexAsync = exports.findAsync = exports.sortAsync = exports.parseAsync = exports.stringifyAsync = void 0;
 
 var _wrappers = require("./wrappers");
 
@@ -14,6 +14,10 @@ var _parse = require("./yastjson/lib/parse");
 var _timsort = require("./timsort");
 
 var _arrayUtilities = require("./array-utilities");
+
+var _lzString = require("./lz-string/lz-string");
+
+var _base64String = require("./lz-string/base64-string");
 
 function wrapAsPromiseAndYieldFn(fn) {
   var yielder = (0, _wrappers.wrapAsPromise)(fn);
@@ -46,5 +50,35 @@ var forEachAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.forEach);
 exports.forEachAsync = forEachAsync;
 var someAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.some);
 exports.someAsync = someAsync;
-var everyAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.every);
+var everyAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.every); // Compression
+
 exports.everyAsync = everyAsync;
+var compressToBase64Async = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.compressToBase64);
+exports.compressToBase64Async = compressToBase64Async;
+var compressToUTF16 = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.compressToUTF16);
+exports.compressToUTF16 = compressToUTF16;
+var compressToUint8Array = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.compressToUint8Array);
+exports.compressToUint8Array = compressToUint8Array;
+var compressToEncodeURIComponent = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.compressToEncodeURIComponent);
+exports.compressToEncodeURIComponent = compressToEncodeURIComponent;
+var compressAsync = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.compress);
+exports.compressAsync = compressAsync;
+var base64CompressToUTF16Async = (0, _wrappers.wrapAsPromise)(_base64String.Base64StringGenerator.compressToUTF16);
+exports.base64CompressToUTF16Async = base64CompressToUTF16Async;
+var base64Compress = (0, _wrappers.wrapAsPromise)(_base64String.Base64StringGenerator.compress); // Decompression
+
+exports.base64Compress = base64Compress;
+var decompressFromBase64Async = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.decompressFromBase64);
+exports.decompressFromBase64Async = decompressFromBase64Async;
+var decompressFromUTF16 = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.decompressFromUTF16);
+exports.decompressFromUTF16 = decompressFromUTF16;
+var decompressFromUint8Array = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.decompressFromUint8Array);
+exports.decompressFromUint8Array = decompressFromUint8Array;
+var decompressFromEncodeURIComponent = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.decompressFromEncodeURIComponent);
+exports.decompressFromEncodeURIComponent = decompressFromEncodeURIComponent;
+var decompressAsync = (0, _wrappers.wrapAsPromise)(_lzString.LZStringGenerator.decompress);
+exports.decompressAsync = decompressAsync;
+var base64decompressFromUTF16Async = (0, _wrappers.wrapAsPromise)(_base64String.Base64StringGenerator.decompressFromUTF16);
+exports.base64decompressFromUTF16Async = base64decompressFromUTF16Async;
+var base64Decompress = (0, _wrappers.wrapAsPromise)(_base64String.Base64StringGenerator.decompress);
+exports.base64Decompress = base64Decompress;

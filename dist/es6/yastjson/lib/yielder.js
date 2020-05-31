@@ -1,6 +1,6 @@
 let yieldCount = 0;
 export function yielder() {
-  if (yieldCount++ > 128) {
+  if (yieldCount++ > 100) {
     yieldCount = 0;
     return true;
   }

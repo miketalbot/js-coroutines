@@ -70,7 +70,7 @@ export class Tokenizer {
     this.sourceCode = src;
     const length = src.length;
     while (this.pos < length) {
-      if ((this.pos & 15) === 0 && yielder()) yield;
+      if ((this.pos & 7) === 0 && yielder()) yield;
       let text = this.read();
       switch (this.state) {
         case STATE_INIT:

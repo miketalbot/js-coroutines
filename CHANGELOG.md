@@ -1,3 +1,7 @@
+#### 1.1.33
+
+- Add compress and decompression from lz-string in the gaps
+
 #### 1.1.32
 
 - setTimeout idle time background processing

@@ -83,7 +83,7 @@ var Tokenizer = /*#__PURE__*/function () {
                 break;
               }
 
-              if (!((this.pos & 15) === 0 && (0, _yielder.yielder)())) {
+              if (!((this.pos & 7) === 0 && (0, _yielder.yielder)())) {
                 _context.next = 6;
                 break;
               }
