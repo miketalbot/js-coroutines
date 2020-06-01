@@ -20,11 +20,25 @@ You can use `*stringify()` and `*parse()` to manipulate JSON in an idle coroutin
 block the main thread.
 
 You can use `stringifyAsync()` and `parseAsync()` to perform JSON parsing and stringifying
-anywhere you can take a promise or `await` a reponse.
+anywhere you can take a promise or `await` a response.
+
+## 1.1.33 and onwards support LZ-String compression in the "gaps"
+
+You can use `*compress()` and `*uncompress()` to compress to storable/transmittable strings.
+
+You can use `compressAsync()` and `decompressAsync()` to perform compression and decompression
+anywhere you can take a promise or `await` a response.
+
+Exports all lz-string flavours using `LZStringGenerator` and `Base64StringGenerator` and direct exports
+of all of the methods as `xxxxAsync`. e.g. `compressToEncodedURIComponentAsync(data)`.
+
+[LZ-String GitHub/Documentation](https://github.com/pieroxy/lz-string).
 
 ### Wait there's more!
 
 Another super useful way of using coroutines is to animate and control complex states - js-coroutines provides this too with the powerful `update` method that runs every frame in high priority. See below.
+
+See [this CodeSandbox demo](https://codesandbox.io/s/coroutines-examples-zeq33) of stateful animations.
 
 ## Installation
 
@@ -482,6 +496,14 @@ as a coroutine.
 ### `concatAsync(array1, array2) -> Promise([])`
 
 Concatenates two arrays into a new array as a coroutine.
+
+### `compressAsync(String)` -> Promise(String)
+
+Compresses using lz-string to a string representation
+
+### `decompressAsync(String)` -> Promise(String)
+
+Decompresses using lz-string to an inflated string representation
 
 ### `everyAsync(array, filterFn) -> Promise(Bool)`
 

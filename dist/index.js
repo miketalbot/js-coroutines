@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var _exportNames = {
+  compress: true,
+  decompress: true,
   stringify: true,
   parse: true,
   sort: true
@@ -26,6 +28,7 @@ Object.defineProperty(exports, "sort", {
     return _timsort.sort;
   }
 });
+exports.decompress = exports.compress = void 0;
 
 var _json = require("./json");
 
@@ -84,3 +87,36 @@ Object.keys(_asyncWrappers).forEach(function (key) {
     }
   });
 });
+
+var _base64String = require("./lz-string/base64-string");
+
+Object.keys(_base64String).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _base64String[key];
+    }
+  });
+});
+
+var _lzString = require("./lz-string/lz-string");
+
+Object.keys(_lzString).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _lzString[key];
+    }
+  });
+});
+
+var _lzString2 = require("./lz-string");
+
+var compress = _lzString2.LZStringGenerator.compress;
+exports.compress = compress;
+var decompress = _lzString2.LZStringGenerator.decompress;
+exports.decompress = decompress;

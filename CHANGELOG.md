@@ -1,3 +1,8 @@
+#### 1.1.34
+
+- Update documentation
+- Fix an issue with encodeURIComponent version of lz-string
+
 #### 1.1.33
 
 - Add compress and decompression from lz-string in the gaps

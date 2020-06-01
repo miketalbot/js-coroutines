@@ -45,8 +45,8 @@ export const compressToUTF16 = wrapAsPromise(LZStringGenerator.compressToUTF16);
 export const compressToUint8Array = wrapAsPromise(
   LZStringGenerator.compressToUint8Array
 );
-export const compressToEncodeURIComponent = wrapAsPromise(
-  LZStringGenerator.compressToEncodeURIComponent
+export const compressToEncodedURIComponent = wrapAsPromise(
+  LZStringGenerator.compressToEncodedURIComponent
 );
 export const compressAsync = wrapAsPromise(LZStringGenerator.compress);
 export const base64CompressToUTF16Async = wrapAsPromise(
@@ -63,8 +63,8 @@ export const decompressFromUTF16 = wrapAsPromise(
 export const decompressFromUint8Array = wrapAsPromise(
   LZStringGenerator.decompressFromUint8Array
 );
-export const decompressFromEncodeURIComponent = wrapAsPromise(
-  LZStringGenerator.decompressFromEncodeURIComponent
+export const decompressFromEncodedURIComponent = wrapAsPromise(
+  LZStringGenerator.decompressFromURIComponent
 );
 export const decompressAsync = wrapAsPromise(LZStringGenerator.decompress);
 export const base64decompressFromUTF16Async = wrapAsPromise(

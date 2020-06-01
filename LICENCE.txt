@@ -89,3 +89,17 @@ JSON stringify json2.js
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
+lz-string 
+
+Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>
+          (c) 2020 Mike Talbot (generator modifications)
+This work is free. You can redistribute it and/or modify it
+under the terms of the WTFPL, Version 2
+For more information see http://www.wtfpl.net/
+
+For more information, the home page:
+http://pieroxy.net/blog/pages/lz-string/testing.html
+
+LZ-based compression algorithm, version 1.4.4
+
+
