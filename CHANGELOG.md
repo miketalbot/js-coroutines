@@ -1,3 +1,7 @@
+#### 1.1.35
+
+- fixed build issue
+
 #### 1.1.34
 
 - Update documentation

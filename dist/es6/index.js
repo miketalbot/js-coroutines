@@ -8,6 +8,6 @@ export * from "./async-wrappers";
 export * from "./lz-string/base64-string";
 export * from "./lz-string/lz-string";
 export { stringify, parse };
-import { LZStringGenerator } from "./lz-string";
+import { LZStringGenerator } from "./lz-string/lz-string";
 export const compress = LZStringGenerator.compress;
 export const decompress = LZStringGenerator.decompress;

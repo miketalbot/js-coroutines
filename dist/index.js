@@ -113,10 +113,7 @@ Object.keys(_lzString).forEach(function (key) {
     }
   });
 });
-
-var _lzString2 = require("./lz-string");
-
-var compress = _lzString2.LZStringGenerator.compress;
+var compress = _lzString.LZStringGenerator.compress;
 exports.compress = compress;
-var decompress = _lzString2.LZStringGenerator.decompress;
+var decompress = _lzString.LZStringGenerator.decompress;
 exports.decompress = decompress;
