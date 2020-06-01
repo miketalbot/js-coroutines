@@ -1,3 +1,7 @@
+#### 1.1.36
+
+- fix documentation typo
+
 #### 1.1.35
 
 - fixed build issue

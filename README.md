@@ -24,7 +24,7 @@ anywhere you can take a promise or `await` a response.
 
 ## 1.1.33 and onwards support LZ-String compression in the "gaps"
 
-You can use `*compress()` and `*uncompress()` to compress to storable/transmittable strings.
+You can use `*compress()` and `*decompress()` to compress to storable/transmittable strings.
 
 You can use `compressAsync()` and `decompressAsync()` to perform compression and decompression
 anywhere you can take a promise or `await` a response.
