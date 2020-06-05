@@ -1,3 +1,9 @@
+#### 2.1.37
+
+- remove direct reference to requestIdleCallback polyfill for React Native support.  This 
+  can now be added manually on websites requiring it
+- first attempts at RN support
+
 #### 1.1.36
 
 - fix documentation typo

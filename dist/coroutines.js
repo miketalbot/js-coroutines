@@ -8,8 +8,6 @@ exports.update = update;
 exports.runAsync = runAsync;
 exports.default = void 0;
 
-require("requestidlecallback-polyfill");
-
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -91,11 +89,15 @@ function run(coroutine) {
 }
 
 function update(coroutine) {
+  for (var _len = arguments.length, params = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    params[_key - 1] = arguments[_key];
+  }
+
   var terminated = false;
   var resolver = null;
   var result = new Promise(function (resolve, reject) {
     resolver = resolve;
-    var iterator = coroutine();
+    var iterator = coroutine.apply(void 0, params);
     window.requestAnimationFrame(run);
 
     function run() {

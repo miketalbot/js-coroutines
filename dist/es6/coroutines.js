@@ -1,5 +1,3 @@
-import "requestidlecallback-polyfill";
-
 export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
   let terminated = false;
   let resolver = null;
@@ -62,12 +60,12 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
   return result;
 }
 
-export function update(coroutine) {
+export function update(coroutine, ...params) {
   let terminated = false;
   let resolver = null;
   const result = new Promise(function (resolve, reject) {
     resolver = resolve;
-    const iterator = coroutine();
+    const iterator = coroutine(...params);
     window.requestAnimationFrame(run);
 
     function run() {
