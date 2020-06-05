@@ -1,3 +1,7 @@
+#### 2.1.38
+
+- Provide own polyfill for requestIdleCallback
+
 #### 2.1.37
 
 - remove direct reference to requestIdleCallback polyfill for React Native support.  This 

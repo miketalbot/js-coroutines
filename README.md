@@ -126,16 +126,10 @@ async function asyncFunctions() {
 
 ## Getting Started Writing Your Own Generators
 
-`js-coroutines` uses generator functions and `requestIdleCallback` to let you easily split up
+`js-coroutines` uses generator functions and `requestIdleCallback` (polyfilled) to let you easily split up
 your work with minimal effort.
 
-To support all legacy browsers you will need to polyfill `requestIdleCallback` [using this polyfill](https://github.com/pladaria/requestidlecallback-polyfill).
-```bash
-npm i requestidlecallback-polyfill
-```
-
 A simple generator:
-
 
 ```js
 await run(function* () {

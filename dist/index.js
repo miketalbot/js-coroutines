@@ -113,6 +113,9 @@ Object.keys(_lzString).forEach(function (key) {
     }
   });
 });
+
+require("./polyfill");
+
 var compress = _lzString.LZStringGenerator.compress;
 exports.compress = compress;
 var decompress = _lzString.LZStringGenerator.decompress;

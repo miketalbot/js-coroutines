@@ -11,3 +11,4 @@ export { stringify, parse };
 import { LZStringGenerator } from "./lz-string/lz-string";
 export const compress = LZStringGenerator.compress;
 export const decompress = LZStringGenerator.decompress;
+import './polyfill'
