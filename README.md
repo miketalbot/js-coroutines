@@ -1,5 +1,7 @@
 # js-coroutines
 
+**Supports all browsers and React Native**
+
 When is the right time to sort a massive array on the main thread of a Javascript app? Well any time you
 like if you don't mind the user seeing all of your animations and effects jank to hell. Even transferring
 to a worker thread is going to hit the main thread for serialization and stutter everything.
