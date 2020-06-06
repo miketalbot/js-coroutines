@@ -58,7 +58,7 @@ try {
 
       function startFrame() {
         var time = Date.now();
-        setImmediate(function () {
+        setTimeout(function () {
           return endOfWork(time);
         });
       }

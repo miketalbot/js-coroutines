@@ -56,7 +56,7 @@ try {
 
             function startFrame() {
                 const time = Date.now()
-                setImmediate(() => endOfWork(time))
+                setTimeout(() => endOfWork(time))
             }
 
             function endOfWork(time = 100) {

@@ -1,3 +1,11 @@
+#### 2.1.41
+
+- Improved polyfill
+
+#### 2.1.40
+
+- Tested react native
+
 #### 2.1.38
 
 - Provide own polyfill for requestIdleCallback
