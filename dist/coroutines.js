@@ -12,6 +12,84 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+/**
+ *<p>
+ * A coroutine to be run during the gaps in other processing and animation.
+ *</p>
+ * <p>
+ * The coroutine should <code>yield</code> regularly to do a time check.  A plain <code>yield</code> will cause
+ * a check against the standard time remaining specified when running.  <code>yield {number}</code> will
+ * check that <code>number</code> milliseconds are available and <code>yield true</code> will abandon any more
+ * processing on the current frame.
+ *</p>
+ * @callback Coroutine
+ * @generator
+ * @yields {number} either undefined to perform a standard time remaining check, a number of milliseconds required for the next step or true if we should abandon the current frame
+ * @returns the result of the function if any to be returned to the caller
+ */
+
+/**
+ * @typedef IteratorResult
+ * @object
+ * @property {any} value - the returned value
+ * @property {boolean} done - whether the iterator is complete
+ */
+
+/**
+ * @interface Iterator
+ */
+
+/**
+ * Get the next value
+ * @function
+ * @name Iterator#next
+ * @returns {IteratorResult}
+ */
+
+/**
+ * A coroutine to be used in high priority to animate.
+ *
+ * Executing a <code>yield</code> will cause the routine to resume at the start
+ * of the next frame.
+ * @callback AnimationCoroutine
+ * @generator
+ * @returns the result of the function if any to be returned to the caller
+ */
+
+/**
+ * <p>
+ *     Starts an idle time coroutine and returns a promise for its completion and
+ *      any value it might return.
+ * </p>
+ * <p>
+ *     You may pass a coroutine function or the result of calling such a function.  The
+ *     latter helps when you must provide parameters to the coroutine.
+ * </p>
+ * @param {Coroutine|Iterator} coroutine the routine to run or an iterator for an already started coroutine
+ * @param {number} [loopWhileMsRemains=1 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
+ * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
+ * @returns {Promise<any>} the result of the coroutine
+ * <strong>The promise returned by <code>run</code> has a <code>terminate()</code> method
+ * that can be used to stop the routine.</strong>
+ * @example
+ * async function process() {
+ *     let answer = await run(function * () {
+ *         let total = 0
+ *         for(let i=1; i < 10000000; i++) {
+ *            total += i
+ *            if((i % 100) === 0) yield
+ *         }
+ *         return total
+ *     })
+ *     ...
+ * }
+ *
+ * // Or
+ *
+ * async function process(param) {
+ *     let answer = await run(someCoroutine(param))
+ * }
+ */
 function run(coroutine) {
   var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
   var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 16 * 10;
@@ -19,7 +97,7 @@ function run(coroutine) {
   var resolver = null;
   var result = new Promise(function (resolve, reject) {
     resolver = resolve;
-    var iterator = coroutine(); // Request a callback during idle
+    var iterator = coroutine.next ? coroutine : coroutine(); // Request a callback during idle
 
     window.requestIdleCallback(run); // Handle background processing when tab is not active
 
@@ -87,6 +165,19 @@ function run(coroutine) {
 
   return result;
 }
+/**
+ * Start an animation coroutine, the animation will continue until
+ * you return and will be broken up between frames by using a
+ * <code>yield</code>.
+ *
+ * @param {AnimationCoroutine|Iterator} coroutine - The animation to run
+ * @param {...*} [params] - Parameters to be passed to the animation function
+ * @returns {Promise<any>} a value that will be returned to the caller
+ * when the animation is complete.
+ * <strong>The promise returned by <code>update</code> has a <code>terminate()</code> method
+ * that can be used to stop the routine.</strong>
+ */
+
 
 function update(coroutine) {
   for (var _len = arguments.length, params = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -97,7 +188,7 @@ function update(coroutine) {
   var resolver = null;
   var result = new Promise(function (resolve, reject) {
     resolver = resolve;
-    var iterator = coroutine.apply(void 0, params);
+    var iterator = coroutine.next ? coroutine.next : coroutine.apply(void 0, params);
     window.requestAnimationFrame(run);
 
     function run() {
@@ -134,6 +225,16 @@ function update(coroutine) {
 
   return result;
 }
+/**
+ * Starts an idle time coroutine using an async generator - <strong>this is NOT normally required
+ * and the performance of such routines is slower than ordinary coroutines</strong>.  This is included
+ * in case of an edge case requirement.
+ * @param {Coroutine|Iterator} coroutine - the routine to run
+ * @param {number} [loopWhileMsRemains=1 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
+ * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
+ * @returns {Promise<any>} the result of the coroutine
+ */
+
 
 function runAsync(coroutine) {
   var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
@@ -236,14 +337,28 @@ function runAsync(coroutine) {
               };
 
               resolver = resolve;
-              _context2.next = 5;
-              return Promise.resolve(coroutine());
 
-            case 5:
-              iterator = _context2.sent;
-              window.requestIdleCallback(run);
+              if (!coroutine.next) {
+                _context2.next = 7;
+                break;
+              }
+
+              _context2.t0 = coroutine.next;
+              _context2.next = 10;
+              break;
 
             case 7:
+              _context2.next = 9;
+              return Promise.resolve(coroutine());
+
+            case 9:
+              _context2.t0 = _context2.sent;
+
+            case 10:
+              iterator = _context2.t0;
+              window.requestIdleCallback(run);
+
+            case 12:
             case "end":
               return _context2.stop();
           }

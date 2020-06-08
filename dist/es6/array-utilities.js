@@ -1,11 +1,55 @@
 import {yielding} from './wrappers'
 
+/**
+ * @callback Process
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ */
+
+/**
+ * @callback Filter
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {boolean} true if included in the filter
+ */
+
+/**
+ * @callback Map
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {any} updated item
+ */
+
+/**
+ * @callback Reduce
+ * @param {any} accumulator
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {any} updated value
+ */
+
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {process} fn
+ */
 export function* forEach(array, fn) {
     for (let index = 0, length = array.length; index < length; index++) {
         yield* fn(array[index], index, array)
     }
 }
 
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns array of elements matching the filter
+ */
 export function* filter(array, fn) {
     let result = []
     let index = 0
@@ -15,6 +59,13 @@ export function* filter(array, fn) {
     return result
 }
 
+/**
+ * @param {Array} array
+ * @param {Reduce} fn
+ * @param {any} [initialValue]
+ * @returns The result of processing the reduction function on all
+ * of the items in the array
+ */
 export function* reduce(array, fn, initial) {
     let result = initial || array[0]
     let index = 0
@@ -24,6 +75,13 @@ export function* reduce(array, fn, initial) {
     return result
 }
 
+/**
+ * Concatenate two arrays into a new array
+ * @generator
+ * @param {Array} array1
+ * @param {Array} array2
+ * @returns {Array} the concatenated arrays
+ */
 export function* concat(array1, array2) {
     yield true
     const result = new Array(array1.length + array2.length)
@@ -40,6 +98,13 @@ export function* concat(array1, array2) {
     return result
 }
 
+/**
+ * Appends one array to another
+ * @generator
+ * @param {Array} array1 - the destination
+ * @param {Array} array2 - the source
+ * @returns {Array} returns <code>array1</code>
+ */
 export function* append(array1, array2) {
     const l = array1.length
     yield true
@@ -53,6 +118,12 @@ export function* append(array1, array2) {
     return array1
 }
 
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Map} fn
+ * @returns {Array} new array of mapped values
+ */
 export function* map(array, fn) {
     yield true
     let result = new Array(array.length)
@@ -64,6 +135,12 @@ export function* map(array, fn) {
     return result
 }
 
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {any} the first matching value in the array or null
+ */
 export function* find(array, fn) {
     let index = 0
     for (let item of array) {
@@ -73,6 +150,12 @@ export function* find(array, fn) {
     return undefined
 }
 
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {number} Index of matching element or -1
+ */
 export function* findIndex(array, fn) {
     let index = 0
     for (let item of array) {
@@ -82,6 +165,12 @@ export function* findIndex(array, fn) {
     return -1
 }
 
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {boolean} true if at least one item matched the filter
+ */
 export function* some(array, fn) {
     let index = 0
     for (let item of array) {
@@ -91,6 +180,12 @@ export function* some(array, fn) {
     return false
 }
 
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {boolean} true if all of the array items matched the filter
+ */
 export function* every(array, fn) {
     let index = 0
     for (let item of array) {

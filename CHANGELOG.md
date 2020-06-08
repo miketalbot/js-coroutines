@@ -1,3 +1,8 @@
+#### 2.1.42
+
+- Can start `run` or `update` with the results of calling a generator to enable parameter passing
+- Main website linked
+
 #### 2.1.41
 
 - Improved polyfill

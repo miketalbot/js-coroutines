@@ -33,6 +33,43 @@ var _marked = /*#__PURE__*/regeneratorRuntime.mark(forEach),
     _marked9 = /*#__PURE__*/regeneratorRuntime.mark(some),
     _marked10 = /*#__PURE__*/regeneratorRuntime.mark(every);
 
+/**
+ * @callback Process
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ */
+
+/**
+ * @callback Filter
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {boolean} true if included in the filter
+ */
+
+/**
+ * @callback Map
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {any} updated item
+ */
+
+/**
+ * @callback Reduce
+ * @param {any} accumulator
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {any} updated value
+ */
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {process} fn
+ */
 function forEach(array, fn) {
   var index, length;
   return regeneratorRuntime.wrap(function forEach$(_context) {
@@ -61,6 +98,13 @@ function forEach(array, fn) {
     }
   }, _marked);
 }
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns array of elements matching the filter
+ */
+
 
 function filter(array, fn) {
   var result, index, _iterator, _step, item;
@@ -124,6 +168,14 @@ function filter(array, fn) {
     }
   }, _marked2, null, [[3, 14, 17, 20]]);
 }
+/**
+ * @param {Array} array
+ * @param {Reduce} fn
+ * @param {any} [initialValue]
+ * @returns The result of processing the reduction function on all
+ * of the items in the array
+ */
+
 
 function reduce(array, fn, initial) {
   var result, index, _iterator2, _step2, item;
@@ -182,6 +234,14 @@ function reduce(array, fn, initial) {
     }
   }, _marked3, null, [[3, 13, 16, 19]]);
 }
+/**
+ * Concatenate two arrays into a new array
+ * @generator
+ * @param {Array} array1
+ * @param {Array} array2
+ * @returns {Array} the concatenated arrays
+ */
+
 
 function concat(array1, array2) {
   var result, l;
@@ -218,6 +278,14 @@ function concat(array1, array2) {
     }
   }, _marked4);
 }
+/**
+ * Appends one array to another
+ * @generator
+ * @param {Array} array1 - the destination
+ * @param {Array} array2 - the source
+ * @returns {Array} returns <code>array1</code>
+ */
+
 
 function append(array1, array2) {
   var l;
@@ -249,6 +317,13 @@ function append(array1, array2) {
     }
   }, _marked5);
 }
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Map} fn
+ * @returns {Array} new array of mapped values
+ */
+
 
 function map(array, fn) {
   var result, index, _iterator3, _step3, item;
@@ -315,6 +390,13 @@ function map(array, fn) {
     }
   }, _marked6, null, [[7, 17, 20, 23]]);
 }
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {any} the first matching value in the array or null
+ */
+
 
 function find(array, fn) {
   var index, _iterator4, _step4, item, result;
@@ -379,6 +461,13 @@ function find(array, fn) {
     }
   }, _marked7, null, [[2, 14, 17, 20]]);
 }
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {number} Index of matching element or -1
+ */
+
 
 function findIndex(array, fn) {
   var index, _iterator5, _step5, item, result;
@@ -443,6 +532,13 @@ function findIndex(array, fn) {
     }
   }, _marked8, null, [[2, 14, 17, 20]]);
 }
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {boolean} true if at least one item matched the filter
+ */
+
 
 function some(array, fn) {
   var index, _iterator6, _step6, item, result;
@@ -507,6 +603,13 @@ function some(array, fn) {
     }
   }, _marked9, null, [[2, 14, 17, 20]]);
 }
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {boolean} true if all of the array items matched the filter
+ */
+
 
 function every(array, fn) {
   var index, _iterator7, _step7, item, result;

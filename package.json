@@ -1,6 +1,6 @@
 {
   "name": "js-coroutines",
-  "version": "2.1.41",
+  "version": "2.1.42",
   "private": false,
   "files": [
     "dist",
@@ -36,7 +36,7 @@
   "scripts": {
     "start": "PORT=3012 react-scripts start",
     "dts": "node ./build-dts.js",
-    "document": "rm -rf ./docs && jsdoc -c ./doc.conf.json && cp -r ./docs ../js-coroutines-web",
+    "document": "rm -rf ./docs && jsdoc -c ./doc.conf.json && cp -r ./docs ../js-coroutines-web/public",
     "tsd": "jsdoc -t node_modules/tsd-jsdoc/dist -r ./src/component",
     "build": "source ./scripts/build.sh",
     "push": "node ./node_modules/versiony-cli/bin/cli.js ./package.json --patch && npm run build && npm publish && git add . && git commit -am build && git push",
@@ -62,6 +62,5 @@
       "last 1 safari version"
     ]
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
