@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/js-coroutines.iml" filepath="$PROJECT_DIR$/.idea/js-coroutines.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../js-coroutines-web/.idea/js-coroutines-web.iml" filepath="$PROJECT_DIR$/../js-coroutines-web/.idea/js-coroutines-web.iml" />
     </modules>
   </component>
 </project>

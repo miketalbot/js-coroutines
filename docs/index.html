@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Home - js-coroutines</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content="js-coroutines"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    <meta property="og:site_name" content="js-coroutines"/>
+    <meta property="og:url" content="http://js-coroutines.com"/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="http://js-coroutines.com" >JS-COROUTINES</a></h2><h3>Global</h3><ul><li><a href="global.html#append">append</a></li><li><a href="global.html#appendAsync">appendAsync</a></li><li><a href="global.html#base64CompressAsync">base64CompressAsync</a></li><li><a href="global.html#base64CompressToUTF16Async">base64CompressToUTF16Async</a></li><li><a href="global.html#base64Decompress">base64Decompress</a></li><li><a href="global.html#base64decompressFromUTF16Async">base64decompressFromUTF16Async</a></li><li><a href="global.html#compressAsync">compressAsync</a></li><li><a href="global.html#compressToBase64Async">compressToBase64Async</a></li><li><a href="global.html#compressToEncodedURIComponentAsync">compressToEncodedURIComponentAsync</a></li><li><a href="global.html#compressToUint8ArrayAsync">compressToUint8ArrayAsync</a></li><li><a href="global.html#compressToUTF16Async">compressToUTF16Async</a></li><li><a href="global.html#concat">concat</a></li><li><a href="global.html#concatAsync">concatAsync</a></li><li><a href="global.html#decompressAsync">decompressAsync</a></li><li><a href="global.html#decompressFromEncodedURIComponentAsync">decompressFromEncodedURIComponentAsync</a></li><li><a href="global.html#decompressFromUint8ArrayAsync">decompressFromUint8ArrayAsync</a></li><li><a href="global.html#decompressFromUTF16Async">decompressFromUTF16Async</a></li><li><a href="global.html#every">every</a></li><li><a href="global.html#everyAsync">everyAsync</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#filterAsync">filterAsync</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAsync">findAsync</a></li><li><a href="global.html#findIndex">findIndex</a></li><li><a href="global.html#findIndexAsync">findIndexAsync</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#forEachAsync">forEachAsync</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mapAsync">mapAsync</a></li><li><a href="global.html#parseAsync">parseAsync</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#reduceAsync">reduceAsync</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#runAsync">runAsync</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#someAsync">someAsync</a></li><li><a href="global.html#sortAsync">sortAsync</a></li><li><a href="global.html#stringifyAsync">stringifyAsync</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#wrapAsPromise">wrapAsPromise</a></li><li><a href="global.html#yielding">yielding</a></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+    <section class="package">
+        <h3> </h3>		
+    </section>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    <section class="readme usertext">
+        <article><h1>js-coroutines</h1>
+<p><a href="http://js-coroutines.com"><em>JS-COROUTINES Home Page</em></a></p>
+<p><strong>Supports all browsers and React Native</strong></p>
+<p>When is the right time to sort a massive array on the main thread of a Javascript app? Well any time you
+like if you don't mind the user seeing all of your animations and effects jank to hell. Even transferring
+to a worker thread is going to hit the main thread for serialization and stutter everything.</p>
+<p>So when is the right time? Well it's in all those gaps where you animation isn't doing anything and the
+system is idle. If only you could write something to use up that time and then relinquish control to the
+system so it can animate and do the rest of the work, then resume in the next gap. Well now you can...</p>
+<p><strong>Get 60fps while sorting an array of 10 million items with <em>js-coroutines</em></strong></p>
+<h2>How it works?</h2>
+<p><a href="https://dev.to/miketalbot/60fps-javascript-while-stringfying-and-parsing-100mbs-of-json-84l">This dev.to article goes into detail about how js-coutines works</a></p>
+<h2>Demo</h2>
+<p>See the <a href="https://codesandbox.io/s/js-coroutines-json-demo-etyft?file=/src/App.js">Code Sandbox Demo</a>.</p>
+<h2>Animating Using Coroutines</h2>
+<p>Another super useful way of using coroutines is to animate and control complex states - js-coroutines provides this too with the powerful
+<code>update</code> method that runs every frame in high priority.</p>
+<p>There's an example of how to write your own animation later and you
+can see <a href="https://codesandbox.io/s/coroutines-examples-zeq33">this CodeSandbox demo</a> of stateful animations for more.</p>
+<h2>Commonly required asynchronous operations</h2>
+<p>You can use <code>*stringify()</code> and <code>*parse()</code> to manipulate JSON in an idle coroutine that won't
+block the main thread.</p>
+<p>You can use <code>stringifyAsync()</code> and <code>parseAsync()</code> to perform JSON parsing and stringifying
+anywhere you can take a promise or <code>await</code> a response.</p>
+<p>You can use <code>*compress()</code> and <code>*decompress()</code> to compress to storable/transmittable strings.</p>
+<p>You can use <code>compressAsync()</code> and <code>decompressAsync()</code> to perform compression and decompression
+anywhere you can take a promise or <code>await</code> a response.</p>
+<h3>Compression</h3>
+<p>js-coroutines uses lz-string for compression.</p>
+<p><a href="https://github.com/pieroxy/lz-string">LZ-String GitHub/Documentation</a>.</p>
+<h2>Installation</h2>
+<pre class="prettyprint source lang-sh"><code>npm install --save js-coroutines
+</code></pre>
+<h2>Usage</h2>
+<p>You can make your own generator functions that do anything you like and <code>yield</code> to check
+if there is time remaining this frame:</p>
+<pre class="prettyprint source lang-js"><code>import {run, sort, stringify} from 'js-coroutines'
+
+...
+
+let json = await run(function*() {
+  const results = [];
+  for(let i = 0; i &lt; 10000000; i++) {
+    results.push(Math.random() * 10000);
+    //Check how much time left every 100 entries
+    if(i % 100 === 0) yield;
+  }
+  //Pass to a coroutine sort function
+  yield* sort(results, value=>value)
+  return yield* stringify(results);
+})
+
+</code></pre>
+<p>Or you can just use the Async helper functions in an async routine. This is
+less powerful, but you don't have to start writing generator functions
+or working out where to yield.</p>
+<pre class="prettyprint source lang-js"><code>import { parseAsync, mapAsync } from &quot;js-coroutines&quot;;
+
+async function process(url) {
+  const response = await fetch(&quot;someurl&quot;);
+  //Use the coroutine version of parse, rather than blocking
+  //the main thread permanently by using .json()
+  const result = await parseAsync(await response.text());
+  //Imagining the result is some database rows, map out the
+  //desired response without blocking the main thread for paints
+  const values = await mapAsync(result, (row) => ({
+    item: row.time,
+    value: row.quantity * row.unitPrice,
+  }));
+  return values;
+}
+</code></pre>
+<h2>Getting Started With Async Functions</h2>
+<p>Async functions are the easiest way to use js-coroutines if you just need to
+handle common functions like sorts, finds, filters and JSON parsing in the
+background. If you need to break up your own logic you will have to write
+a generator.</p>
+<p>Just import the <code>xxxAsync</code> version of the function from js-coroutines and
+use a standard Promise chain or <code>await</code> and the code will run only in the
+gaps.</p>
+<pre class="prettyprint source lang-js"><code>async function asyncFunctions() {
+  // Parse the JSON async
+  let o = await parseAsync(json);
+  // Concatenate arrays in the background
+  for (let i = 1; i &lt; 12; i++) {
+    o = await concatAsync(o, o);
+  }
+  // Write out the arrays
+  let output = await stringifyAsync(o);
+  // Map ids from the array in the background
+  let justIds = await mapAsync(o, (v) => v.id);
+  // Return the JSON of just the ids
+  return [output, await stringifyAsync(justIds)];
+}
+</code></pre>
+<h2>Getting Started Writing Your Own Generators</h2>
+<p><code>js-coroutines</code> uses generator functions and <code>requestIdleCallback</code> to let you easily split up
+your work with minimal effort.</p>
+<p>A simple generator:</p>
+<pre class="prettyprint source lang-js"><code>await run(function* () {
+  const strings = [];
+  let results;
+
+  //Create 2 million rows of random values
+  results = new Array(2000000);
+  for (let i = 0; i &lt; 2000000; i++) {
+    //Every 128th record, check to see if we still have time
+    //run the remainder on another tick if we don't
+    if ((i & 127) === 0) yield;
+    results[i] = (Math.random() * 10000) | 0;
+  }
+
+  //Double all the values
+  yield* forEach(
+    results,
+    yielding((r, i) => (results[i] = r * 2))
+  );
+
+  //Get the square roots
+  const sqrRoot = yield* map(
+    results,
+    yielding((r) => Math.sqrt(r))
+  );
+
+  //Sum all of the items
+  const sum = yield* reduce(
+    results,
+    yielding((c, a) => c + a, 64),
+    0
+  );
+
+  //Join the arrays
+  yield* append(results, sqrRoot);
+
+  // Sort the results
+  yield* sort(results, (a, b) => a - b);
+  return results;
+});
+</code></pre>
+<p>As you can probably see, it comes ready with the most useful functions for arrays:</p>
+<ul>
+<li><code>forEach</code></li>
+<li><code>map</code></li>
+<li><code>filter</code></li>
+<li><code>reduce</code></li>
+<li><code>findIndex</code></li>
+<li><code>find</code></li>
+<li><code>some</code></li>
+<li><code>every</code></li>
+<li><code>sort</code></li>
+<li><code>append</code> (array into array)</li>
+<li><code>concat</code> (two arrays into a new array)</li>
+</ul>
+<p>The helper <code>yielding</code> wraps a normal function as a generator and checks remaining time
+every few iterations. You can see it in use above. It's just a helper though - if
+your <code>map</code> function needs to do more work it can just be a generator itself,
+yield when it likes and also pass on to deeper functions that can yield:</p>
+<pre class="prettyprint source lang-js"><code>const results =
+  yield *
+  map(inputArray, function* (element, index) {
+    //Every 200 indices give up work
+    //on this frame by yielding 'true'
+    //yield without true, checks the amount
+    //of remaining time
+    if (index % 200 === 199) yield true;
+
+    //Yield out a filter operation
+    let matched = yield* filter(
+      element,
+      yielding((c) => c > 1000)
+    );
+
+    //Now yield out the calculation of a sum
+    return yield* reduce(
+      matched,
+      yielding((c, a) => c + a),
+      0
+    );
+  });
+</code></pre>
+<p><code>yielding(fn, [optional yieldFrequency]) -&gt; function *</code></p>
+<h2></h2>
+<h2>Async</h2>
+<p>You may also use async generators by calling <code>runAsync</code> instead
+of <code>run</code>. These can call and await promises themselves - be aware
+though that this is a little slower, during the check for time
+remaining phase so it's better to await a <code>run</code> call
+for an inner generator when you are inbetween async calls and
+are running something that may check often - like <code>sort</code>.</p>
+<pre class="prettyprint source lang-js"><code>const results = await runAsync(async function* () {
+  const response = await fetch(&quot;http://someurl&quot;);
+  const rows = await response.json();
+  const processed = await run(function* () {
+    yield* sort(rows, (a) => a.value);
+    return rows;
+  });
+  return processed;
+});
+</code></pre>
+<h1>Update coroutines</h1>
+<p>A great way to do stateful animation is using a coroutine running every frame.
+In this case when you <code>yield</code> you get called back on the next frame making
+stateful animations a piece of cake:</p>
+<pre class="prettyprint source lang-js"><code>import { update } from &quot;js-coroutines&quot;;
+
+//Animate using a coroutine for state
+update(function* () {
+  while (true) {
+    //Move left to right
+    for (let x = -200; x &lt; 200; x++) {
+      logoRef.current.style.marginLeft = `${x * multiplier}px`;
+      yield;
+      //Now we are on the next frame
+    }
+    //Move top to bottom
+    for (let y = 0; y &lt; 200; y++) {
+      logoRef.current.style.marginTop = `${y * multiplier}px`;
+      yield;
+    }
+    //Move diagonally back
+    for (let x = 200; x > -200; x--) {
+      logoRef.current.style.marginLeft = `${x * multiplier}px`;
+      logoRef.current.style.marginTop = ((x + 200) * multiplier) / 2 + &quot;px&quot;;
+      yield;
+    }
+  }
+});
+</code></pre>
+<h1>Writing Coroutines with the API</h1>
+<h3><code>run(coroutineFunction, msToLeaveSpare=1, timeout=160) -&gt; TerminatablePromise(Any)</code></h3>
+<p><code>coroutineFunction</code> must be a <code>function *</code></p>
+<p>Run your coroutine, which will occupy up to the last amount of
+m/s specified in the <code>msToLeaveSpare</code> (0.5 is the minimum) of the idle
+time on the thread. <code>timeout</code> specifies the time before it will run
+if there is no idle time (default 1/10 frames).</p>
+<p>The promise returned has a <code>terminate(result)</code> function that can be used
+to stop the calculation early - maybe you want to go again with different
+parameters.</p>
+<p><code>yield</code> inside your coroutine will check how much time is left and continue
+if there is enough.</p>
+<p><code>yield 2</code> yielding a number results in a check for at least that number of ms remaining.</p>
+<p><code>yield true</code> will definitely abandon the current frames work. Useful if you
+are about to/just have allocated tons of memory to give time for GC.</p>
+<p><code>yield* generatorFn([param], [...param])</code> call a generator function which
+will take over yielding time checks and return the value it creates when done.</p>
+<pre class="prettyprint source lang-js"><code>function* myCoroutine() {
+  const results = [];
+  for (let i = 1; i &lt; 1000000; i++) {
+    if ((i & 127) === 0) yield; //time check
+    results.push(i);
+  }
+  yield true; // end current frame processing
+  let anotherArray = new Array(results.length);
+  yield true; // give time for GC
+  // Run a for loop on the results
+  yield* forEach(
+    results,
+    yielding(
+      (result, index, collection) =>
+        (anotherArray[index] = result / collection.length)
+    )
+  );
+  return anotherArray;
+}
+</code></pre>
+<h3><code>*yielding(fn, [optional frequency=8]) -&gt; function *</code></h3>
+<p>Converts a normal function into one that yields every <code>frequency</code> calls.</p>
+<p>Very useful for providing map/filter functions etc.</p>
+<h3><code>wrapAsPromise(coroutine) -&gt; function([params]) -&gt; Promise(Any)</code></h3>
+<p>Returns an async function that can be called with await and will call
+the passed in coroutine forwarding parameters.</p>
+<pre class="prettyprint source lang-js"><code>//Create an async function
+const toTuplesAsync = wrapAsPromise(function* (array) {
+  let output = [];
+  //Create tuples
+  for (let i = 0; i &lt; array.length; i += 2) {
+    output.push([array[i], array[i + 1]]);
+    yield;
+  }
+  return output;
+});
+
+...
+
+async function myProcess() {
+  const data = await getDataFromSomewhere();
+  //Call your wrapped coroutine
+  const tuples = await toTuplesAsync(data);
+  //do something with the result
+  return processTuplesSomehow(tuples);
+}
+
+
+</code></pre>
+<h2>License</h2>
+<p>js-coroutines - MIT (c) 2020 Mike Talbot</p>
+<p>Timsort - MIT (c) 2015 Marco Ziccardi (c) 2020 Mike Talbot (Generator modifications)</p>
+<p>JSON stringify - Public Domain (c) 2017 Douglas Crockford (c) 2020 Mike Talbot (Generator modifications)</p>
+<p>JSON Parse - yastjson - MIT (c) 2020 5u9ar (zhuyingda) (c) 2020 Mike Talbot (Optimisations and generator modifications)</p></article>
+    </section>
+
+
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jun 08 2020 20:25:41 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

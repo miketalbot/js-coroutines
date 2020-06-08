@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>array-utilities.js - js-coroutines</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content="js-coroutines"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    <meta property="og:site_name" content="js-coroutines"/>
+    <meta property="og:url" content="http://js-coroutines.com"/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="http://js-coroutines.com" >JS-COROUTINES</a></h2><h3>Global</h3><ul><li><a href="global.html#append">append</a></li><li><a href="global.html#appendAsync">appendAsync</a></li><li><a href="global.html#base64CompressAsync">base64CompressAsync</a></li><li><a href="global.html#base64CompressToUTF16Async">base64CompressToUTF16Async</a></li><li><a href="global.html#base64Decompress">base64Decompress</a></li><li><a href="global.html#base64decompressFromUTF16Async">base64decompressFromUTF16Async</a></li><li><a href="global.html#compressAsync">compressAsync</a></li><li><a href="global.html#compressToBase64Async">compressToBase64Async</a></li><li><a href="global.html#compressToEncodedURIComponentAsync">compressToEncodedURIComponentAsync</a></li><li><a href="global.html#compressToUint8ArrayAsync">compressToUint8ArrayAsync</a></li><li><a href="global.html#compressToUTF16Async">compressToUTF16Async</a></li><li><a href="global.html#concat">concat</a></li><li><a href="global.html#concatAsync">concatAsync</a></li><li><a href="global.html#decompressAsync">decompressAsync</a></li><li><a href="global.html#decompressFromEncodedURIComponentAsync">decompressFromEncodedURIComponentAsync</a></li><li><a href="global.html#decompressFromUint8ArrayAsync">decompressFromUint8ArrayAsync</a></li><li><a href="global.html#decompressFromUTF16Async">decompressFromUTF16Async</a></li><li><a href="global.html#every">every</a></li><li><a href="global.html#everyAsync">everyAsync</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#filterAsync">filterAsync</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAsync">findAsync</a></li><li><a href="global.html#findIndex">findIndex</a></li><li><a href="global.html#findIndexAsync">findIndexAsync</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#forEachAsync">forEachAsync</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mapAsync">mapAsync</a></li><li><a href="global.html#parseAsync">parseAsync</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#reduceAsync">reduceAsync</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#runAsync">runAsync</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#someAsync">someAsync</a></li><li><a href="global.html#sortAsync">sortAsync</a></li><li><a href="global.html#stringifyAsync">stringifyAsync</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#wrapAsPromise">wrapAsPromise</a></li><li><a href="global.html#yielding">yielding</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">array-utilities.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {yielding} from './wrappers'
+
+/**
+ * @callback Process
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ */
+
+/**
+ * @callback Filter
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {boolean} true if included in the filter
+ */
+
+/**
+ * @callback Map
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {any} updated item
+ */
+
+/**
+ * @callback Reduce
+ * @param {any} accumulator
+ * @param {any} element
+ * @param {number} index
+ * @param {Array} collection
+ * @returns {any} updated value
+ */
+
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {process} fn
+ */
+export function* forEach(array, fn) {
+    for (let index = 0, length = array.length; index &lt; length; index++) {
+        yield* fn(array[index], index, array)
+    }
+}
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns array of elements matching the filter
+ */
+export function* filter(array, fn) {
+    let result = []
+    let index = 0
+    for (let item of array) {
+        if (yield* fn(item, index++, array)) result.push(item)
+    }
+    return result
+}
+
+/**
+ * @param {Array} array
+ * @param {Reduce} fn
+ * @param {any} [initialValue]
+ * @returns The result of processing the reduction function on all
+ * of the items in the array
+ */
+export function* reduce(array, fn, initial) {
+    let result = initial || array[0]
+    let index = 0
+    for (let item of array) {
+        result = yield* fn(result, item, index, array)
+    }
+    return result
+}
+
+/**
+ * Concatenate two arrays into a new array
+ * @generator
+ * @param {Array} array1
+ * @param {Array} array2
+ * @returns {Array} the concatenated arrays
+ */
+export function* concat(array1, array2) {
+    yield true
+    const result = new Array(array1.length + array2.length)
+    yield
+    const l = array1.length
+    yield* forEach(
+        array1,
+        yielding((a, i) => (result[i] = a))
+    )
+    yield* forEach(
+        array2,
+        yielding((a, i) => (result[i + l] = a))
+    )
+    return result
+}
+
+/**
+ * Appends one array to another
+ * @generator
+ * @param {Array} array1 - the destination
+ * @param {Array} array2 - the source
+ * @returns {Array} returns &lt;code>array1&lt;/code>
+ */
+export function* append(array1, array2) {
+    const l = array1.length
+    yield true
+    array1.length += array2.length
+    yield
+    yield* forEach(
+        array2,
+        yielding((a, i) => (array1[i + l] = a))
+    )
+
+    return array1
+}
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Map} fn
+ * @returns {Array} new array of mapped values
+ */
+export function* map(array, fn) {
+    yield true
+    let result = new Array(array.length)
+    yield
+    let index = 0
+    for (let item of array) {
+        result[index++] = yield* fn(item, index, array)
+    }
+    return result
+}
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {any} the first matching value in the array or null
+ */
+export function* find(array, fn) {
+    let index = 0
+    for (let item of array) {
+        let result = yield* fn(item, index++, array)
+        if (result) return item
+    }
+    return undefined
+}
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {number} Index of matching element or -1
+ */
+export function* findIndex(array, fn) {
+    let index = 0
+    for (let item of array) {
+        let result = yield* fn(item, index++, array)
+        if (result) return index
+    }
+    return -1
+}
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {boolean} true if at least one item matched the filter
+ */
+export function* some(array, fn) {
+    let index = 0
+    for (let item of array) {
+        let result = yield* fn(item, index++, array)
+        if (result) return true
+    }
+    return false
+}
+
+/**
+ * @generator
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {boolean} true if all of the array items matched the filter
+ */
+export function* every(array, fn) {
+    let index = 0
+    for (let item of array) {
+        let result = yield* fn(item, index++, array)
+        if (!result) return false
+    }
+    return true
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jun 08 2020 20:25:41 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

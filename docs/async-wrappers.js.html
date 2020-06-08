@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>async-wrappers.js - js-coroutines</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content="js-coroutines"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    <meta property="og:site_name" content="js-coroutines"/>
+    <meta property="og:url" content="http://js-coroutines.com"/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="http://js-coroutines.com" >JS-COROUTINES</a></h2><h3>Global</h3><ul><li><a href="global.html#append">append</a></li><li><a href="global.html#appendAsync">appendAsync</a></li><li><a href="global.html#base64CompressAsync">base64CompressAsync</a></li><li><a href="global.html#base64CompressToUTF16Async">base64CompressToUTF16Async</a></li><li><a href="global.html#base64Decompress">base64Decompress</a></li><li><a href="global.html#base64decompressFromUTF16Async">base64decompressFromUTF16Async</a></li><li><a href="global.html#compressAsync">compressAsync</a></li><li><a href="global.html#compressToBase64Async">compressToBase64Async</a></li><li><a href="global.html#compressToEncodedURIComponentAsync">compressToEncodedURIComponentAsync</a></li><li><a href="global.html#compressToUint8ArrayAsync">compressToUint8ArrayAsync</a></li><li><a href="global.html#compressToUTF16Async">compressToUTF16Async</a></li><li><a href="global.html#concat">concat</a></li><li><a href="global.html#concatAsync">concatAsync</a></li><li><a href="global.html#decompressAsync">decompressAsync</a></li><li><a href="global.html#decompressFromEncodedURIComponentAsync">decompressFromEncodedURIComponentAsync</a></li><li><a href="global.html#decompressFromUint8ArrayAsync">decompressFromUint8ArrayAsync</a></li><li><a href="global.html#decompressFromUTF16Async">decompressFromUTF16Async</a></li><li><a href="global.html#every">every</a></li><li><a href="global.html#everyAsync">everyAsync</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#filterAsync">filterAsync</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAsync">findAsync</a></li><li><a href="global.html#findIndex">findIndex</a></li><li><a href="global.html#findIndexAsync">findIndexAsync</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#forEachAsync">forEachAsync</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mapAsync">mapAsync</a></li><li><a href="global.html#parseAsync">parseAsync</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#reduceAsync">reduceAsync</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#runAsync">runAsync</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#someAsync">someAsync</a></li><li><a href="global.html#sortAsync">sortAsync</a></li><li><a href="global.html#stringifyAsync">stringifyAsync</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#wrapAsPromise">wrapAsPromise</a></li><li><a href="global.html#yielding">yielding</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">async-wrappers.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {wrapAsPromise, yielding} from './wrappers'
+import {stringify} from './json'
+import {parse} from './yastjson/lib/parse'
+import {sort} from './timsort'
+import {append, concat, every, filter, find, findIndex, forEach, map, reduce, some,} from './array-utilities'
+import {LZStringGenerator} from './lz-string/lz-string'
+import {Base64StringGenerator} from './lz-string/base64-string'
+
+function wrapAsPromiseAndYieldFn(fn) {
+    let yielder = wrapAsPromise(fn)
+    return function (array, fn) {
+        return yielder(array, yielding(fn))
+    }
+}
+
+/**
+ * @callback SortFunction
+ * @param {any} item1
+ * @param {any} item2
+ * @returns &lt; 0 if item 2 is bigger than item 1, === 0 if they are the same else > 0
+ */
+
+/**
+ * @callback ExtractFunction
+ * @param {any} item1
+ * @returns {any} the value to sort item 1 by
+ */
+
+/**
+ * Asynchronously stringify data into JSON
+ * @function
+ * @name stringifyAsync
+ * @param {any} data - Object to store
+ * @returns {Promise.&lt;String>} a Promise for the JSON representation of &lt;code>data&lt;/code>
+ */
+export const stringifyAsync = wrapAsPromise(stringify)
+/**
+ * Asynchronously parse JSON into an object
+ * @function parseAsync
+ * @param {String} json - the JSON to be parsed
+ * @returns {Promise.&lt;any>} a Promise for the parsed JSON
+ */
+export const parseAsync = wrapAsPromise(parse)
+/**
+ * &lt;p>Sort an array (in place) by a sorting function&lt;/p>
+ * &lt;p>Sorts an array in place asynchronously. This function is a yielding
+ * implementation of Timsort (standard sort used in modern browsers). Timsort
+ * is fast and stable making it ideal for multi-key sorts. It it not as fast
+ * as Quicksort.&lt;/p>
+ * @function sortAsync
+ * @param {Array} array - The array to sort
+ * @param {SortFunction|ExtractFunction} sort - The method to sort the array
+ * @returns {Promise.&lt;Array>} a promise for the sorted array
+ * @example
+ * async function process(data) {
+ *     return await sortAsync(data, v=>v.someProperty)
+ * }
+ */
+export const sortAsync = wrapAsPromise(sort)
+/**
+ * Finds an item in an array asynchronously
+ * @function findAsync
+ * @param {Array} array
+ * @param {Filter} filter
+ * @returns {Promise.&lt;any|null>} promise for the item found or null if no match
+ */
+export const findAsync = wrapAsPromiseAndYieldFn(find)
+/**
+ * Finds an item index in an array asynchronously
+ * @function findIndexAsync
+ * @param {Array} array
+ * @param {Filter} filter
+ * @returns {Promise.&lt;Number>} promise for the index of the first item to pass the filter or -1
+ */
+export const findIndexAsync = wrapAsPromiseAndYieldFn(findIndex)
+/**
+ * Maps the contents of an array asynchronously
+ * @function mapAsync
+ * @param {Array} array
+ * @param {Map} mapFn
+ * @returns {Promise.&lt;Array>} promise for the mapped array
+ */
+export const mapAsync = wrapAsPromiseAndYieldFn(map)
+/**
+ * Filters an array asynchronously
+ * @function filterAsync
+ * @param {Array} array
+ * @param {Filter} filter
+ * @returns {Promise.&lt;Array>} promise for the filtered array
+ */
+export const filterAsync = wrapAsPromiseAndYieldFn(filter)
+/**
+ * Performs a reduce on an array asynchronously
+ * @function reduceAsync
+ * @param {Array} array
+ * @param {Reduce} reduceFn
+ * @param {any} initialValue
+ * @returns {Promise.&lt;any>} a promise for the reduced value
+ */
+export const reduceAsync = wrapAsPromiseAndYieldFn(reduce)
+/**
+ * Appends one array to another asynchronously
+ * @function appendAsync
+ * @param {Array} destination
+ * @param {Array} source
+ * @returns {Promise.&lt;Array>} a promise for destination after appending
+ */
+export const appendAsync = wrapAsPromise(append)
+/**
+ * Concatenates 2 arrays into a new array
+ * @function concatAsync
+ * @param {Array} array1
+ * @param {Array} array2
+ * @returns {Promise.&lt;Array>} a promise for combined array
+ */
+export const concatAsync = wrapAsPromise(concat)
+/**
+ * Asynchronously loop over the elements of an array
+ * @function forEachAsync
+ * @param {Array} array
+ * @param {Process} fn
+ * @returns {Promise} promise for the end of the operation
+ */
+export const forEachAsync = wrapAsPromiseAndYieldFn(forEach)
+/**
+ * Asynchronously apply an array &lt;code>some&lt;/code> operation
+ * returning a promise for &lt;code>true&lt;/code> if at least
+ * one item matches
+ * @function someAsync
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {Promise.&lt;Boolean>} promise for true if at least one item matched the filter
+ */
+export const someAsync = wrapAsPromiseAndYieldFn(some)
+/**
+ * Asynchronously check if every element in an array matches
+ * a predicate
+ * @function everyAsync
+ * @param {Array} array
+ * @param {Filter} fn
+ * @returns {Promise.&lt;Boolean>} promise for true if all items matched the filter
+ */
+export const everyAsync = wrapAsPromiseAndYieldFn(every)
+/**
+ * Asynchronously compress a string to a base64 format
+ * @function compressToBase64Async
+ * @param {String} source - the data to compress
+ * @returns {Promise.&lt;String>} a promise for the base64 compressed data
+ */
+export const compressToBase64Async = wrapAsPromise(
+    LZStringGenerator.compressToBase64
+)
+/**
+ * Asynchronously compress a string to a utf16 string
+ * @function compressToUTF16Async
+ * @param {String} source - the data to compress
+ * @returns {Promise.&lt;String>} a promise for the utf16 compressed data
+ */
+export const compressToUTF16Async = wrapAsPromise(LZStringGenerator.compressToUTF16)
+/**
+ * Asynchronously compress a string to a Uint8Array
+ * @function compressToUint8ArrayAsync
+ * @param {String} source - the data to compress
+ * @returns {Promise.&lt;Uint8Array>} a promise for the Uint8Array of compressed data
+ */
+export const compressToUint8ArrayAsync = wrapAsPromise(
+    LZStringGenerator.compressToUint8Array
+)
+/**
+ * Asynchronously compress a string to a URI safe version
+ * @function compressToEncodedURIComponentAsync
+ * @param {String} source - the data to compress
+ * @returns {Promise.&lt;String>} a promise for the string of compressed data
+ */
+export const compressToEncodedURIComponentAsync = wrapAsPromise(
+    LZStringGenerator.compressToEncodedURIComponent
+)
+/**
+ * Asynchronously compress a string of data with lz-string
+ * @function compressAsync
+ * @param {String} source - the data to compress
+ * @returns {Promise.&lt;String>} a promise for the compressed data
+ */
+export const compressAsync = wrapAsPromise(LZStringGenerator.compress)
+/**
+ * Asynchronously apply lz-string base64 remapping of a string to utf16
+ * @function base64CompressToUTF16Async
+ * @param {String} source - the data to compress
+ * @returns {Promise.&lt;String>} a promise for the compressed data
+ */
+export const base64CompressToUTF16Async = wrapAsPromise(
+    Base64StringGenerator.compressToUTF16
+)
+/**
+ * Asynchronously apply lz-string base64 remapping of a string
+ * @function base64CompressAsync
+ * @param {String} source - the data to compress
+ * @returns {Promise.&lt;String>} a promise for the compressed data
+ */
+export const base64Compress = wrapAsPromise(Base64StringGenerator.compress)
+/**
+ * Asynchronously decompress a string from a base64 source
+ * @function compressToBase64Async
+ * @param {String} compressedData - the data to decompress
+ * @returns {Promise.&lt;String>} a promise for the uncompressed data
+ */
+export const decompressFromBase64Async = wrapAsPromise(
+    LZStringGenerator.decompressFromBase64
+)
+/**
+ * Asynchronously decompress a string from a utf16 source
+ * @function decompressFromUTF16Async
+ * @param {String} compressedData - the data to decompress
+ * @returns {Promise.&lt;String>} a promise for the uncompressed data
+ */
+export const decompressFromUTF16Async = wrapAsPromise(
+    LZStringGenerator.decompressFromUTF16
+)
+/**
+ * Asynchronously decompress a string from a utf16 source
+ * @function decompressFromUint8ArrayAsync
+ * @param {String} compressedData - the data to decompress
+ * @returns {Promise.&lt;String>} a promise for the uncompressed data
+ */
+export const decompressFromUint8ArrayAsync = wrapAsPromise(
+    LZStringGenerator.decompressFromUint8Array
+)
+/**
+ * Asynchronously decompress a string from a URL safe URI Component encoded source
+ * @function decompressFromEncodedURIComponentAsync
+ * @param {String} compressedData - the data to decompress
+ * @returns {Promise.&lt;String>} a promise for the uncompressed data
+ */
+export const decompressFromEncodedURIComponentAsync = wrapAsPromise(
+    LZStringGenerator.decompressFromURIComponent
+)
+/**
+ * Asynchronously decompress a string from a string source
+ * @function decompressAsync
+ * @param {String} compressedData - the data to decompress
+ * @returns {Promise.&lt;String>} a promise for the uncompressed data
+ */
+export const decompressAsync = wrapAsPromise(LZStringGenerator.decompress)
+/**
+ * Asynchronously unmap base64 encoded data to a utf16 destination
+ * @function base64decompressFromUTF16Async
+ * @param {String} base64Data - the data to decompress
+ * @returns {Promise.&lt;String>} a promise for the uncompressed data
+ */
+export const base64decompressFromUTF16Async = wrapAsPromise(
+    Base64StringGenerator.decompressFromUTF16
+)
+/**
+ * Asynchronously unmap base64 encoded data
+ * @function base64Decompress
+ * @param {String} base64Data - the data to decompress
+ * @returns {Promise.&lt;String>} a promise for the uncompressed data
+ */
+export const base64Decompress = wrapAsPromise(Base64StringGenerator.decompress)
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jun 08 2020 20:25:41 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>coroutines.js - js-coroutines</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content="js-coroutines"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    <meta property="og:site_name" content="js-coroutines"/>
+    <meta property="og:url" content="http://js-coroutines.com"/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="http://js-coroutines.com" >JS-COROUTINES</a></h2><h3>Global</h3><ul><li><a href="global.html#append">append</a></li><li><a href="global.html#appendAsync">appendAsync</a></li><li><a href="global.html#base64CompressAsync">base64CompressAsync</a></li><li><a href="global.html#base64CompressToUTF16Async">base64CompressToUTF16Async</a></li><li><a href="global.html#base64Decompress">base64Decompress</a></li><li><a href="global.html#base64decompressFromUTF16Async">base64decompressFromUTF16Async</a></li><li><a href="global.html#compressAsync">compressAsync</a></li><li><a href="global.html#compressToBase64Async">compressToBase64Async</a></li><li><a href="global.html#compressToEncodedURIComponentAsync">compressToEncodedURIComponentAsync</a></li><li><a href="global.html#compressToUint8ArrayAsync">compressToUint8ArrayAsync</a></li><li><a href="global.html#compressToUTF16Async">compressToUTF16Async</a></li><li><a href="global.html#concat">concat</a></li><li><a href="global.html#concatAsync">concatAsync</a></li><li><a href="global.html#decompressAsync">decompressAsync</a></li><li><a href="global.html#decompressFromEncodedURIComponentAsync">decompressFromEncodedURIComponentAsync</a></li><li><a href="global.html#decompressFromUint8ArrayAsync">decompressFromUint8ArrayAsync</a></li><li><a href="global.html#decompressFromUTF16Async">decompressFromUTF16Async</a></li><li><a href="global.html#every">every</a></li><li><a href="global.html#everyAsync">everyAsync</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#filterAsync">filterAsync</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAsync">findAsync</a></li><li><a href="global.html#findIndex">findIndex</a></li><li><a href="global.html#findIndexAsync">findIndexAsync</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#forEachAsync">forEachAsync</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mapAsync">mapAsync</a></li><li><a href="global.html#parseAsync">parseAsync</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#reduceAsync">reduceAsync</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#runAsync">runAsync</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#someAsync">someAsync</a></li><li><a href="global.html#sortAsync">sortAsync</a></li><li><a href="global.html#stringifyAsync">stringifyAsync</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#wrapAsPromise">wrapAsPromise</a></li><li><a href="global.html#yielding">yielding</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">coroutines.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ *&lt;p>
+ * A coroutine to be run during the gaps in other processing and animation.
+ *&lt;/p>
+ * &lt;p>
+ * The coroutine should &lt;code>yield&lt;/code> regularly to do a time check.  A plain &lt;code>yield&lt;/code> will cause
+ * a check against the standard time remaining specified when running.  &lt;code>yield {number}&lt;/code> will
+ * check that &lt;code>number&lt;/code> milliseconds are available and &lt;code>yield true&lt;/code> will abandon any more
+ * processing on the current frame.
+ *&lt;/p>
+ * @callback Coroutine
+ * @generator
+ * @yields {number} either undefined to perform a standard time remaining check, a number of milliseconds required for the next step or true if we should abandon the current frame
+ * @returns the result of the function if any to be returned to the caller
+ */
+
+/**
+ * @typedef IteratorResult
+ * @object
+ * @property {any} value - the returned value
+ * @property {boolean} done - whether the iterator is complete
+ */
+
+/**
+ * @interface Iterator
+ */
+
+/**
+ * Get the next value
+ * @function
+ * @name Iterator#next
+ * @returns {IteratorResult}
+ */
+
+/**
+ * A coroutine to be used in high priority to animate.
+ *
+ * Executing a &lt;code>yield&lt;/code> will cause the routine to resume at the start
+ * of the next frame.
+ * @callback AnimationCoroutine
+ * @generator
+ * @returns the result of the function if any to be returned to the caller
+ */
+
+/**
+ * &lt;p>
+ *     Starts an idle time coroutine and returns a promise for its completion and
+ *      any value it might return.
+ * &lt;/p>
+ * &lt;p>
+ *     You may pass a coroutine function or the result of calling such a function.  The
+ *     latter helps when you must provide parameters to the coroutine.
+ * &lt;/p>
+ * @param {Coroutine|Iterator} coroutine the routine to run or an iterator for an already started coroutine
+ * @param {number} [loopWhileMsRemains=1 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
+ * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
+ * @returns {Promise&lt;any>} the result of the coroutine
+ * &lt;strong>The promise returned by &lt;code>run&lt;/code> has a &lt;code>terminate()&lt;/code> method
+ * that can be used to stop the routine.&lt;/strong>
+ * @example
+ * async function process() {
+ *     let answer = await run(function * () {
+ *         let total = 0
+ *         for(let i=1; i &lt; 10000000; i++) {
+ *            total += i
+ *            if((i % 100) === 0) yield
+ *         }
+ *         return total
+ *     })
+ *     ...
+ * }
+ *
+ * // Or
+ *
+ * async function process(param) {
+ *     let answer = await run(someCoroutine(param))
+ * }
+ */
+export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
+    let terminated = false
+    let resolver = null
+    const result = new Promise(function (resolve, reject) {
+        resolver = resolve
+        const iterator = coroutine.next ? coroutine : coroutine()
+        // Request a callback during idle
+        window.requestIdleCallback(run)
+        // Handle background processing when tab is not active
+        let id = setTimeout(runFromTimeout, timeout)
+
+        function run(api) {
+            clearTimeout(id)
+            // Stop the timeout version
+            if (terminated) {
+                iterator.return()
+                return
+            }
+            let minTime = Math.max(0.5, loopWhileMsRemains)
+            try {
+                do {
+                    const {value, done} = iterator.next()
+                    if (done) {
+                        resolve(value)
+                        return
+                    }
+                    if (value === true) {
+                        break
+                    }
+                    if (value) {
+                        minTime = +value
+                        if (isNaN(minTime)) minTime = 1
+                    }
+                } while (api.timeRemaining() > minTime)
+            } catch (e) {
+                reject(e)
+                return
+            }
+            // Request an idle callback
+            window.requestIdleCallback(run)
+            // Request again on timeout
+            id = setTimeout(runFromTimeout, timeout)
+        }
+
+        function runFromTimeout() {
+            const budget = 8.5
+            const start = performance.now()
+            run({
+                timeRemaining() {
+                    return budget - (performance.now() - start)
+                },
+            })
+        }
+    })
+
+    result.terminate = function (result) {
+        terminated = true
+        if (resolver) {
+            resolver(result)
+        }
+    }
+    return result
+}
+
+/**
+ * Start an animation coroutine, the animation will continue until
+ * you return and will be broken up between frames by using a
+ * &lt;code>yield&lt;/code>.
+ *
+ * @param {AnimationCoroutine|Iterator} coroutine - The animation to run
+ * @param {...*} [params] - Parameters to be passed to the animation function
+ * @returns {Promise&lt;any>} a value that will be returned to the caller
+ * when the animation is complete.
+ * &lt;strong>The promise returned by &lt;code>update&lt;/code> has a &lt;code>terminate()&lt;/code> method
+ * that can be used to stop the routine.&lt;/strong>
+ */
+export function update(coroutine, ...params) {
+    let terminated = false
+    let resolver = null
+    const result = new Promise(function (resolve, reject) {
+        resolver = resolve
+        const iterator = coroutine.next ? coroutine.next : coroutine(...params)
+        window.requestAnimationFrame(run)
+
+        function run() {
+            if (terminated) {
+                iterator.return()
+                return
+            }
+
+            try {
+                const {value, done} = iterator.next()
+                if (done) {
+                    resolve(value)
+                    return
+                }
+            } catch (e) {
+                reject(e)
+                return
+            }
+
+            window.requestAnimationFrame(run)
+        }
+    })
+    result.terminate = function (result) {
+        terminated = true
+        if (resolver) {
+            resolver(result)
+        }
+    }
+    return result
+}
+
+/**
+ * Starts an idle time coroutine using an async generator - &lt;strong>this is NOT normally required
+ * and the performance of such routines is slower than ordinary coroutines&lt;/strong>.  This is included
+ * in case of an edge case requirement.
+ * @param {Coroutine|Iterator} coroutine - the routine to run
+ * @param {number} [loopWhileMsRemains=1 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
+ * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
+ * @returns {Promise&lt;any>} the result of the coroutine
+ */
+export function runAsync(coroutine, loopWhileMsRemains = 1, timeout = 160) {
+    const options = {timeout}
+    let terminated = false
+    let resolver = null
+    const result = new Promise(async function (resolve, reject) {
+        resolver = resolve
+        const iterator = coroutine.next ? coroutine.next : await Promise.resolve(coroutine())
+        window.requestIdleCallback(run)
+
+        async function run(api) {
+            if (terminated) {
+                iterator.return()
+                return
+            }
+            let minTime = Math.max(0.5, loopWhileMsRemains)
+            try {
+                do {
+                    const {value, done} = await iterator.next()
+                    if (done) {
+                        resolve(value)
+                        return
+                    }
+                    if (value === true) {
+                        break
+                    }
+                    if (value) {
+                        minTime = +value
+                        if (isNaN(minTime)) minTime = 1
+                    }
+                } while (api.timeRemaining() > minTime)
+            } catch (e) {
+                reject(e)
+                return
+            }
+
+            window.requestIdleCallback(run, options)
+        }
+    })
+    result.terminate = function (result) {
+        terminated = true
+        if (resolver) {
+            resolver(result)
+        }
+    }
+    return result
+}
+
+export default run
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jun 08 2020 20:25:41 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

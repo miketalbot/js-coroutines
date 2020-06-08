@@ -1,0 +1,46 @@
+{
+  "plugins": [
+  ],
+  "source": {
+    "include": [
+      "src/component/coroutines.js",
+      "src/component/array-utilities.js",
+      "src/component/index.js",
+      "src/component/async-wrappers.js",
+      "src/component/wrappers.js"
+    ]
+  },
+  "opts": {
+    "destination": "./docs/",
+    "recurse": true,
+    "encoding": "utf8",
+    "template": "./node_modules/docdash",
+    "readme": "./README.md",
+    "tutorials": "./tutorials"
+  },
+  "docdash": {
+    "typedefs": false,
+    "sectionOrder": [
+
+    ],
+    "menu": {
+      "JS-COROUTINES": {
+        "href": "http://js-coroutines.com"
+      }
+    },
+    "meta": {
+      "title": "js-coroutines"
+    },
+    "openGraph": {
+      // Open Graph options (mostly for Facebook and other sites to easily extract meta information)
+      "title": "js-coroutines",
+      // Title of the website
+      "type": "website",
+      // Main image/logo
+      "site_name": "js-coroutines",
+      // Site name
+      "url": "http://js-coroutines.com"
+      // Main canonical URL for the main page of the site
+    }
+  }
+}
