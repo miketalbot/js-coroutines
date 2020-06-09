@@ -6,7 +6,7 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
             initialized = true
             const MAX_TIME = 15
             let callbacks = []
-            global.requestIdleCallback = function (fn) {
+            global.requestIdleCallback = (fn) => {
                 callbacks.push(fn)
             }
 
@@ -41,12 +41,11 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
     } catch (e) {
     }
 }
-
 try {
     if (!initialized && window && !window.requestIdleCallback) {
         const MAX_TIME = 15
         let callbacks = []
-        window.requestIdleCallback = function (fn) {
+        window.requestIdleCallback =  (fn) => {
             callbacks.push(fn)
         }
 
@@ -79,4 +78,5 @@ try {
         })()
     }
 } catch (e) {
+    console.error(e)
 }

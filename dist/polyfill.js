@@ -11,7 +11,9 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
 
       global.requestIdleCallback = function (fn) {
         callbacks.push(fn);
-      }(function idle() {
+      };
+
+      (function idle() {
         requestAnimationFrame(startFrame);
 
         function startFrame() {
@@ -53,7 +55,9 @@ try {
 
     window.requestIdleCallback = function (fn) {
       _callbacks.push(fn);
-    }(function idle() {
+    };
+
+    (function idle() {
       requestAnimationFrame(startFrame);
 
       function startFrame() {
@@ -85,4 +89,6 @@ try {
       }
     })();
   }
-} catch (e) {}
+} catch (e) {
+  console.error(e);
+}

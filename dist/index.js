@@ -30,9 +30,24 @@ Object.defineProperty(exports, "sort", {
 });
 exports.decompress = exports.compress = void 0;
 
+require("./polyfill");
+
 var _json = require("./json");
 
 var _parse = require("./yastjson/lib/parse");
+
+var _lzString = require("./lz-string/lz-string");
+
+Object.keys(_lzString).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _lzString[key];
+    }
+  });
+});
 
 var _timsort = require("./timsort");
 
@@ -100,22 +115,6 @@ Object.keys(_base64String).forEach(function (key) {
     }
   });
 });
-
-var _lzString = require("./lz-string/lz-string");
-
-Object.keys(_lzString).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _lzString[key];
-    }
-  });
-});
-
-require("./polyfill");
-
 var compress = _lzString.LZStringGenerator.compress;
 exports.compress = compress;
 var decompress = _lzString.LZStringGenerator.decompress;
