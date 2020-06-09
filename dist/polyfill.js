@@ -50,7 +50,7 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
 
 try {
   if (!initialized && window && !window.requestIdleCallback) {
-    var _MAX_TIME = 15;
+    var _MAX_TIME = 12;
     var _callbacks = [];
 
     window.requestIdleCallback = function (fn) {
