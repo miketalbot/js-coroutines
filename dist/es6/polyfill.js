@@ -43,7 +43,7 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
 }
 try {
     if (!initialized && window && !window.requestIdleCallback) {
-        const MAX_TIME = 12
+        const MAX_TIME = 14
         let callbacks = []
         window.requestIdleCallback =  (fn) => {
             callbacks.push(fn)

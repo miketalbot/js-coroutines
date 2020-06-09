@@ -1,3 +1,7 @@
+#### 2.1.44 - 2.1.48
+
+- Adjust polyfill for a variety of Safari use cases
+
 #### 2.1.43
 
 - Fix polyfill on Safari
