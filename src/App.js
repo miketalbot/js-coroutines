@@ -130,6 +130,13 @@ function App() {
         yielding((r, i) => (results[i] = r * 2))
       );
       add(`Doubled the value of ${format(results.length)} items`);
+
+      const result = yield new Promise(resolve => {
+        setTimeout(() => {
+          resolve(1234)
+        }, 1000)
+      })
+      add(`Result of a Promise was ${result}`);
       //Get the square roots
       const sqrRoot = yield* map(
         results,

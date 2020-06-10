@@ -1,3 +1,10 @@
+#### 2.1.49
+
+- Added the ability to yield a Promise and have the coroutine
+  restart when it finishes
+  
+- Deprecated runAsync (due to above)
+
 #### 2.1.44 - 2.1.48
 
 - Adjust polyfill for a variety of Safari use cases

@@ -17,7 +17,7 @@
 /**
  * @typedef IteratorResult
  * @object
- * @property {any} value - the returned value
+ * @property {any} [value] - the returned value
  * @property {boolean} done - whether the iterator is complete
  */
 
@@ -29,6 +29,7 @@
  * Get the next value
  * @function
  * @name Iterator#next
+ * @param {any} value - value to send to the coroutine
  * @returns {IteratorResult}
  */
 
@@ -86,6 +87,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
         window.requestIdleCallback(run)
         // Handle background processing when tab is not active
         let id = setTimeout(runFromTimeout, timeout)
+        let parameter = undefined
 
         function run(api) {
             clearTimeout(id)
@@ -97,17 +99,24 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
             let minTime = Math.max(0.5, loopWhileMsRemains)
             try {
                 do {
-                    const {value, done} = iterator.next()
+                    const {value, done} = iterator.next(parameter)
+                    parameter = undefined
                     if (done) {
                         resolve(value)
                         return
                     }
                     if (value === true) {
                         break
-                    }
-                    if (value) {
+                    } else if (typeof value === 'number') {
                         minTime = +value
                         if (isNaN(minTime)) minTime = 1
+                    } else if (value && value.then) {
+                        value.then(result => {
+                            parameter = result
+                            window.requestIdleCallback(run)
+                            id = setTimeout(runFromTimeout, timeout)
+                        }, console.error)
+                        return
                     }
                 } while (api.timeRemaining() > minTime)
             } catch (e) {
@@ -190,6 +199,7 @@ export function update(coroutine, ...params) {
 }
 
 /**
+ * @deprecated
  * Starts an idle time coroutine using an async generator - <strong>this is NOT normally required
  * and the performance of such routines is slower than ordinary coroutines</strong>.  This is included
  * in case of an edge case requirement.

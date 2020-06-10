@@ -31,7 +31,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /**
  * @typedef IteratorResult
  * @object
- * @property {any} value - the returned value
+ * @property {any} [value] - the returned value
  * @property {boolean} done - whether the iterator is complete
  */
 
@@ -43,6 +43,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * Get the next value
  * @function
  * @name Iterator#next
+ * @param {any} value - value to send to the coroutine
  * @returns {IteratorResult}
  */
 
@@ -102,6 +103,7 @@ function run(coroutine) {
     window.requestIdleCallback(run); // Handle background processing when tab is not active
 
     var id = setTimeout(runFromTimeout, timeout);
+    var parameter = undefined;
 
     function run(api) {
       clearTimeout(id); // Stop the timeout version
@@ -115,9 +117,11 @@ function run(coroutine) {
 
       try {
         do {
-          var _iterator$next = iterator.next(),
+          var _iterator$next = iterator.next(parameter),
               value = _iterator$next.value,
               done = _iterator$next.done;
+
+          parameter = undefined;
 
           if (done) {
             resolve(value);
@@ -126,11 +130,16 @@ function run(coroutine) {
 
           if (value === true) {
             break;
-          }
-
-          if (value) {
+          } else if (typeof value === 'number') {
             minTime = +value;
             if (isNaN(minTime)) minTime = 1;
+          } else if (value && value.then) {
+            value.then(function (result) {
+              parameter = result;
+              window.requestIdleCallback(run);
+              id = setTimeout(runFromTimeout, timeout);
+            }, console.error);
+            return;
           }
         } while (api.timeRemaining() > minTime);
       } catch (e) {
@@ -226,6 +235,7 @@ function update(coroutine) {
   return result;
 }
 /**
+ * @deprecated
  * Starts an idle time coroutine using an async generator - <strong>this is NOT normally required
  * and the performance of such routines is slower than ordinary coroutines</strong>.  This is included
  * in case of an edge case requirement.

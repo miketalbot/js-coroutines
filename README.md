@@ -230,21 +230,15 @@ const results =
 
 ## Async
 
-You may also use async generators by calling `runAsync` instead
-of `run`. These can call and await promises themselves - be aware
-though that this is a little slower, during the check for time
-remaining phase so it's better to await a `run` call
-for an inner generator when you are inbetween async calls and
-are running something that may check often - like `sort`.
+Former `runAsync` is deprecated. You may yield a Promise instead.
+js-coroutines will automatically restart the coroutine when the
+Promise is resolved.
 
 ```js
-const results = await runAsync(async function* () {
-  const response = await fetch("http://someurl");
-  const rows = await response.json();
-  const processed = await run(function* () {
-    yield* sort(rows, (a) => a.value);
-    return rows;
-  });
+const results = await run( function* () {
+  const response = yield fetch("http://someurl");
+  const rows = yield response.json();
+  yield* sort(rows, (a) => a.value);
   return processed;
 });
 ```
