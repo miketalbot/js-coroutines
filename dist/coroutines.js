@@ -105,52 +105,98 @@ function run(coroutine) {
     var id = setTimeout(runFromTimeout, timeout);
     var parameter = undefined;
 
-    function run(api) {
-      clearTimeout(id); // Stop the timeout version
+    function run(_x) {
+      return _run.apply(this, arguments);
+    }
 
-      if (terminated) {
-        iterator.return();
-        return;
-      }
+    function _run() {
+      _run = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(api) {
+        var minTime, _iterator$next, value, done;
 
-      var minTime = Math.max(0.5, loopWhileMsRemains);
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                clearTimeout(id); // Stop the timeout version
 
-      try {
-        do {
-          var _iterator$next = iterator.next(parameter),
-              value = _iterator$next.value,
-              done = _iterator$next.done;
+                if (!terminated) {
+                  _context.next = 4;
+                  break;
+                }
 
-          parameter = undefined;
+                iterator.return();
+                return _context.abrupt("return");
 
-          if (done) {
-            resolve(value);
-            return;
+              case 4:
+                minTime = Math.max(0.5, loopWhileMsRemains);
+                _context.prev = 5;
+
+              case 6:
+                _context.t0 = iterator;
+                _context.next = 9;
+                return parameter;
+
+              case 9:
+                _context.t1 = _context.sent;
+                _iterator$next = _context.t0.next.call(_context.t0, _context.t1);
+                value = _iterator$next.value;
+                done = _iterator$next.done;
+                parameter = undefined;
+
+                if (!done) {
+                  _context.next = 17;
+                  break;
+                }
+
+                resolve(value);
+                return _context.abrupt("return");
+
+              case 17:
+                if (!(value === true)) {
+                  _context.next = 21;
+                  break;
+                }
+
+                return _context.abrupt("break", 23);
+
+              case 21:
+                if (typeof value === 'number') {
+                  minTime = +value;
+                  if (isNaN(minTime)) minTime = 1;
+                } else if (value && value.then) {
+                  parameter = value;
+                }
+
+              case 22:
+                if (api.timeRemaining() > minTime) {
+                  _context.next = 6;
+                  break;
+                }
+
+              case 23:
+                _context.next = 29;
+                break;
+
+              case 25:
+                _context.prev = 25;
+                _context.t2 = _context["catch"](5);
+                reject(_context.t2);
+                return _context.abrupt("return");
+
+              case 29:
+                // Request an idle callback
+                window.requestIdleCallback(run); // Request again on timeout
+
+                id = setTimeout(runFromTimeout, timeout);
+
+              case 31:
+              case "end":
+                return _context.stop();
+            }
           }
-
-          if (value === true) {
-            break;
-          } else if (typeof value === 'number') {
-            minTime = +value;
-            if (isNaN(minTime)) minTime = 1;
-          } else if (value && value.then) {
-            value.then(function (result) {
-              parameter = result;
-              window.requestIdleCallback(run);
-              id = setTimeout(runFromTimeout, timeout);
-            }, console.error);
-            return;
-          }
-        } while (api.timeRemaining() > minTime);
-      } catch (e) {
-        reject(e);
-        return;
-      } // Request an idle callback
-
-
-      window.requestIdleCallback(run); // Request again on timeout
-
-      id = setTimeout(runFromTimeout, timeout);
+        }, _callee, null, [[5, 25]]);
+      }));
+      return _run.apply(this, arguments);
     }
 
     function runFromTimeout() {
@@ -255,57 +301,57 @@ function runAsync(coroutine) {
   var terminated = false;
   var resolver = null;
   var result = new Promise( /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(resolve, reject) {
-      var iterator, run, _run;
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(resolve, reject) {
+      var iterator, run, _run2;
 
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _run = function _run3() {
-                _run = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(api) {
+              _run2 = function _run4() {
+                _run2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(api) {
                   var minTime, _yield$iterator$next, value, done;
 
-                  return regeneratorRuntime.wrap(function _callee$(_context) {
+                  return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
-                      switch (_context.prev = _context.next) {
+                      switch (_context2.prev = _context2.next) {
                         case 0:
                           if (!terminated) {
-                            _context.next = 3;
+                            _context2.next = 3;
                             break;
                           }
 
                           iterator.return();
-                          return _context.abrupt("return");
+                          return _context2.abrupt("return");
 
                         case 3:
                           minTime = Math.max(0.5, loopWhileMsRemains);
-                          _context.prev = 4;
+                          _context2.prev = 4;
 
                         case 5:
-                          _context.next = 7;
+                          _context2.next = 7;
                           return iterator.next();
 
                         case 7:
-                          _yield$iterator$next = _context.sent;
+                          _yield$iterator$next = _context2.sent;
                           value = _yield$iterator$next.value;
                           done = _yield$iterator$next.done;
 
                           if (!done) {
-                            _context.next = 13;
+                            _context2.next = 13;
                             break;
                           }
 
                           resolve(value);
-                          return _context.abrupt("return");
+                          return _context2.abrupt("return");
 
                         case 13:
                           if (!(value === true)) {
-                            _context.next = 15;
+                            _context2.next = 15;
                             break;
                           }
 
-                          return _context.abrupt("break", 17);
+                          return _context2.abrupt("break", 17);
 
                         case 15:
                           if (value) {
@@ -315,68 +361,68 @@ function runAsync(coroutine) {
 
                         case 16:
                           if (api.timeRemaining() > minTime) {
-                            _context.next = 5;
+                            _context2.next = 5;
                             break;
                           }
 
                         case 17:
-                          _context.next = 23;
+                          _context2.next = 23;
                           break;
 
                         case 19:
-                          _context.prev = 19;
-                          _context.t0 = _context["catch"](4);
-                          reject(_context.t0);
-                          return _context.abrupt("return");
+                          _context2.prev = 19;
+                          _context2.t0 = _context2["catch"](4);
+                          reject(_context2.t0);
+                          return _context2.abrupt("return");
 
                         case 23:
                           window.requestIdleCallback(run, options);
 
                         case 24:
                         case "end":
-                          return _context.stop();
+                          return _context2.stop();
                       }
                     }
-                  }, _callee, null, [[4, 19]]);
+                  }, _callee2, null, [[4, 19]]);
                 }));
-                return _run.apply(this, arguments);
+                return _run2.apply(this, arguments);
               };
 
-              run = function _run2(_x3) {
-                return _run.apply(this, arguments);
+              run = function _run3(_x4) {
+                return _run2.apply(this, arguments);
               };
 
               resolver = resolve;
 
               if (!coroutine.next) {
-                _context2.next = 7;
+                _context3.next = 7;
                 break;
               }
 
-              _context2.t0 = coroutine.next;
-              _context2.next = 10;
+              _context3.t0 = coroutine.next;
+              _context3.next = 10;
               break;
 
             case 7:
-              _context2.next = 9;
+              _context3.next = 9;
               return Promise.resolve(coroutine());
 
             case 9:
-              _context2.t0 = _context2.sent;
+              _context3.t0 = _context3.sent;
 
             case 10:
-              iterator = _context2.t0;
+              iterator = _context3.t0;
               window.requestIdleCallback(run);
 
             case 12:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2);
+      }, _callee3);
     }));
 
-    return function (_x, _x2) {
+    return function (_x2, _x3) {
       return _ref.apply(this, arguments);
     };
   }());

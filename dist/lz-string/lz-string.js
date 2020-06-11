@@ -14,7 +14,7 @@ exports.LZStringGenerator = void 0;
 // http://pieroxy.net/blog/pages/lz-string/testing.html
 //
 // LZ-based compression algorithm, version 1.4.4
-var YIELD_MASK = 127;
+var YIELD_MASK = 63;
 
 var LZStringGenerator = function () {
   // private property
@@ -394,7 +394,7 @@ var LZStringGenerator = function () {
 
             case 4:
               if (!(ii < uncompressed.length)) {
-                _context10.next = 15;
+                _context10.next = 69;
                 break;
               }
 
@@ -416,219 +416,62 @@ var LZStringGenerator = function () {
 
               context_wc = context_w + context_c;
 
-              if (Object.prototype.hasOwnProperty.call(context_dictionary, context_wc)) {
-                context_w = context_wc;
-              } else {
-                if (Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
-                  if (context_w.charCodeAt(0) < 256) {
-                    for (i = 0; i < context_numBits; i++) {
-                      context_data_val = context_data_val << 1;
-
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
-                    }
-
-                    value = context_w.charCodeAt(0);
-
-                    for (i = 0; i < 8; i++) {
-                      context_data_val = context_data_val << 1 | value & 1;
-
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
-
-                      value = value >> 1;
-                    }
-                  } else {
-                    value = 1;
-
-                    for (i = 0; i < context_numBits; i++) {
-                      context_data_val = context_data_val << 1 | value;
-
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
-
-                      value = 0;
-                    }
-
-                    value = context_w.charCodeAt(0);
-
-                    for (i = 0; i < 16; i++) {
-                      context_data_val = context_data_val << 1 | value & 1;
-
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
-
-                      value = value >> 1;
-                    }
-                  }
-
-                  context_enlargeIn--;
-
-                  if (context_enlargeIn === 0) {
-                    context_enlargeIn = Math.pow(2, context_numBits);
-                    context_numBits++;
-                  }
-
-                  delete context_dictionaryToCreate[context_w];
-                } else {
-                  value = context_dictionary[context_w];
-
-                  for (i = 0; i < context_numBits; i++) {
-                    context_data_val = context_data_val << 1 | value & 1;
-
-                    if (context_data_position === bitsPerChar - 1) {
-                      context_data_position = 0;
-                      context_data.push(getCharFromInt(context_data_val));
-                      context_data_val = 0;
-                    } else {
-                      context_data_position++;
-                    }
-
-                    value = value >> 1;
-                  }
-                }
-
-                context_enlargeIn--;
-
-                if (context_enlargeIn === 0) {
-                  context_enlargeIn = Math.pow(2, context_numBits);
-                  context_numBits++;
-                } // Add wc to the dictionary.
-
-
-                context_dictionary[context_wc] = context_dictSize++;
-                context_w = String(context_c);
+              if (!Object.prototype.hasOwnProperty.call(context_dictionary, context_wc)) {
+                _context10.next = 15;
+                break;
               }
 
-            case 12:
-              ii += 1;
-              _context10.next = 4;
+              context_w = context_wc;
+              _context10.next = 66;
               break;
 
             case 15:
-              // Output the code for w.
-              if (context_w !== "") {
-                if (Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
-                  if (context_w.charCodeAt(0) < 256) {
-                    for (i = 0; i < context_numBits; i++) {
-                      context_data_val = context_data_val << 1;
+              if (!Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
+                _context10.next = 50;
+                break;
+              }
 
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
-                    }
+              if (!(context_w.charCodeAt(0) < 256)) {
+                _context10.next = 31;
+                break;
+              }
 
-                    value = context_w.charCodeAt(0);
+              i = 0;
 
-                    for (i = 0; i < 8; i++) {
-                      context_data_val = context_data_val << 1 | value & 1;
+            case 18:
+              if (!(i < context_numBits)) {
+                _context10.next = 27;
+                break;
+              }
 
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
+              if (!((i & 15) === 0)) {
+                _context10.next = 22;
+                break;
+              }
 
-                      value = value >> 1;
-                    }
-                  } else {
-                    value = 1;
+              _context10.next = 22;
+              return;
 
-                    for (i = 0; i < context_numBits; i++) {
-                      context_data_val = context_data_val << 1 | value;
+            case 22:
+              context_data_val = context_data_val << 1;
 
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
+              if (context_data_position === bitsPerChar - 1) {
+                context_data_position = 0;
+                context_data.push(getCharFromInt(context_data_val));
+                context_data_val = 0;
+              } else {
+                context_data_position++;
+              }
 
-                      value = 0;
-                    }
+            case 24:
+              i++;
+              _context10.next = 18;
+              break;
 
-                    value = context_w.charCodeAt(0);
+            case 27:
+              value = context_w.charCodeAt(0);
 
-                    for (i = 0; i < 16; i++) {
-                      context_data_val = context_data_val << 1 | value & 1;
-
-                      if (context_data_position === bitsPerChar - 1) {
-                        context_data_position = 0;
-                        context_data.push(getCharFromInt(context_data_val));
-                        context_data_val = 0;
-                      } else {
-                        context_data_position++;
-                      }
-
-                      value = value >> 1;
-                    }
-                  }
-
-                  context_enlargeIn--;
-
-                  if (context_enlargeIn === 0) {
-                    context_enlargeIn = Math.pow(2, context_numBits);
-                    context_numBits++;
-                  }
-
-                  delete context_dictionaryToCreate[context_w];
-                } else {
-                  value = context_dictionary[context_w];
-
-                  for (i = 0; i < context_numBits; i++) {
-                    context_data_val = context_data_val << 1 | value & 1;
-
-                    if (context_data_position === bitsPerChar - 1) {
-                      context_data_position = 0;
-                      context_data.push(getCharFromInt(context_data_val));
-                      context_data_val = 0;
-                    } else {
-                      context_data_position++;
-                    }
-
-                    value = value >> 1;
-                  }
-                }
-
-                context_enlargeIn--;
-
-                if (context_enlargeIn === 0) {
-                  context_enlargeIn = Math.pow(2, context_numBits);
-                  context_numBits++;
-                }
-              } // Mark the end of the stream
-
-
-              value = 2;
-
-              for (i = 0; i < context_numBits; i++) {
+              for (i = 0; i < 8; i++) {
                 context_data_val = context_data_val << 1 | value & 1;
 
                 if (context_data_position === bitsPerChar - 1) {
@@ -642,40 +485,376 @@ var LZStringGenerator = function () {
                 value = value >> 1;
               }
 
-              _context10.next = 20;
+              _context10.next = 45;
+              break;
+
+            case 31:
+              value = 1;
+              i = 0;
+
+            case 33:
+              if (!(i < context_numBits)) {
+                _context10.next = 43;
+                break;
+              }
+
+              if (!((i & 15) === 0)) {
+                _context10.next = 37;
+                break;
+              }
+
+              _context10.next = 37;
               return;
 
-            case 20:
+            case 37:
+              context_data_val = context_data_val << 1 | value;
+
+              if (context_data_position === bitsPerChar - 1) {
+                context_data_position = 0;
+                context_data.push(getCharFromInt(context_data_val));
+                context_data_val = 0;
+              } else {
+                context_data_position++;
+              }
+
+              value = 0;
+
+            case 40:
+              i++;
+              _context10.next = 33;
+              break;
+
+            case 43:
+              value = context_w.charCodeAt(0);
+
+              for (i = 0; i < 16; i++) {
+                context_data_val = context_data_val << 1 | value & 1;
+
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = value >> 1;
+              }
+
+            case 45:
+              context_enlargeIn--;
+
+              if (context_enlargeIn === 0) {
+                context_enlargeIn = Math.pow(2, context_numBits);
+                context_numBits++;
+              }
+
+              delete context_dictionaryToCreate[context_w];
+              _context10.next = 62;
+              break;
+
+            case 50:
+              value = context_dictionary[context_w];
+              i = 0;
+
+            case 52:
+              if (!(i < context_numBits)) {
+                _context10.next = 62;
+                break;
+              }
+
+              if (!((i & 15) === 0)) {
+                _context10.next = 56;
+                break;
+              }
+
+              _context10.next = 56;
+              return;
+
+            case 56:
+              context_data_val = context_data_val << 1 | value & 1;
+
+              if (context_data_position === bitsPerChar - 1) {
+                context_data_position = 0;
+                context_data.push(getCharFromInt(context_data_val));
+                context_data_val = 0;
+              } else {
+                context_data_position++;
+              }
+
+              value = value >> 1;
+
+            case 59:
+              i++;
+              _context10.next = 52;
+              break;
+
+            case 62:
+              context_enlargeIn--;
+
+              if (context_enlargeIn === 0) {
+                context_enlargeIn = Math.pow(2, context_numBits);
+                context_numBits++;
+              } // Add wc to the dictionary.
+
+
+              context_dictionary[context_wc] = context_dictSize++;
+              context_w = String(context_c);
+
+            case 66:
+              ii += 1;
+              _context10.next = 4;
+              break;
+
+            case 69:
+              if (!(context_w !== "")) {
+                _context10.next = 119;
+                break;
+              }
+
+              if (!Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
+                _context10.next = 105;
+                break;
+              }
+
+              if (!(context_w.charCodeAt(0) < 256)) {
+                _context10.next = 86;
+                break;
+              }
+
+              i = 0;
+
+            case 73:
+              if (!(i < context_numBits)) {
+                _context10.next = 82;
+                break;
+              }
+
+              if (!((i & 15) === 0)) {
+                _context10.next = 77;
+                break;
+              }
+
+              _context10.next = 77;
+              return;
+
+            case 77:
+              context_data_val = context_data_val << 1;
+
+              if (context_data_position === bitsPerChar - 1) {
+                context_data_position = 0;
+                context_data.push(getCharFromInt(context_data_val));
+                context_data_val = 0;
+              } else {
+                context_data_position++;
+              }
+
+            case 79:
+              i++;
+              _context10.next = 73;
+              break;
+
+            case 82:
+              value = context_w.charCodeAt(0);
+
+              for (i = 0; i < 8; i++) {
+                context_data_val = context_data_val << 1 | value & 1;
+
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = value >> 1;
+              }
+
+              _context10.next = 100;
+              break;
+
+            case 86:
+              value = 1;
+              i = 0;
+
+            case 88:
+              if (!(i < context_numBits)) {
+                _context10.next = 98;
+                break;
+              }
+
+              if (!((i & 15) === 0)) {
+                _context10.next = 92;
+                break;
+              }
+
+              _context10.next = 92;
+              return;
+
+            case 92:
+              context_data_val = context_data_val << 1 | value;
+
+              if (context_data_position === bitsPerChar - 1) {
+                context_data_position = 0;
+                context_data.push(getCharFromInt(context_data_val));
+                context_data_val = 0;
+              } else {
+                context_data_position++;
+              }
+
+              value = 0;
+
+            case 95:
+              i++;
+              _context10.next = 88;
+              break;
+
+            case 98:
+              value = context_w.charCodeAt(0);
+
+              for (i = 0; i < 16; i++) {
+                context_data_val = context_data_val << 1 | value & 1;
+
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = value >> 1;
+              }
+
+            case 100:
+              context_enlargeIn--;
+
+              if (context_enlargeIn === 0) {
+                context_enlargeIn = Math.pow(2, context_numBits);
+                context_numBits++;
+              }
+
+              delete context_dictionaryToCreate[context_w];
+              _context10.next = 117;
+              break;
+
+            case 105:
+              value = context_dictionary[context_w];
+              i = 0;
+
+            case 107:
+              if (!(i < context_numBits)) {
+                _context10.next = 117;
+                break;
+              }
+
+              if (!((i & 15) === 0)) {
+                _context10.next = 111;
+                break;
+              }
+
+              _context10.next = 111;
+              return;
+
+            case 111:
+              context_data_val = context_data_val << 1 | value & 1;
+
+              if (context_data_position === bitsPerChar - 1) {
+                context_data_position = 0;
+                context_data.push(getCharFromInt(context_data_val));
+                context_data_val = 0;
+              } else {
+                context_data_position++;
+              }
+
+              value = value >> 1;
+
+            case 114:
+              i++;
+              _context10.next = 107;
+              break;
+
+            case 117:
+              context_enlargeIn--;
+
+              if (context_enlargeIn === 0) {
+                context_enlargeIn = Math.pow(2, context_numBits);
+                context_numBits++;
+              }
+
+            case 119:
+              // Mark the end of the stream
+              value = 2;
+              i = 0;
+
+            case 121:
+              if (!(i < context_numBits)) {
+                _context10.next = 131;
+                break;
+              }
+
+              if (!((i & 15) === 0)) {
+                _context10.next = 125;
+                break;
+              }
+
+              _context10.next = 125;
+              return;
+
+            case 125:
+              context_data_val = context_data_val << 1 | value & 1;
+
+              if (context_data_position === bitsPerChar - 1) {
+                context_data_position = 0;
+                context_data.push(getCharFromInt(context_data_val));
+                context_data_val = 0;
+              } else {
+                context_data_position++;
+              }
+
+              value = value >> 1;
+
+            case 128:
+              i++;
+              _context10.next = 121;
+              break;
+
+            case 131:
+              _context10.next = 133;
+              return;
+
+            case 133:
               if (!true) {
-                _context10.next = 30;
+                _context10.next = 143;
                 break;
               }
 
               context_data_val = context_data_val << 1;
 
               if (!(context_data_position === bitsPerChar - 1)) {
-                _context10.next = 27;
+                _context10.next = 140;
                 break;
               }
 
               context_data.push(getCharFromInt(context_data_val));
-              return _context10.abrupt("break", 30);
+              return _context10.abrupt("break", 143);
 
-            case 27:
+            case 140:
               context_data_position++;
 
-            case 28:
-              _context10.next = 20;
+            case 141:
+              _context10.next = 133;
               break;
 
-            case 30:
-              _context10.next = 32;
+            case 143:
+              _context10.next = 145;
               return;
 
-            case 32:
+            case 145:
               return _context10.abrupt("return", context_data.join(""));
 
-            case 33:
+            case 146:
             case "end":
               return _context10.stop();
           }

@@ -1,3 +1,8 @@
+#### 2.1.507
+
+- Handle the case where the Promise yielded is immediately resolved without
+  going through the restart process
+
 #### 2.1.49
 
 - Added the ability to yield a Promise and have the coroutine

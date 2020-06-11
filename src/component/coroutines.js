@@ -80,7 +80,7 @@
 export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
     let terminated = false
     let resolver = null
-    const result = new Promise(function (resolve, reject) {
+    const result = new Promise( function (resolve, reject) {
         resolver = resolve
         const iterator = coroutine.next ? coroutine : coroutine()
         // Request a callback during idle
@@ -89,7 +89,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
         let id = setTimeout(runFromTimeout, timeout)
         let parameter = undefined
 
-        function run(api) {
+        async function run(api) {
             clearTimeout(id)
             // Stop the timeout version
             if (terminated) {
@@ -99,7 +99,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
             let minTime = Math.max(0.5, loopWhileMsRemains)
             try {
                 do {
-                    const {value, done} = iterator.next(parameter)
+                    const {value, done} = iterator.next(await parameter)
                     parameter = undefined
                     if (done) {
                         resolve(value)
@@ -111,12 +111,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
                         minTime = +value
                         if (isNaN(minTime)) minTime = 1
                     } else if (value && value.then) {
-                        value.then(result => {
-                            parameter = result
-                            window.requestIdleCallback(run)
-                            id = setTimeout(runFromTimeout, timeout)
-                        }, console.error)
-                        return
+                        parameter = value
                     }
                 } while (api.timeRemaining() > minTime)
             } catch (e) {

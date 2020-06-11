@@ -9,7 +9,7 @@
 //
 // LZ-based compression algorithm, version 1.4.4
 
-const YIELD_MASK = 127;
+const YIELD_MASK = 63;
 
 var LZStringGenerator = (function () {
   // private property
@@ -169,6 +169,7 @@ var LZStringGenerator = (function () {
           ) {
             if (context_w.charCodeAt(0) < 256) {
               for (i = 0; i < context_numBits; i++) {
+                if ((i & 15) === 0) yield
                 context_data_val = context_data_val << 1;
                 if (context_data_position === bitsPerChar - 1) {
                   context_data_position = 0;
@@ -193,6 +194,7 @@ var LZStringGenerator = (function () {
             } else {
               value = 1;
               for (i = 0; i < context_numBits; i++) {
+                if ((i & 15) === 0) yield
                 context_data_val = (context_data_val << 1) | value;
                 if (context_data_position === bitsPerChar - 1) {
                   context_data_position = 0;
@@ -225,6 +227,7 @@ var LZStringGenerator = (function () {
           } else {
             value = context_dictionary[context_w];
             for (i = 0; i < context_numBits; i++) {
+              if ((i & 15) === 0) yield
               context_data_val = (context_data_val << 1) | (value & 1);
               if (context_data_position === bitsPerChar - 1) {
                 context_data_position = 0;
@@ -257,6 +260,7 @@ var LZStringGenerator = (function () {
         ) {
           if (context_w.charCodeAt(0) < 256) {
             for (i = 0; i < context_numBits; i++) {
+              if ((i & 15) === 0) yield
               context_data_val = context_data_val << 1;
               if (context_data_position === bitsPerChar - 1) {
                 context_data_position = 0;
@@ -281,6 +285,7 @@ var LZStringGenerator = (function () {
           } else {
             value = 1;
             for (i = 0; i < context_numBits; i++) {
+              if ((i & 15) === 0) yield
               context_data_val = (context_data_val << 1) | value;
               if (context_data_position === bitsPerChar - 1) {
                 context_data_position = 0;
@@ -313,6 +318,7 @@ var LZStringGenerator = (function () {
         } else {
           value = context_dictionary[context_w];
           for (i = 0; i < context_numBits; i++) {
+            if ((i & 15) === 0) yield
             context_data_val = (context_data_val << 1) | (value & 1);
             if (context_data_position === bitsPerChar - 1) {
               context_data_position = 0;
@@ -334,6 +340,7 @@ var LZStringGenerator = (function () {
       // Mark the end of the stream
       value = 2;
       for (i = 0; i < context_numBits; i++) {
+        if((i & 15)===0) yield
         context_data_val = (context_data_val << 1) | (value & 1);
         if (context_data_position === bitsPerChar - 1) {
           context_data_position = 0;
