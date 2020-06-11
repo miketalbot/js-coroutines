@@ -1,4 +1,8 @@
-#### 2.1.507
+#### 2.1.51
+
+- Fix a bug in starting update coroutines with parameters
+
+#### 2.1.50
 
 - Handle the case where the Promise yielded is immediately resolved without
   going through the restart process

@@ -161,7 +161,7 @@ export function update(coroutine, ...params) {
     let resolver = null
     const result = new Promise(function (resolve, reject) {
         resolver = resolve
-        const iterator = coroutine.next ? coroutine.next : coroutine(...params)
+        const iterator = coroutine.next ? coroutine : coroutine(...params)
         window.requestAnimationFrame(run)
 
         function run() {
@@ -209,7 +209,7 @@ export function runAsync(coroutine, loopWhileMsRemains = 1, timeout = 160) {
     let resolver = null
     const result = new Promise(async function (resolve, reject) {
         resolver = resolve
-        const iterator = coroutine.next ? coroutine.next : await Promise.resolve(coroutine())
+        const iterator = coroutine.next ? coroutine : await Promise.resolve(coroutine())
         window.requestIdleCallback(run)
 
         async function run(api) {

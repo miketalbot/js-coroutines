@@ -243,7 +243,7 @@ function update(coroutine) {
   var resolver = null;
   var result = new Promise(function (resolve, reject) {
     resolver = resolve;
-    var iterator = coroutine.next ? coroutine.next : coroutine.apply(void 0, params);
+    var iterator = coroutine.next ? coroutine : coroutine.apply(void 0, params);
     window.requestAnimationFrame(run);
 
     function run() {
@@ -399,7 +399,7 @@ function runAsync(coroutine) {
                 break;
               }
 
-              _context3.t0 = coroutine.next;
+              _context3.t0 = coroutine;
               _context3.next = 10;
               break;
 
