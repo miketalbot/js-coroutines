@@ -1,3 +1,7 @@
+#### 2.1.52
+
+- Buffer animation callbacks to reduce calls to requestAnimationFrame
+
 #### 2.1.51
 
 - Fix a bug in starting update coroutines with parameters

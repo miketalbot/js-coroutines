@@ -8,6 +8,12 @@ exports.update = update;
 exports.runAsync = runAsync;
 exports.default = void 0;
 
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -220,6 +226,38 @@ function run(coroutine) {
 
   return result;
 }
+
+var animationCallbacks = [];
+var bufferCallback = [];
+
+function nextAnimationFrame(fn) {
+  if (animationCallbacks.length === 0) {
+    requestAnimationFrame(process);
+  }
+
+  animationCallbacks.push(fn);
+}
+
+function process() {
+  var callbacks = animationCallbacks;
+  animationCallbacks = bufferCallback;
+  animationCallbacks.length = 0;
+  bufferCallback = callbacks;
+
+  var _iterator = _createForOfIteratorHelper(callbacks),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var callback = _step.value;
+      callback();
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+}
 /**
  * Start an animation coroutine, the animation will continue until
  * you return and will be broken up between frames by using a
@@ -244,7 +282,7 @@ function update(coroutine) {
   var result = new Promise(function (resolve, reject) {
     resolver = resolve;
     var iterator = coroutine.next ? coroutine : coroutine.apply(void 0, params);
-    window.requestAnimationFrame(run);
+    nextAnimationFrame(run);
 
     function run() {
       if (terminated) {
@@ -266,7 +304,7 @@ function update(coroutine) {
         return;
       }
 
-      window.requestAnimationFrame(run);
+      nextAnimationFrame(run);
     }
   });
 

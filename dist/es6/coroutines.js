@@ -144,6 +144,27 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
     return result
 }
 
+
+let animationCallbacks = []
+let bufferCallback = []
+
+function nextAnimationFrame(fn) {
+    if(animationCallbacks.length === 0) {
+        requestAnimationFrame(process)
+    }
+    animationCallbacks.push(fn)
+}
+
+function process() {
+    let callbacks = animationCallbacks
+    animationCallbacks = bufferCallback
+    animationCallbacks.length = 0
+    bufferCallback = callbacks
+    for (let callback of callbacks) {
+        callback()
+    }
+}
+
 /**
  * Start an animation coroutine, the animation will continue until
  * you return and will be broken up between frames by using a
@@ -162,7 +183,7 @@ export function update(coroutine, ...params) {
     const result = new Promise(function (resolve, reject) {
         resolver = resolve
         const iterator = coroutine.next ? coroutine : coroutine(...params)
-        window.requestAnimationFrame(run)
+        nextAnimationFrame(run)
 
         function run() {
             if (terminated) {
@@ -181,7 +202,7 @@ export function update(coroutine, ...params) {
                 return
             }
 
-            window.requestAnimationFrame(run)
+            nextAnimationFrame(run)
         }
     })
     result.terminate = function (result) {
