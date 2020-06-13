@@ -1,9 +1,14 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Base64StringGenerator = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
 // Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>
 //           (c) 2020 Mike Talbot (generator modifications)
 // This work is free. You can redistribute it and/or modify it
@@ -17,9 +22,9 @@ exports.Base64StringGenerator = void 0;
 // Base64 compression / decompression for already compressed content (gif, png, jpg, mp3, ...)
 // version 1.4.1
 var Base64StringGenerator = {
-  compressToUTF16: /*#__PURE__*/regeneratorRuntime.mark(function compressToUTF16(input) {
+  compressToUTF16: /*#__PURE__*/_regenerator.default.mark(function compressToUTF16(input) {
     var output, i, c, current, status;
-    return regeneratorRuntime.wrap(function compressToUTF16$(_context) {
+    return _regenerator.default.wrap(function compressToUTF16$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -144,9 +149,9 @@ var Base64StringGenerator = {
       }
     }, compressToUTF16, this);
   }),
-  decompressFromUTF16: /*#__PURE__*/regeneratorRuntime.mark(function decompressFromUTF16(input) {
+  decompressFromUTF16: /*#__PURE__*/_regenerator.default.mark(function decompressFromUTF16(input) {
     var output, current, c, status, i;
-    return regeneratorRuntime.wrap(function decompressFromUTF16$(_context2) {
+    return _regenerator.default.wrap(function decompressFromUTF16$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
@@ -274,9 +279,9 @@ var Base64StringGenerator = {
   }),
   // private property
   _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-  decompress: /*#__PURE__*/regeneratorRuntime.mark(function decompress(input) {
+  decompress: /*#__PURE__*/_regenerator.default.mark(function decompress(input) {
     var output, chr1, chr2, chr3, enc1, enc2, enc3, enc4, i, odd, ii;
-    return regeneratorRuntime.wrap(function decompress$(_context3) {
+    return _regenerator.default.wrap(function decompress$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
@@ -342,9 +347,9 @@ var Base64StringGenerator = {
       }
     }, decompress, this);
   }),
-  compress: /*#__PURE__*/regeneratorRuntime.mark(function compress(input) {
+  compress: /*#__PURE__*/_regenerator.default.mark(function compress(input) {
     var output, ol, output_, chr1, chr2, chr3, enc1, enc2, enc3, enc4, i, flush;
-    return regeneratorRuntime.wrap(function compress$(_context4) {
+    return _regenerator.default.wrap(function compress$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:

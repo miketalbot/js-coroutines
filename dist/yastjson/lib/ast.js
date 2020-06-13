@@ -1,9 +1,17 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.AST = exports.ASTNode = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
 var _token = require("./token");
 
@@ -11,28 +19,34 @@ var _expression = require("./expression");
 
 var _yielder = require("./yielder");
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
+/**
+ * Copyright (c) 2020 5u9ar (zhuyingda) (c) 2020 Mike Talbot (Generator mods)
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 var ASTNode = /*#__PURE__*/function () {
   function ASTNode(tokens, type) {
-    _classCallCheck(this, ASTNode);
-
+    (0, _classCallCheck2.default)(this, ASTNode);
     this.type = type;
     this.tokens = tokens;
     this.childNodeList = [];
   }
 
-  _createClass(ASTNode, [{
+  (0, _createClass2.default)(ASTNode, [{
     key: "addChild",
     value: function addChild(node) {
       this.childNodeList.push(node);
     }
   }]);
-
   return ASTNode;
 }();
 
@@ -40,15 +54,14 @@ exports.ASTNode = ASTNode;
 
 var AST = /*#__PURE__*/function () {
   function AST(tokens) {
-    _classCallCheck(this, AST);
-
+    (0, _classCallCheck2.default)(this, AST);
     this.tokens = tokens;
   }
 
-  _createClass(AST, [{
+  (0, _createClass2.default)(AST, [{
     key: "buildTree",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function buildTree() {
-      return regeneratorRuntime.wrap(function buildTree$(_context) {
+    value: /*#__PURE__*/_regenerator.default.mark(function buildTree() {
+      return _regenerator.default.wrap(function buildTree$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -66,9 +79,9 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprJson",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprJson(tokens) {
+    value: /*#__PURE__*/_regenerator.default.mark(function handleExprJson(tokens) {
       var node, firstToken, arrayExpr, objectExpr;
-      return regeneratorRuntime.wrap(function handleExprJson$(_context2) {
+      return _regenerator.default.wrap(function handleExprJson$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -126,10 +139,10 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprArray",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprArray(tokens) {
+    value: /*#__PURE__*/_regenerator.default.mark(function handleExprArray(tokens) {
       var node, valueTokens, brace, bracket, index, length, token, _valueExpr, valueExpr;
 
-      return regeneratorRuntime.wrap(function handleExprArray$(_context3) {
+      return _regenerator.default.wrap(function handleExprArray$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
@@ -253,10 +266,10 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprObject",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprObject(tokens) {
+    value: /*#__PURE__*/_regenerator.default.mark(function handleExprObject(tokens) {
       var node, propExprNode, propTokens, valueTokens, brace, bracket, state, index, length, token, _valueExpr2, valueExpr;
 
-      return regeneratorRuntime.wrap(function handleExprObject$(_context4) {
+      return _regenerator.default.wrap(function handleExprObject$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
@@ -417,9 +430,9 @@ var AST = /*#__PURE__*/function () {
     })
   }, {
     key: "handleExprProp",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprProp(tokens) {
+    value: /*#__PURE__*/_regenerator.default.mark(function handleExprProp(tokens) {
       var node;
-      return regeneratorRuntime.wrap(function handleExprProp$(_context5) {
+      return _regenerator.default.wrap(function handleExprProp$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
@@ -465,9 +478,9 @@ var AST = /*#__PURE__*/function () {
     }
   }, {
     key: "handleExprValue",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleExprValue(tokens) {
+    value: /*#__PURE__*/_regenerator.default.mark(function handleExprValue(tokens) {
       var node;
-      return regeneratorRuntime.wrap(function handleExprValue$(_context6) {
+      return _regenerator.default.wrap(function handleExprValue$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
@@ -495,7 +508,6 @@ var AST = /*#__PURE__*/function () {
       }, handleExprValue, this);
     })
   }]);
-
   return AST;
 }();
 

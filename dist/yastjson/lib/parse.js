@@ -1,10 +1,18 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.parse = parse;
 exports.ASTParser = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
 var _tokenizer = require("./tokenizer");
 
@@ -16,7 +24,7 @@ var _token = require("./token");
 
 var _yielder = require("./yielder");
 
-var _marked = /*#__PURE__*/regeneratorRuntime.mark(parse);
+var _marked = /*#__PURE__*/_regenerator.default.mark(parse);
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -24,23 +32,16 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 var ASTParser = /*#__PURE__*/function () {
   function ASTParser(ast) {
-    _classCallCheck(this, ASTParser);
-
+    (0, _classCallCheck2.default)(this, ASTParser);
     this.ast = ast;
   }
 
-  _createClass(ASTParser, [{
+  (0, _createClass2.default)(ASTParser, [{
     key: "getJson",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function getJson() {
-      return regeneratorRuntime.wrap(function getJson$(_context) {
+    value: /*#__PURE__*/_regenerator.default.mark(function getJson() {
+      return _regenerator.default.wrap(function getJson$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -58,10 +59,10 @@ var ASTParser = /*#__PURE__*/function () {
     })
   }, {
     key: "handleJson",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleJson(astNode) {
+    value: /*#__PURE__*/_regenerator.default.mark(function handleJson(astNode) {
       var output, node, _iterator, _step, item, _iterator2, _step2, _item;
 
-      return regeneratorRuntime.wrap(function handleJson$(_context2) {
+      return _regenerator.default.wrap(function handleJson$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -190,9 +191,9 @@ var ASTParser = /*#__PURE__*/function () {
     })
   }, {
     key: "handleValue",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function handleValue(astNode) {
+    value: /*#__PURE__*/_regenerator.default.mark(function handleValue(astNode) {
       var token, num;
-      return regeneratorRuntime.wrap(function handleValue$(_context3) {
+      return _regenerator.default.wrap(function handleValue$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
@@ -240,7 +241,6 @@ var ASTParser = /*#__PURE__*/function () {
       }, handleValue, this);
     })
   }]);
-
   return ASTParser;
 }();
 
@@ -248,7 +248,7 @@ exports.ASTParser = ASTParser;
 
 function parse(jsonString) {
   var tokenizer, tokens, astInst, ast, astParser;
-  return regeneratorRuntime.wrap(function parse$(_context4) {
+  return _regenerator.default.wrap(function parse$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:

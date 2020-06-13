@@ -1,20 +1,36 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Tokenizer = void 0;
 
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
 var _token = require("./token");
 
 var _yielder = require("./yielder");
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
+/**
+ * Copyright (c) 2020 5u9ar (zhuyingda) (c) 2020 Mike Talbot (Generator mods)
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 var INVISIBLE_CHAR_CODE_TOKEN_LIST = [10, 13, 32];
 var STATE_INIT = 'init';
 var STATE_KW_NULL = 'null';
@@ -57,8 +73,7 @@ var MOVE_TO = {
 
 var Tokenizer = /*#__PURE__*/function () {
   function Tokenizer() {
-    _classCallCheck(this, Tokenizer);
-
+    (0, _classCallCheck2.default)(this, Tokenizer);
     this.state = STATE_INIT;
     this.pos = 0;
     this.sourceCode = '';
@@ -66,11 +81,11 @@ var Tokenizer = /*#__PURE__*/function () {
     this.curToken = '';
   }
 
-  _createClass(Tokenizer, [{
+  (0, _createClass2.default)(Tokenizer, [{
     key: "tokenizeArray",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function tokenizeArray(src) {
+    value: /*#__PURE__*/_regenerator.default.mark(function tokenizeArray(src) {
       var length, text;
-      return regeneratorRuntime.wrap(function tokenizeArray$(_context) {
+      return _regenerator.default.wrap(function tokenizeArray$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -144,9 +159,9 @@ var Tokenizer = /*#__PURE__*/function () {
     })
   }, {
     key: "tokenize",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function tokenize(src) {
+    value: /*#__PURE__*/_regenerator.default.mark(function tokenize(src) {
       var length, text;
-      return regeneratorRuntime.wrap(function tokenize$(_context2) {
+      return _regenerator.default.wrap(function tokenize$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -455,7 +470,6 @@ var Tokenizer = /*#__PURE__*/function () {
       }
     }
   }]);
-
   return Tokenizer;
 }();
 

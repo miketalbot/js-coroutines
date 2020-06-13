@@ -1,23 +1,25 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.sort = sort;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _marked = /*#__PURE__*/regeneratorRuntime.mark(makeAscendingRun),
-    _marked2 = /*#__PURE__*/regeneratorRuntime.mark(reverseRun),
-    _marked3 = /*#__PURE__*/regeneratorRuntime.mark(gallopLeft),
-    _marked4 = /*#__PURE__*/regeneratorRuntime.mark(gallopRight),
-    _marked5 = /*#__PURE__*/regeneratorRuntime.mark(sort);
+var _marked = /*#__PURE__*/_regenerator.default.mark(makeAscendingRun),
+    _marked2 = /*#__PURE__*/_regenerator.default.mark(reverseRun),
+    _marked3 = /*#__PURE__*/_regenerator.default.mark(gallopLeft),
+    _marked4 = /*#__PURE__*/_regenerator.default.mark(gallopRight),
+    _marked5 = /*#__PURE__*/_regenerator.default.mark(sort);
 
 /*
 
@@ -193,7 +195,7 @@ function minRunLength(n) {
 
 function makeAscendingRun(array, lo, hi, compare) {
   var runHi;
-  return regeneratorRuntime.wrap(function makeAscendingRun$(_context) {
+  return _regenerator.default.wrap(function makeAscendingRun$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
@@ -280,7 +282,7 @@ function makeAscendingRun(array, lo, hi, compare) {
 
 function reverseRun(array, lo, hi) {
   var t;
-  return regeneratorRuntime.wrap(function reverseRun$(_context2) {
+  return _regenerator.default.wrap(function reverseRun$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
@@ -409,7 +411,7 @@ function checkYield() {
 
 function gallopLeft(value, array, start, length, hint, compare) {
   var lastOffset, maxOffset, offset, tmp, m;
-  return regeneratorRuntime.wrap(function gallopLeft$(_context3) {
+  return _regenerator.default.wrap(function gallopLeft$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
@@ -565,7 +567,7 @@ function gallopLeft(value, array, start, length, hint, compare) {
 
 function gallopRight(value, array, start, length, hint, compare) {
   var lastOffset, maxOffset, offset, tmp, m;
-  return regeneratorRuntime.wrap(function gallopRight$(_context4) {
+  return _regenerator.default.wrap(function gallopRight$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
@@ -707,26 +709,16 @@ function gallopRight(value, array, start, length, hint, compare) {
 
 var TimSort = /*#__PURE__*/function () {
   function TimSort(array, compare) {
-    _classCallCheck(this, TimSort);
-
-    _defineProperty(this, "array", null);
-
-    _defineProperty(this, "compare", null);
-
-    _defineProperty(this, "minGallop", DEFAULT_MIN_GALLOPING);
-
-    _defineProperty(this, "length", 0);
-
-    _defineProperty(this, "tmpStorageLength", DEFAULT_TMP_STORAGE_LENGTH);
-
-    _defineProperty(this, "stackLength", 0);
-
-    _defineProperty(this, "runStart", null);
-
-    _defineProperty(this, "runLength", null);
-
-    _defineProperty(this, "stackSize", 0);
-
+    (0, _classCallCheck2.default)(this, TimSort);
+    (0, _defineProperty2.default)(this, "array", null);
+    (0, _defineProperty2.default)(this, "compare", null);
+    (0, _defineProperty2.default)(this, "minGallop", DEFAULT_MIN_GALLOPING);
+    (0, _defineProperty2.default)(this, "length", 0);
+    (0, _defineProperty2.default)(this, "tmpStorageLength", DEFAULT_TMP_STORAGE_LENGTH);
+    (0, _defineProperty2.default)(this, "stackLength", 0);
+    (0, _defineProperty2.default)(this, "runStart", null);
+    (0, _defineProperty2.default)(this, "runLength", null);
+    (0, _defineProperty2.default)(this, "stackSize", 0);
     this.array = array;
     this.compare = compare;
     this.length = array.length;
@@ -748,7 +740,7 @@ var TimSort = /*#__PURE__*/function () {
    */
 
 
-  _createClass(TimSort, [{
+  (0, _createClass2.default)(TimSort, [{
     key: "pushRun",
     value: function pushRun(runStart, runLength) {
       this.runStart[this.stackSize] = runStart;
@@ -763,9 +755,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeRuns",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function mergeRuns() {
+    value: /*#__PURE__*/_regenerator.default.mark(function mergeRuns() {
       var n;
-      return regeneratorRuntime.wrap(function mergeRuns$(_context5) {
+      return _regenerator.default.wrap(function mergeRuns$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
@@ -816,9 +808,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "forceMergeRuns",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function forceMergeRuns() {
+    value: /*#__PURE__*/_regenerator.default.mark(function forceMergeRuns() {
       var n;
-      return regeneratorRuntime.wrap(function forceMergeRuns$(_context6) {
+      return _regenerator.default.wrap(function forceMergeRuns$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
@@ -855,9 +847,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeAt",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function mergeAt(i) {
+    value: /*#__PURE__*/_regenerator.default.mark(function mergeAt(i) {
       var compare, array, start1, length1, start2, length2, k;
-      return regeneratorRuntime.wrap(function mergeAt$(_context7) {
+      return _regenerator.default.wrap(function mergeAt$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
@@ -949,9 +941,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeLow",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function mergeLow(start1, length1, start2, length2) {
+    value: /*#__PURE__*/_regenerator.default.mark(function mergeLow(start1, length1, start2, length2) {
       var compare, array, tmp, i, cursor1, cursor2, dest, minGallop, count1, count2, exit;
-      return regeneratorRuntime.wrap(function mergeLow$(_context8) {
+      return _regenerator.default.wrap(function mergeLow$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
@@ -1376,9 +1368,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeHigh",
-    value: /*#__PURE__*/regeneratorRuntime.mark(function mergeHigh(start1, length1, start2, length2) {
+    value: /*#__PURE__*/_regenerator.default.mark(function mergeHigh(start1, length1, start2, length2) {
       var compare, array, tmp, i, cursor1, cursor2, dest, customCursor, customDest, minGallop, count1, count2, exit;
-      return regeneratorRuntime.wrap(function mergeHigh$(_context9) {
+      return _regenerator.default.wrap(function mergeHigh$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
             case 0:
@@ -1797,7 +1789,6 @@ var TimSort = /*#__PURE__*/function () {
       }, mergeHigh, this);
     })
   }]);
-
   return TimSort;
 }();
 /**
@@ -1814,7 +1805,7 @@ var TimSort = /*#__PURE__*/function () {
 
 function sort(array, compare, lo, hi) {
   var itemExtract, remaining, runLength, ts, minRun, force;
-  return regeneratorRuntime.wrap(function sort$(_context10) {
+  return _regenerator.default.wrap(function sort$(_context10) {
     while (1) {
       switch (_context10.prev = _context10.next) {
         case 0:

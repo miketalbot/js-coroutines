@@ -1,9 +1,14 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.LZStringGenerator = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
 // Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>
 //           (c) 2020 Mike Talbot (generator modifications)
 // This work is free. You can redistribute it and/or modify it
@@ -36,9 +41,9 @@ var LZStringGenerator = function () {
   }
 
   var LZString = {
-    compressToBase64: /*#__PURE__*/regeneratorRuntime.mark(function compressToBase64(input) {
+    compressToBase64: /*#__PURE__*/_regenerator.default.mark(function compressToBase64(input) {
       var res;
-      return regeneratorRuntime.wrap(function compressToBase64$(_context) {
+      return _regenerator.default.wrap(function compressToBase64$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -80,8 +85,8 @@ var LZStringGenerator = function () {
         }
       }, compressToBase64);
     }),
-    decompressFromBase64: /*#__PURE__*/regeneratorRuntime.mark(function decompressFromBase64(input) {
-      return regeneratorRuntime.wrap(function decompressFromBase64$(_context2) {
+    decompressFromBase64: /*#__PURE__*/_regenerator.default.mark(function decompressFromBase64(input) {
+      return _regenerator.default.wrap(function decompressFromBase64$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -115,8 +120,8 @@ var LZStringGenerator = function () {
         }
       }, decompressFromBase64);
     }),
-    compressToUTF16: /*#__PURE__*/regeneratorRuntime.mark(function compressToUTF16(input) {
-      return regeneratorRuntime.wrap(function compressToUTF16$(_context3) {
+    compressToUTF16: /*#__PURE__*/_regenerator.default.mark(function compressToUTF16(input) {
+      return _regenerator.default.wrap(function compressToUTF16$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
@@ -142,8 +147,8 @@ var LZStringGenerator = function () {
         }
       }, compressToUTF16);
     }),
-    decompressFromUTF16: /*#__PURE__*/regeneratorRuntime.mark(function decompressFromUTF16(compressed) {
-      return regeneratorRuntime.wrap(function decompressFromUTF16$(_context4) {
+    decompressFromUTF16: /*#__PURE__*/_regenerator.default.mark(function decompressFromUTF16(compressed) {
+      return _regenerator.default.wrap(function decompressFromUTF16$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
@@ -178,9 +183,9 @@ var LZStringGenerator = function () {
       }, decompressFromUTF16);
     }),
     //compress into uint8array (UCS-2 big endian format)
-    compressToUint8Array: /*#__PURE__*/regeneratorRuntime.mark(function compressToUint8Array(uncompressed) {
+    compressToUint8Array: /*#__PURE__*/_regenerator.default.mark(function compressToUint8Array(uncompressed) {
       var compressed, buf, i, TotalLen, current_value;
-      return regeneratorRuntime.wrap(function compressToUint8Array$(_context5) {
+      return _regenerator.default.wrap(function compressToUint8Array$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
@@ -231,9 +236,9 @@ var LZStringGenerator = function () {
       }, compressToUint8Array);
     }),
     //decompress from uint8array (UCS-2 big endian format)
-    decompressFromUint8Array: /*#__PURE__*/regeneratorRuntime.mark(function decompressFromUint8Array(compressed) {
+    decompressFromUint8Array: /*#__PURE__*/_regenerator.default.mark(function decompressFromUint8Array(compressed) {
       var buf, i, TotalLen;
-      return regeneratorRuntime.wrap(function decompressFromUint8Array$(_context6) {
+      return _regenerator.default.wrap(function decompressFromUint8Array$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
@@ -292,8 +297,8 @@ var LZStringGenerator = function () {
       }, decompressFromUint8Array);
     }),
     //compress into a string that is already URI encoded
-    compressToEncodedURIComponent: /*#__PURE__*/regeneratorRuntime.mark(function compressToEncodedURIComponent(input) {
-      return regeneratorRuntime.wrap(function compressToEncodedURIComponent$(_context7) {
+    compressToEncodedURIComponent: /*#__PURE__*/_regenerator.default.mark(function compressToEncodedURIComponent(input) {
+      return _regenerator.default.wrap(function compressToEncodedURIComponent$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
@@ -320,8 +325,8 @@ var LZStringGenerator = function () {
       }, compressToEncodedURIComponent);
     }),
     //decompress from an output of compressToEncodedURIComponent
-    decompressFromEncodedURIComponent: /*#__PURE__*/regeneratorRuntime.mark(function decompressFromEncodedURIComponent(input) {
-      return regeneratorRuntime.wrap(function decompressFromEncodedURIComponent$(_context8) {
+    decompressFromEncodedURIComponent: /*#__PURE__*/_regenerator.default.mark(function decompressFromEncodedURIComponent(input) {
+      return _regenerator.default.wrap(function decompressFromEncodedURIComponent$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
@@ -356,8 +361,8 @@ var LZStringGenerator = function () {
         }
       }, decompressFromEncodedURIComponent);
     }),
-    compress: /*#__PURE__*/regeneratorRuntime.mark(function compress(uncompressed) {
-      return regeneratorRuntime.wrap(function compress$(_context9) {
+    compress: /*#__PURE__*/_regenerator.default.mark(function compress(uncompressed) {
+      return _regenerator.default.wrap(function compress$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
             case 0:
@@ -375,9 +380,9 @@ var LZStringGenerator = function () {
         }
       }, compress);
     }),
-    _compress: /*#__PURE__*/regeneratorRuntime.mark(function _compress(uncompressed, bitsPerChar, getCharFromInt) {
+    _compress: /*#__PURE__*/_regenerator.default.mark(function _compress(uncompressed, bitsPerChar, getCharFromInt) {
       var i, value, context_dictionary, context_dictionaryToCreate, context_c, context_wc, context_w, context_enlargeIn, context_dictSize, context_numBits, context_data, context_data_val, context_data_position, ii;
-      return regeneratorRuntime.wrap(function _compress$(_context10) {
+      return _regenerator.default.wrap(function _compress$(_context10) {
         while (1) {
           switch (_context10.prev = _context10.next) {
             case 0:
@@ -861,8 +866,8 @@ var LZStringGenerator = function () {
         }
       }, _compress);
     }),
-    decompress: /*#__PURE__*/regeneratorRuntime.mark(function decompress(compressed) {
-      return regeneratorRuntime.wrap(function decompress$(_context11) {
+    decompress: /*#__PURE__*/_regenerator.default.mark(function decompress(compressed) {
+      return _regenerator.default.wrap(function decompress$(_context11) {
         while (1) {
           switch (_context11.prev = _context11.next) {
             case 0:
@@ -896,9 +901,9 @@ var LZStringGenerator = function () {
         }
       }, decompress);
     }),
-    _decompress: /*#__PURE__*/regeneratorRuntime.mark(function _decompress(length, resetValue, getNextValue) {
+    _decompress: /*#__PURE__*/_regenerator.default.mark(function _decompress(length, resetValue, getNextValue) {
       var dictionary, enlargeIn, dictSize, numBits, entry, result, i, w, bits, resb, maxpower, power, c, data, ic;
-      return regeneratorRuntime.wrap(function _decompress$(_context12) {
+      return _regenerator.default.wrap(function _decompress$(_context12) {
         while (1) {
           switch (_context12.prev = _context12.next) {
             case 0:

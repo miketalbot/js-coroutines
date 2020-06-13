@@ -1,6 +1,6 @@
 {
   "name": "js-coroutines",
-  "version": "2.1.53",
+  "version": "2.1.54",
   "private": false,
   "files": [
     "dist",
@@ -13,6 +13,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/polyfill": "^7.10.1",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
@@ -62,5 +63,7 @@
       "last 1 safari version"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "@babel/runtime": "^7.10.2"
+  }
 }

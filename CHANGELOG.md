@@ -1,3 +1,7 @@
+#### 2.1.54
+
+- Move to transform runtime to remove regenerator issues
+
 #### 2.1.53
 
 - Ensure requestAnimationFrame starts on next frame

@@ -1,14 +1,16 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.yielding = yielding;
 exports.wrapAsPromise = wrapAsPromise;
 
-var _coroutines = _interopRequireDefault(require("./coroutines"));
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _coroutines = _interopRequireDefault(require("./coroutines"));
 
 /**
  * Wraps a normal function into a generator function
@@ -23,10 +25,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function yielding(fn) {
   var frequency = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 8;
   var yieldCount = 0;
-  return /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+  return /*#__PURE__*/_regenerator.default.mark(function _callee() {
     var result,
         _args = arguments;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return _regenerator.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -75,8 +77,8 @@ function wrapAsPromise(coroutine) {
       params[_key] = arguments[_key];
     }
 
-    return (0, _coroutines.default)( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+    return (0, _coroutines.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:

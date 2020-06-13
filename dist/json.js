@@ -1,15 +1,19 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.stringify = stringify;
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
-var _marked = /*#__PURE__*/regeneratorRuntime.mark(quote),
-    _marked2 = /*#__PURE__*/regeneratorRuntime.mark(str),
-    _marked3 = /*#__PURE__*/regeneratorRuntime.mark(stringify);
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _marked = /*#__PURE__*/_regenerator.default.mark(quote),
+    _marked2 = /*#__PURE__*/_regenerator.default.mark(str),
+    _marked3 = /*#__PURE__*/_regenerator.default.mark(stringify);
 
 //  json2.js
 //  2017-06-12
@@ -38,7 +42,7 @@ function yielder() {
 
 function quote(string) {
   var result, i, l, c, r;
-  return regeneratorRuntime.wrap(function quote$(_context) {
+  return _regenerator.default.wrap(function quote$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
@@ -92,7 +96,7 @@ function quote(string) {
 
 function str(key, holder, ctrl) {
   var rep, i, k, v, length, mind, partial, value;
-  return regeneratorRuntime.wrap(function str$(_context2) {
+  return _regenerator.default.wrap(function str$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
@@ -112,7 +116,7 @@ function str(key, holder, ctrl) {
           value = holder[key]; // If we were called with a replacer function, then call the replacer to
           // obtain a replacement value.
 
-          if (value && _typeof(value) === "object" && typeof value.toJSON === "function") {
+          if (value && (0, _typeof2.default)(value) === "object" && typeof value.toJSON === "function") {
             value = value.toJSON(key);
           }
 
@@ -121,7 +125,7 @@ function str(key, holder, ctrl) {
           } // What happens next depends on the value's type.
 
 
-          _context2.t0 = _typeof(value);
+          _context2.t0 = (0, _typeof2.default)(value);
           _context2.next = _context2.t0 === "string" ? 11 : _context2.t0 === "number" ? 13 : _context2.t0 === "boolean" ? 14 : _context2.t0 === "null" ? 14 : 15;
           break;
 
@@ -185,7 +189,7 @@ function str(key, holder, ctrl) {
           return _context2.abrupt("return", v + "]");
 
         case 34:
-          if (!(rep && _typeof(rep) === "object")) {
+          if (!(rep && (0, _typeof2.default)(rep) === "object")) {
             _context2.next = 56;
             break;
           }
@@ -237,7 +241,7 @@ function str(key, holder, ctrl) {
           break;
 
         case 56:
-          _context2.t15 = regeneratorRuntime.keys(value);
+          _context2.t15 = _regenerator.default.keys(value);
 
         case 57:
           if ((_context2.t16 = _context2.t15()).done) {
@@ -307,7 +311,7 @@ meta = {
 
 function stringify(value, replacer, space) {
   var i;
-  return regeneratorRuntime.wrap(function stringify$(_context3) {
+  return _regenerator.default.wrap(function stringify$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
@@ -331,7 +335,7 @@ function stringify(value, replacer, space) {
           // Otherwise, throw an error.
 
 
-          if (!(replacer && typeof replacer !== "function" && (_typeof(replacer) !== "object" || typeof replacer.length !== "number"))) {
+          if (!(replacer && typeof replacer !== "function" && ((0, _typeof2.default)(replacer) !== "object" || typeof replacer.length !== "number"))) {
             _context3.next = 5;
             break;
           }

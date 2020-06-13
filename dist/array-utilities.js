@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -14,6 +16,8 @@ exports.findIndex = findIndex;
 exports.some = some;
 exports.every = every;
 
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
 var _wrappers = require("./wrappers");
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
@@ -22,16 +26,16 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-var _marked = /*#__PURE__*/regeneratorRuntime.mark(forEach),
-    _marked2 = /*#__PURE__*/regeneratorRuntime.mark(filter),
-    _marked3 = /*#__PURE__*/regeneratorRuntime.mark(reduce),
-    _marked4 = /*#__PURE__*/regeneratorRuntime.mark(concat),
-    _marked5 = /*#__PURE__*/regeneratorRuntime.mark(append),
-    _marked6 = /*#__PURE__*/regeneratorRuntime.mark(map),
-    _marked7 = /*#__PURE__*/regeneratorRuntime.mark(find),
-    _marked8 = /*#__PURE__*/regeneratorRuntime.mark(findIndex),
-    _marked9 = /*#__PURE__*/regeneratorRuntime.mark(some),
-    _marked10 = /*#__PURE__*/regeneratorRuntime.mark(every);
+var _marked = /*#__PURE__*/_regenerator.default.mark(forEach),
+    _marked2 = /*#__PURE__*/_regenerator.default.mark(filter),
+    _marked3 = /*#__PURE__*/_regenerator.default.mark(reduce),
+    _marked4 = /*#__PURE__*/_regenerator.default.mark(concat),
+    _marked5 = /*#__PURE__*/_regenerator.default.mark(append),
+    _marked6 = /*#__PURE__*/_regenerator.default.mark(map),
+    _marked7 = /*#__PURE__*/_regenerator.default.mark(find),
+    _marked8 = /*#__PURE__*/_regenerator.default.mark(findIndex),
+    _marked9 = /*#__PURE__*/_regenerator.default.mark(some),
+    _marked10 = /*#__PURE__*/_regenerator.default.mark(every);
 
 /**
  * @callback Process
@@ -72,7 +76,7 @@ var _marked = /*#__PURE__*/regeneratorRuntime.mark(forEach),
  */
 function forEach(array, fn) {
   var index, length;
-  return regeneratorRuntime.wrap(function forEach$(_context) {
+  return _regenerator.default.wrap(function forEach$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
@@ -109,7 +113,7 @@ function forEach(array, fn) {
 function filter(array, fn) {
   var result, index, _iterator, _step, item;
 
-  return regeneratorRuntime.wrap(function filter$(_context2) {
+  return _regenerator.default.wrap(function filter$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
@@ -180,7 +184,7 @@ function filter(array, fn) {
 function reduce(array, fn, initial) {
   var result, index, _iterator2, _step2, item;
 
-  return regeneratorRuntime.wrap(function reduce$(_context3) {
+  return _regenerator.default.wrap(function reduce$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
@@ -245,7 +249,7 @@ function reduce(array, fn, initial) {
 
 function concat(array1, array2) {
   var result, l;
-  return regeneratorRuntime.wrap(function concat$(_context4) {
+  return _regenerator.default.wrap(function concat$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
@@ -289,7 +293,7 @@ function concat(array1, array2) {
 
 function append(array1, array2) {
   var l;
-  return regeneratorRuntime.wrap(function append$(_context5) {
+  return _regenerator.default.wrap(function append$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
@@ -328,7 +332,7 @@ function append(array1, array2) {
 function map(array, fn) {
   var result, index, _iterator3, _step3, item;
 
-  return regeneratorRuntime.wrap(function map$(_context6) {
+  return _regenerator.default.wrap(function map$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
@@ -401,7 +405,7 @@ function map(array, fn) {
 function find(array, fn) {
   var index, _iterator4, _step4, item, result;
 
-  return regeneratorRuntime.wrap(function find$(_context7) {
+  return _regenerator.default.wrap(function find$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
         case 0:
@@ -472,7 +476,7 @@ function find(array, fn) {
 function findIndex(array, fn) {
   var index, _iterator5, _step5, item, result;
 
-  return regeneratorRuntime.wrap(function findIndex$(_context8) {
+  return _regenerator.default.wrap(function findIndex$(_context8) {
     while (1) {
       switch (_context8.prev = _context8.next) {
         case 0:
@@ -543,7 +547,7 @@ function findIndex(array, fn) {
 function some(array, fn) {
   var index, _iterator6, _step6, item, result;
 
-  return regeneratorRuntime.wrap(function some$(_context9) {
+  return _regenerator.default.wrap(function some$(_context9) {
     while (1) {
       switch (_context9.prev = _context9.next) {
         case 0:
@@ -614,7 +618,7 @@ function some(array, fn) {
 function every(array, fn) {
   var index, _iterator7, _step7, item, result;
 
-  return regeneratorRuntime.wrap(function every$(_context10) {
+  return _regenerator.default.wrap(function every$(_context10) {
     while (1) {
       switch (_context10.prev = _context10.next) {
         case 0:
