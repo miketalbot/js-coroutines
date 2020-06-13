@@ -227,11 +227,12 @@ function run(coroutine) {
   return result;
 }
 
+var requested = false;
 var animationCallbacks = [];
-var bufferCallback = [];
 
 function nextAnimationFrame(fn) {
-  if (animationCallbacks.length === 0) {
+  if (animationCallbacks.length === 0 && !requested) {
+    requested = true;
     requestAnimationFrame(process);
   }
 
@@ -240,9 +241,14 @@ function nextAnimationFrame(fn) {
 
 function process() {
   var callbacks = animationCallbacks;
-  animationCallbacks = bufferCallback;
-  animationCallbacks.length = 0;
-  bufferCallback = callbacks;
+
+  if (callbacks.length) {
+    requestAnimationFrame(process);
+  } else {
+    requested = false;
+  }
+
+  animationCallbacks = [];
 
   var _iterator = _createForOfIteratorHelper(callbacks),
       _step;

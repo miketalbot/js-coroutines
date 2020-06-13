@@ -145,11 +145,12 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
 }
 
 
+let requested = false
 let animationCallbacks = []
-let bufferCallback = []
 
 function nextAnimationFrame(fn) {
-    if(animationCallbacks.length === 0) {
+    if(animationCallbacks.length === 0 && !requested) {
+        requested = true
         requestAnimationFrame(process)
     }
     animationCallbacks.push(fn)
@@ -157,9 +158,12 @@ function nextAnimationFrame(fn) {
 
 function process() {
     let callbacks = animationCallbacks
-    animationCallbacks = bufferCallback
-    animationCallbacks.length = 0
-    bufferCallback = callbacks
+    if (callbacks.length) {
+        requestAnimationFrame(process)
+    } else {
+        requested = false
+    }
+    animationCallbacks = []
     for (let callback of callbacks) {
         callback()
     }

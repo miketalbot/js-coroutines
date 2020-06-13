@@ -1,3 +1,7 @@
+#### 2.1.53
+
+- Ensure requestAnimationFrame starts on next frame
+
 #### 2.1.52
 
 - Buffer animation callbacks to reduce calls to requestAnimationFrame
