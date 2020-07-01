@@ -1,3 +1,8 @@
+#### 2.1.56
+
+- Fix a bug with reduce/reduceAsync
+- try to get typings working again
+
 #### 2.1.54
 
 - Move to transform runtime to remove regenerator issues

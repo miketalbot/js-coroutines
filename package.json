@@ -1,6 +1,6 @@
 {
   "name": "js-coroutines",
-  "version": "2.1.55",
+  "version": "2.1.56",
   "private": false,
   "files": [
     "dist",
@@ -48,6 +48,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "types": "dist/es6/jscoroutines.d.ts",
   "typings": "dist/es6/jscoroutines.d.ts",
   "browserslist": {
     "production": [

@@ -175,7 +175,7 @@ function filter(array, fn) {
 /**
  * @param {Array} array
  * @param {Reduce} fn
- * @param {any} [initialValue]
+ * @param {any} [initial]
  * @returns The result of processing the reduction function on all
  * of the items in the array
  */
@@ -188,7 +188,7 @@ function reduce(array, fn, initial) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          result = initial || array[0];
+          result = initial !== undefined ? initial : array[0];
           index = 0;
           _iterator2 = _createForOfIteratorHelper(array);
           _context3.prev = 3;

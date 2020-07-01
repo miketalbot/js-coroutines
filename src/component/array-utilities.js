@@ -62,12 +62,12 @@ export function* filter(array, fn) {
 /**
  * @param {Array} array
  * @param {Reduce} fn
- * @param {any} [initialValue]
+ * @param {any} [initial]
  * @returns The result of processing the reduction function on all
  * of the items in the array
  */
 export function* reduce(array, fn, initial) {
-    let result = initial || array[0]
+    let result = initial !== undefined ? initial : array[0]
     let index = 0
     for (let item of array) {
         result = yield* fn(result, item, index, array)
