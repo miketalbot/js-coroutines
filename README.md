@@ -1,8 +1,8 @@
 # js-coroutines
 
-![Logo](http://js-coroutines.com/splash.png)
+[![Logo](http://js-coroutines.com/splash.png)](http://js-coroutines.com)
 
-[*JS-COROUTINES Home Page*](http://js-coroutines.com)
+[*JS-COROUTINES Home Page and API docs*](http://js-coroutines.com)
 
 **Supports all browsers and React Native**
 
@@ -105,6 +105,7 @@ async function process(url) {
 }
 ```
 
+
 ## Getting Started With Async Functions
 
 Async functions are the easiest way to use js-coroutines if you just need to
@@ -132,6 +133,8 @@ async function asyncFunctions() {
   return [output, await stringifyAsync(justIds)];
 }
 ```
+
+
 
 ## Getting Started Writing Your Own Generators
 

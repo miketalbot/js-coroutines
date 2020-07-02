@@ -65,6 +65,11 @@ export function* filter(array, fn) {
  * @param {any} [initial]
  * @returns The result of processing the reduction function on all
  * of the items in the array
+ * @example
+ *
+ * async function sumAge(items) {
+ *     const output = await reduceAsync(items, (acc,cur)=>acc += cur.age, 0)
+ * }
  */
 export function* reduce(array, fn, initial) {
     let result = initial !== undefined ? initial : array[0]
