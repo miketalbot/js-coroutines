@@ -1,4 +1,4 @@
-#### 2.2.58
+#### 2.2.59
 
 -   Improved performance tracking in idle
 -   Added pipe/tap/branch/call/repeat to the API for functional pipelines
