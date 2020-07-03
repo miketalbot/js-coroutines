@@ -533,78 +533,87 @@ function pipe() {
 
             case 4:
               if ((_step2 = _iterator2.n()).done) {
-                _context4.next = 23;
+                _context4.next = 25;
                 break;
               }
 
               fn = _step2.value;
+
+              if (fn) {
+                _context4.next = 8;
+                break;
+              }
+
+              return _context4.abrupt("continue", 23);
+
+            case 8:
               nextResult = fn.call(this, result);
 
               if (!nextResult) {
-                _context4.next = 21;
+                _context4.next = 23;
                 break;
               }
 
               if (!nextResult.next) {
-                _context4.next = 14;
+                _context4.next = 16;
                 break;
               }
 
-              _context4.next = 11;
+              _context4.next = 13;
               return run(nextResult);
 
-            case 11:
+            case 13:
               result = _context4.sent;
-              _context4.next = 21;
+              _context4.next = 23;
               break;
 
-            case 14:
+            case 16:
               if (!nextResult.then) {
-                _context4.next = 20;
+                _context4.next = 22;
                 break;
               }
 
-              _context4.next = 17;
+              _context4.next = 19;
               return nextResult;
 
-            case 17:
+            case 19:
               result = _context4.sent;
-              _context4.next = 21;
+              _context4.next = 23;
               break;
 
-            case 20:
+            case 22:
               result = nextResult;
 
-            case 21:
+            case 23:
               _context4.next = 4;
               break;
 
-            case 23:
-              _context4.next = 28;
+            case 25:
+              _context4.next = 30;
               break;
 
-            case 25:
-              _context4.prev = 25;
+            case 27:
+              _context4.prev = 27;
               _context4.t0 = _context4["catch"](2);
 
               _iterator2.e(_context4.t0);
 
-            case 28:
-              _context4.prev = 28;
+            case 30:
+              _context4.prev = 30;
 
               _iterator2.f();
 
-              return _context4.finish(28);
+              return _context4.finish(30);
 
-            case 31:
+            case 33:
               return _context4.abrupt("return", result);
 
-            case 32:
+            case 34:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, this, [[2, 25, 28, 31]]);
+      }, _callee4, this, [[2, 27, 30, 33]]);
     }));
 
     return function (_x5) {

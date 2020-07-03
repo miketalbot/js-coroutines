@@ -1,3 +1,7 @@
+#### 2.2.60
+
+- enabled falsey values in the pipeline to make composition easier
+
 #### 2.2.59
 
 -   Improved performance tracking in idle

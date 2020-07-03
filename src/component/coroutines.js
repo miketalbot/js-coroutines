@@ -301,6 +301,7 @@ export function pipe(...fns) {
     return async function(params) {
         let result = params
         for(let fn of fns.flat(Infinity)) {
+            if(!fn) continue
             let nextResult = fn.call(this, result)
             if(nextResult) {
                 if(nextResult.next) {
