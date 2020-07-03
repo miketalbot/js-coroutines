@@ -309,8 +309,7 @@ meta = {
   "\\": "\\\\"
 };
 
-function stringify(value, replacer, space) {
-  var i;
+function stringify(value, replacer) {
   return _regenerator.default.wrap(function stringify$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
@@ -321,38 +320,27 @@ function stringify(value, replacer, space) {
           // A default replacer method can be provided. Use of the space parameter can
           // produce text that is more easily readable.
           gap = "";
-          indent = ""; // If the space parameter is a number, make an indent string containing that
-          // many spaces.
-
-          if (typeof space === "number") {
-            for (i = 0; i < space; i += 1) {
-              indent += " ";
-            } // If the space parameter is a string, it will be used as the indent string.
-
-          } else if (typeof space === "string") {
-            indent = space;
-          } // If there is a replacer, it must be a function or an array.
+          indent = ""; // If there is a replacer, it must be a function or an array.
           // Otherwise, throw an error.
 
-
           if (!(replacer && typeof replacer !== "function" && ((0, _typeof2.default)(replacer) !== "object" || typeof replacer.length !== "number"))) {
-            _context3.next = 5;
+            _context3.next = 4;
             break;
           }
 
           throw new Error("JSON.stringify");
 
-        case 5:
+        case 4:
           return _context3.delegateYield(str("", {
             "": value
           }, {
             rep: replacer
-          }), "t0", 6);
+          }), "t0", 5);
 
-        case 6:
+        case 5:
           return _context3.abrupt("return", _context3.t0);
 
-        case 7:
+        case 6:
         case "end":
           return _context3.stop();
       }

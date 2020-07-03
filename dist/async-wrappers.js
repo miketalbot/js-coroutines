@@ -19,11 +19,27 @@ var _lzString = require("./lz-string/lz-string");
 
 var _base64String = require("./lz-string/base64-string");
 
+var _coroutines = require("./coroutines");
+
+/**
+ * Create a promised function
+ * @param {Function} fn
+ * @returns {Function}
+ */
 function wrapAsPromiseAndYieldFn(fn) {
-  var yielder = (0, _wrappers.wrapAsPromise)(fn);
-  return function (array, fn) {
-    return yielder(array, (0, _wrappers.yielding)(fn));
+  var result = function result(array, processor) {
+    return (0, _coroutines.run)(fn(array, (0, _wrappers.yielding)(processor)));
   };
+
+  result.with = function () {
+    for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
+      params[_key] = arguments[_key];
+    }
+
+    return _coroutines.call.apply(void 0, [result].concat(params));
+  };
+
+  return result;
 }
 /**
  * @callback SortFunction

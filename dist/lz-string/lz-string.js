@@ -19,13 +19,13 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 // http://pieroxy.net/blog/pages/lz-string/testing.html
 //
 // LZ-based compression algorithm, version 1.4.4
-var YIELD_MASK = 63;
+var YIELD_MASK = 15;
 
 var LZStringGenerator = function () {
   // private property
   var f = String.fromCharCode;
-  var keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-  var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
+  var keyStrBase64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  var keyStrUriSafe = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$';
   var baseReverseDic = {};
 
   function getBaseValue(alphabet, character) {
@@ -52,7 +52,7 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context.abrupt("return", "");
+              return _context.abrupt("return", '');
 
             case 2:
               return _context.delegateYield(LZString._compress(input, 6, function (a) {
@@ -70,13 +70,13 @@ var LZStringGenerator = function () {
               return _context.abrupt("return", res);
 
             case 8:
-              return _context.abrupt("return", res + "===");
+              return _context.abrupt("return", res + '===');
 
             case 9:
-              return _context.abrupt("return", res + "==");
+              return _context.abrupt("return", res + '==');
 
             case 10:
-              return _context.abrupt("return", res + "=");
+              return _context.abrupt("return", res + '=');
 
             case 11:
             case "end":
@@ -95,10 +95,10 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context2.abrupt("return", "");
+              return _context2.abrupt("return", '');
 
             case 2:
-              if (!(input === "")) {
+              if (!(input === '')) {
                 _context2.next = 4;
                 break;
               }
@@ -130,12 +130,12 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context3.abrupt("return", "");
+              return _context3.abrupt("return", '');
 
             case 2:
               return _context3.delegateYield(LZString._compress(input, 15, function (a) {
                 return f(a + 32);
-              }) + " ", "t0", 3);
+              }) + ' ', "t0", 3);
 
             case 3:
               return _context3.abrupt("return", _context3.t0);
@@ -157,10 +157,10 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context4.abrupt("return", "");
+              return _context4.abrupt("return", '');
 
             case 2:
-              if (!(compressed === "")) {
+              if (!(compressed === '')) {
                 _context4.next = 4;
                 break;
               }
@@ -284,7 +284,7 @@ var LZStringGenerator = function () {
               return;
 
             case 17:
-              return _context6.delegateYield(LZString.decompress(buf.join("")), "t1", 18);
+              return _context6.delegateYield(LZString.decompress(buf.join('')), "t1", 18);
 
             case 18:
               return _context6.abrupt("return", _context6.t1);
@@ -307,7 +307,7 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context7.abrupt("return", "");
+              return _context7.abrupt("return", '');
 
             case 2:
               return _context7.delegateYield(LZString._compress(input, 6, function (a) {
@@ -335,10 +335,10 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context8.abrupt("return", "");
+              return _context8.abrupt("return", '');
 
             case 2:
-              if (!(input === "")) {
+              if (!(input === '')) {
                 _context8.next = 4;
                 break;
               }
@@ -346,7 +346,7 @@ var LZStringGenerator = function () {
               return _context8.abrupt("return", null);
 
             case 4:
-              input = input.replace(/ /g, "+");
+              input = input.replace(/ /g, '+');
               return _context8.delegateYield(LZString._decompress(input.length, 32, function (index) {
                 return getBaseValue(keyStrUriSafe, input.charAt(index));
               }), "t0", 6);
@@ -391,15 +391,15 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context10.abrupt("return", "");
+              return _context10.abrupt("return", '');
 
             case 2:
-              context_dictionary = {}, context_dictionaryToCreate = {}, context_c = "", context_wc = "", context_w = "", context_enlargeIn = 2, context_dictSize = 3, context_numBits = 2, context_data = [], context_data_val = 0, context_data_position = 0;
+              context_dictionary = {}, context_dictionaryToCreate = {}, context_c = '', context_wc = '', context_w = '', context_enlargeIn = 2, context_dictSize = 3, context_numBits = 2, context_data = [], context_data_val = 0, context_data_position = 0;
               ii = 0;
 
             case 4:
               if (!(ii < uncompressed.length)) {
-                _context10.next = 69;
+                _context10.next = 44;
                 break;
               }
 
@@ -427,55 +427,37 @@ var LZStringGenerator = function () {
               }
 
               context_w = context_wc;
-              _context10.next = 66;
+              _context10.next = 41;
               break;
 
             case 15:
               if (!Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
-                _context10.next = 50;
+                _context10.next = 35;
                 break;
               }
 
               if (!(context_w.charCodeAt(0) < 256)) {
-                _context10.next = 31;
+                _context10.next = 24;
                 break;
               }
 
-              i = 0;
+              for (i = 0; i < context_numBits; i++) {
+                context_data_val = context_data_val << 1;
 
-            case 18:
-              if (!(i < context_numBits)) {
-                _context10.next = 27;
-                break;
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
               }
 
-              if (!((i & 15) === 0)) {
-                _context10.next = 22;
-                break;
-              }
-
-              _context10.next = 22;
+              value = context_w.charCodeAt(0);
+              _context10.next = 21;
               return;
 
-            case 22:
-              context_data_val = context_data_val << 1;
-
-              if (context_data_position === bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-
-            case 24:
-              i++;
-              _context10.next = 18;
-              break;
-
-            case 27:
-              value = context_w.charCodeAt(0);
-
+            case 21:
               for (i = 0; i < 8; i++) {
                 context_data_val = context_data_val << 1 | value & 1;
 
@@ -490,48 +472,31 @@ var LZStringGenerator = function () {
                 value = value >> 1;
               }
 
-              _context10.next = 45;
+              _context10.next = 30;
               break;
 
-            case 31:
+            case 24:
               value = 1;
-              i = 0;
 
-            case 33:
-              if (!(i < context_numBits)) {
-                _context10.next = 43;
-                break;
+              for (i = 0; i < context_numBits; i++) {
+                context_data_val = context_data_val << 1 | value;
+
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = 0;
               }
 
-              if (!((i & 15) === 0)) {
-                _context10.next = 37;
-                break;
-              }
-
-              _context10.next = 37;
+              value = context_w.charCodeAt(0);
+              _context10.next = 29;
               return;
 
-            case 37:
-              context_data_val = context_data_val << 1 | value;
-
-              if (context_data_position === bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-
-              value = 0;
-
-            case 40:
-              i++;
-              _context10.next = 33;
-              break;
-
-            case 43:
-              value = context_w.charCodeAt(0);
-
+            case 29:
               for (i = 0; i < 16; i++) {
                 context_data_val = context_data_val << 1 | value & 1;
 
@@ -546,7 +511,7 @@ var LZStringGenerator = function () {
                 value = value >> 1;
               }
 
-            case 45:
+            case 30:
               context_enlargeIn--;
 
               if (context_enlargeIn === 0) {
@@ -555,46 +520,27 @@ var LZStringGenerator = function () {
               }
 
               delete context_dictionaryToCreate[context_w];
-              _context10.next = 62;
+              _context10.next = 37;
               break;
 
-            case 50:
+            case 35:
               value = context_dictionary[context_w];
-              i = 0;
 
-            case 52:
-              if (!(i < context_numBits)) {
-                _context10.next = 62;
-                break;
+              for (i = 0; i < context_numBits; i++) {
+                context_data_val = context_data_val << 1 | value & 1;
+
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = value >> 1;
               }
 
-              if (!((i & 15) === 0)) {
-                _context10.next = 56;
-                break;
-              }
-
-              _context10.next = 56;
-              return;
-
-            case 56:
-              context_data_val = context_data_val << 1 | value & 1;
-
-              if (context_data_position === bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-
-              value = value >> 1;
-
-            case 59:
-              i++;
-              _context10.next = 52;
-              break;
-
-            case 62:
+            case 37:
               context_enlargeIn--;
 
               if (context_enlargeIn === 0) {
@@ -606,62 +552,44 @@ var LZStringGenerator = function () {
               context_dictionary[context_wc] = context_dictSize++;
               context_w = String(context_c);
 
-            case 66:
+            case 41:
               ii += 1;
               _context10.next = 4;
               break;
 
-            case 69:
-              if (!(context_w !== "")) {
-                _context10.next = 119;
+            case 44:
+              if (!(context_w !== '')) {
+                _context10.next = 71;
                 break;
               }
 
               if (!Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
-                _context10.next = 105;
+                _context10.next = 67;
                 break;
               }
 
               if (!(context_w.charCodeAt(0) < 256)) {
-                _context10.next = 86;
+                _context10.next = 54;
                 break;
               }
 
-              i = 0;
+              for (i = 0; i < context_numBits; i++) {
+                context_data_val = context_data_val << 1;
 
-            case 73:
-              if (!(i < context_numBits)) {
-                _context10.next = 82;
-                break;
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
               }
 
-              if (!((i & 15) === 0)) {
-                _context10.next = 77;
-                break;
-              }
-
-              _context10.next = 77;
+              value = context_w.charCodeAt(0);
+              _context10.next = 51;
               return;
 
-            case 77:
-              context_data_val = context_data_val << 1;
-
-              if (context_data_position === bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-
-            case 79:
-              i++;
-              _context10.next = 73;
-              break;
-
-            case 82:
-              value = context_w.charCodeAt(0);
-
+            case 51:
               for (i = 0; i < 8; i++) {
                 context_data_val = context_data_val << 1 | value & 1;
 
@@ -676,48 +604,34 @@ var LZStringGenerator = function () {
                 value = value >> 1;
               }
 
-              _context10.next = 100;
+              _context10.next = 62;
               break;
 
-            case 86:
+            case 54:
               value = 1;
-              i = 0;
-
-            case 88:
-              if (!(i < context_numBits)) {
-                _context10.next = 98;
-                break;
-              }
-
-              if (!((i & 15) === 0)) {
-                _context10.next = 92;
-                break;
-              }
-
-              _context10.next = 92;
+              _context10.next = 57;
               return;
 
-            case 92:
-              context_data_val = context_data_val << 1 | value;
+            case 57:
+              for (i = 0; i < context_numBits; i++) {
+                context_data_val = context_data_val << 1 | value;
 
-              if (context_data_position === bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = 0;
               }
 
-              value = 0;
-
-            case 95:
-              i++;
-              _context10.next = 88;
-              break;
-
-            case 98:
               value = context_w.charCodeAt(0);
+              _context10.next = 61;
+              return;
 
+            case 61:
               for (i = 0; i < 16; i++) {
                 context_data_val = context_data_val << 1 | value & 1;
 
@@ -732,7 +646,7 @@ var LZStringGenerator = function () {
                 value = value >> 1;
               }
 
-            case 100:
+            case 62:
               context_enlargeIn--;
 
               if (context_enlargeIn === 0) {
@@ -741,46 +655,27 @@ var LZStringGenerator = function () {
               }
 
               delete context_dictionaryToCreate[context_w];
-              _context10.next = 117;
+              _context10.next = 69;
               break;
 
-            case 105:
+            case 67:
               value = context_dictionary[context_w];
-              i = 0;
 
-            case 107:
-              if (!(i < context_numBits)) {
-                _context10.next = 117;
-                break;
+              for (i = 0; i < context_numBits; i++) {
+                context_data_val = context_data_val << 1 | value & 1;
+
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = value >> 1;
               }
 
-              if (!((i & 15) === 0)) {
-                _context10.next = 111;
-                break;
-              }
-
-              _context10.next = 111;
-              return;
-
-            case 111:
-              context_data_val = context_data_val << 1 | value & 1;
-
-              if (context_data_position === bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-
-              value = value >> 1;
-
-            case 114:
-              i++;
-              _context10.next = 107;
-              break;
-
-            case 117:
+            case 69:
               context_enlargeIn--;
 
               if (context_enlargeIn === 0) {
@@ -788,78 +683,61 @@ var LZStringGenerator = function () {
                 context_numBits++;
               }
 
-            case 119:
+            case 71:
               // Mark the end of the stream
               value = 2;
-              i = 0;
-
-            case 121:
-              if (!(i < context_numBits)) {
-                _context10.next = 131;
-                break;
-              }
-
-              if (!((i & 15) === 0)) {
-                _context10.next = 125;
-                break;
-              }
-
-              _context10.next = 125;
+              _context10.next = 74;
               return;
 
-            case 125:
-              context_data_val = context_data_val << 1 | value & 1;
+            case 74:
+              for (i = 0; i < context_numBits; i++) {
+                context_data_val = context_data_val << 1 | value & 1;
 
-              if (context_data_position === bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
+                if (context_data_position === bitsPerChar - 1) {
+                  context_data_position = 0;
+                  context_data.push(getCharFromInt(context_data_val));
+                  context_data_val = 0;
+                } else {
+                  context_data_position++;
+                }
+
+                value = value >> 1;
               }
 
-              value = value >> 1;
-
-            case 128:
-              i++;
-              _context10.next = 121;
-              break;
-
-            case 131:
-              _context10.next = 133;
+              _context10.next = 77;
               return;
 
-            case 133:
+            case 77:
               if (!true) {
-                _context10.next = 143;
+                _context10.next = 87;
                 break;
               }
 
               context_data_val = context_data_val << 1;
 
               if (!(context_data_position === bitsPerChar - 1)) {
-                _context10.next = 140;
+                _context10.next = 84;
                 break;
               }
 
               context_data.push(getCharFromInt(context_data_val));
-              return _context10.abrupt("break", 143);
+              return _context10.abrupt("break", 87);
 
-            case 140:
+            case 84:
               context_data_position++;
 
-            case 141:
-              _context10.next = 133;
+            case 85:
+              _context10.next = 77;
               break;
 
-            case 143:
-              _context10.next = 145;
-              return;
+            case 87:
+              _context10.next = 89;
+              return true;
 
-            case 145:
-              return _context10.abrupt("return", context_data.join(""));
+            case 89:
+              return _context10.abrupt("return", context_data.join(''));
 
-            case 146:
+            case 90:
             case "end":
               return _context10.stop();
           }
@@ -876,10 +754,10 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context11.abrupt("return", "");
+              return _context11.abrupt("return", '');
 
             case 2:
-              if (!(compressed === "")) {
+              if (!(compressed === '')) {
                 _context11.next = 4;
                 break;
               }
@@ -907,7 +785,7 @@ var LZStringGenerator = function () {
         while (1) {
           switch (_context12.prev = _context12.next) {
             case 0:
-              dictionary = [], enlargeIn = 4, dictSize = 4, numBits = 3, entry = "", result = [], data = {
+              dictionary = [], enlargeIn = 4, dictSize = 4, numBits = 3, entry = '', result = [], data = {
                 val: getNextValue(0),
                 position: resetValue,
                 index: 1
@@ -981,7 +859,7 @@ var LZStringGenerator = function () {
               return _context12.abrupt("break", 23);
 
             case 21:
-              return _context12.abrupt("return", "");
+              return _context12.abrupt("return", '');
 
             case 22:
               return _context12.abrupt("break", 23);
@@ -994,7 +872,7 @@ var LZStringGenerator = function () {
 
             case 27:
               if (!true) {
-                _context12.next = 75;
+                _context12.next = 105;
                 break;
               }
 
@@ -1012,111 +890,159 @@ var LZStringGenerator = function () {
                 break;
               }
 
-              return _context12.abrupt("return", "");
+              return _context12.abrupt("return", '');
 
             case 33:
               bits = 0;
               maxpower = Math.pow(2, numBits);
               power = 1;
 
-              while (power !== maxpower) {
-                resb = data.val & data.position;
-                data.position >>= 1;
-
-                if (data.position === 0) {
-                  data.position = resetValue;
-                  data.val = getNextValue(data.index++);
-                }
-
-                bits |= (resb > 0 ? 1 : 0) * power;
-                power <<= 1;
+            case 36:
+              if (!(power !== maxpower)) {
+                _context12.next = 47;
+                break;
               }
 
-              _context12.t1 = c = bits;
-              _context12.next = _context12.t1 === 0 ? 40 : _context12.t1 === 1 ? 48 : _context12.t1 === 2 ? 56 : 57;
-              break;
+              if (!((ic++ & YIELD_MASK) === 0)) {
+                _context12.next = 40;
+                break;
+              }
+
+              _context12.next = 40;
+              return;
 
             case 40:
+              resb = data.val & data.position;
+              data.position >>= 1;
+
+              if (data.position === 0) {
+                data.position = resetValue;
+                data.val = getNextValue(data.index++);
+              }
+
+              bits |= (resb > 0 ? 1 : 0) * power;
+              power <<= 1;
+              _context12.next = 36;
+              break;
+
+            case 47:
+              _context12.t1 = c = bits;
+              _context12.next = _context12.t1 === 0 ? 50 : _context12.t1 === 1 ? 68 : _context12.t1 === 2 ? 86 : 87;
+              break;
+
+            case 50:
               bits = 0;
               maxpower = Math.pow(2, 8);
               power = 1;
 
-              while (power !== maxpower) {
-                resb = data.val & data.position;
-                data.position >>= 1;
-
-                if (data.position === 0) {
-                  data.position = resetValue;
-                  data.val = getNextValue(data.index++);
-                }
-
-                bits |= (resb > 0 ? 1 : 0) * power;
-                power <<= 1;
+            case 53:
+              if (!(power !== maxpower)) {
+                _context12.next = 64;
+                break;
               }
 
+              if (!((ic++ & YIELD_MASK) === 0)) {
+                _context12.next = 57;
+                break;
+              }
+
+              _context12.next = 57;
+              return;
+
+            case 57:
+              resb = data.val & data.position;
+              data.position >>= 1;
+
+              if (data.position === 0) {
+                data.position = resetValue;
+                data.val = getNextValue(data.index++);
+              }
+
+              bits |= (resb > 0 ? 1 : 0) * power;
+              power <<= 1;
+              _context12.next = 53;
+              break;
+
+            case 64:
               dictionary[dictSize++] = f(bits);
               c = dictSize - 1;
               enlargeIn--;
-              return _context12.abrupt("break", 58);
+              return _context12.abrupt("break", 88);
 
-            case 48:
+            case 68:
               bits = 0;
               maxpower = Math.pow(2, 16);
               power = 1;
 
-              while (power !== maxpower) {
-                resb = data.val & data.position;
-                data.position >>= 1;
-
-                if (data.position === 0) {
-                  data.position = resetValue;
-                  data.val = getNextValue(data.index++);
-                }
-
-                bits |= (resb > 0 ? 1 : 0) * power;
-                power <<= 1;
+            case 71:
+              if (!(power !== maxpower)) {
+                _context12.next = 82;
+                break;
               }
 
+              if (!((ic++ & YIELD_MASK) === 0)) {
+                _context12.next = 75;
+                break;
+              }
+
+              _context12.next = 75;
+              return;
+
+            case 75:
+              resb = data.val & data.position;
+              data.position >>= 1;
+
+              if (data.position === 0) {
+                data.position = resetValue;
+                data.val = getNextValue(data.index++);
+              }
+
+              bits |= (resb > 0 ? 1 : 0) * power;
+              power <<= 1;
+              _context12.next = 71;
+              break;
+
+            case 82:
               dictionary[dictSize++] = f(bits);
               c = dictSize - 1;
               enlargeIn--;
-              return _context12.abrupt("break", 58);
+              return _context12.abrupt("break", 88);
 
-            case 56:
-              return _context12.abrupt("return", result.join(""));
+            case 86:
+              return _context12.abrupt("return", result.join(''));
 
-            case 57:
-              return _context12.abrupt("break", 58);
+            case 87:
+              return _context12.abrupt("break", 88);
 
-            case 58:
+            case 88:
               if (enlargeIn === 0) {
                 enlargeIn = Math.pow(2, numBits);
                 numBits++;
               }
 
               if (!dictionary[c]) {
-                _context12.next = 63;
+                _context12.next = 93;
                 break;
               }
 
               entry = dictionary[c];
-              _context12.next = 68;
+              _context12.next = 98;
               break;
 
-            case 63:
+            case 93:
               if (!(c === dictSize)) {
-                _context12.next = 67;
+                _context12.next = 97;
                 break;
               }
 
               entry = w + w.charAt(0);
-              _context12.next = 68;
+              _context12.next = 98;
               break;
 
-            case 67:
+            case 97:
               return _context12.abrupt("return", null);
 
-            case 68:
+            case 98:
               result.push(entry); // Add w+entry[0] to the dictionary.
 
               dictionary[dictSize++] = w + entry.charAt(0);
@@ -1131,7 +1057,7 @@ var LZStringGenerator = function () {
               _context12.next = 27;
               break;
 
-            case 75:
+            case 105:
             case "end":
               return _context12.stop();
           }

@@ -143,7 +143,11 @@ export class Tokenizer {
     }
 
     read() {
-        return this.sourceCode[this.pos++]
+        let code
+        do {
+            code = this.sourceCode[this.pos++]
+        } while(code && code.charCodeAt(0)<32)
+        return code
     }
 
     readCharacter() {
@@ -171,7 +175,11 @@ export class Tokenizer {
     }
 
     peek() {
-        return this.sourceCode[this.pos]
+        let offset = this.pos
+        while(this.sourceCode[offset] && this.sourceCode[offset].charCodeAt(0) < 32) {
+            offset ++
+        }
+        return this.sourceCode[offset]
     }
 
     initToken(ch) {
@@ -186,7 +194,7 @@ export class Tokenizer {
         }
         this.state = MOVE_TO[nextCh]
         if (!this.state) {
-            throw new Error('Unexpected character in JSON')
+            throw new Error(`Unexpected character [${type}:${nextCh.charCodeAt(0)}] '${ch}' @ ${this.pos} - ${this.sourceCode.slice(Math.max(0, this.pos - 16), this.pos+16)}`)
         }
     }
 

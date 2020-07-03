@@ -1,6 +1,6 @@
 {
   "name": "js-coroutines",
-  "version": "2.1.57",
+  "version": "2.1.58",
   "private": false,
   "files": [
     "dist",

@@ -134,6 +134,9 @@ async function asyncFunctions() {
 }
 ```
 
+## Getting Started With Function Pipelines
+
+You can use some helper functions to 
 
 
 ## Getting Started Writing Your Own Generators

@@ -247,7 +247,13 @@ var Tokenizer = /*#__PURE__*/function () {
   }, {
     key: "read",
     value: function read() {
-      return this.sourceCode[this.pos++];
+      var code;
+
+      do {
+        code = this.sourceCode[this.pos++];
+      } while (code && code.charCodeAt(0) < 32);
+
+      return code;
     }
   }, {
     key: "readCharacter",
@@ -279,7 +285,13 @@ var Tokenizer = /*#__PURE__*/function () {
   }, {
     key: "peek",
     value: function peek() {
-      return this.sourceCode[this.pos];
+      var offset = this.pos;
+
+      while (this.sourceCode[offset] && this.sourceCode[offset].charCodeAt(0) < 32) {
+        offset++;
+      }
+
+      return this.sourceCode[offset];
     }
   }, {
     key: "initToken",
@@ -303,7 +315,7 @@ var Tokenizer = /*#__PURE__*/function () {
       this.state = MOVE_TO[nextCh];
 
       if (!this.state) {
-        throw new Error('Unexpected character in JSON');
+        throw new Error("Unexpected character [".concat(type, ":").concat(nextCh.charCodeAt(0), "] '").concat(ch, "' @ ").concat(this.pos, " - ").concat(this.sourceCode.slice(Math.max(0, this.pos - 16), this.pos + 16)));
       }
     }
   }, {

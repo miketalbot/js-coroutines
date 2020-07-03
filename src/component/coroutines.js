@@ -77,7 +77,7 @@
  *     let answer = await run(someCoroutine(param))
  * }
  */
-export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
+export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 10) {
     let terminated = false
     let resolver = null
     const result = new Promise( function (resolve, reject) {
@@ -98,6 +98,8 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
             }
             let minTime = Math.max(0.5, loopWhileMsRemains)
             try {
+                let time = api.timeRemaining() | 0
+                let now = Date.now()
                 do {
                     const {value, done} = iterator.next(await parameter)
                     parameter = undefined
@@ -113,7 +115,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 16 * 10) {
                     } else if (value && value.then) {
                         parameter = value
                     }
-                } while (api.timeRemaining() > minTime)
+                } while (time - (Date.now()-now) > minTime)
             } catch (e) {
                 reject(e)
                 return
@@ -273,6 +275,122 @@ export function runAsync(coroutine, loopWhileMsRemains = 1, timeout = 160) {
         }
     }
     return result
+}
+
+/**
+ * @callback GeneratorFunction
+ * @generator
+ * @param {...*} params - the parameters to pass
+ * @returns {*} the result of the coroutine
+ */
+
+/**
+ * @callback AsyncFunction
+ * @param {*} params - the parameters to pass
+ * @async
+ * @returns {*} result of calling the function
+ */
+
+/**
+ * Create a function that executes a pipeline of
+ * functions asynchronously
+ * @param {...(Function|Promise|Array<(Promise|Function|GeneratorFunction|AsyncFunction)>|GeneratorFunction|AsyncFunction)} fns - the pipeline to execute
+ * @returns {AsyncFunction} an async function to execute the pipeline
+ */
+export function pipe(...fns) {
+    return async function(params) {
+        let result = params
+        for(let fn of fns.flat(Infinity)) {
+            let nextResult = fn.call(this, result)
+            if(nextResult) {
+                if(nextResult.next) {
+                    result = await run(nextResult)
+                } else if(nextResult.then) {
+                    result = await nextResult
+                } else {
+                    result = nextResult
+                }
+            }
+        }
+        return result
+    }
+}
+
+/**
+ * Tap into a pipeline to call a function that will probably
+ * perform side effects but should not modify the result, its
+ * return value is ignored
+ * @param {Function} fn - a function to be called at this point in
+ * the pipeline
+ * @returns {AsyncFunction} returning the passed in parameters
+ */
+export function tap(fn) {
+    return async function(params) {
+        let result = fn.call(this, params)
+        if (result) {
+            if (result.next) {
+                await run(result)
+            } else if (result.then) {
+                await result
+            }
+        }
+        return params
+    }
+}
+
+/**
+ * Branches a pipeline by starting another "continuation" with
+ * the current parameters.  Starts a function but the pipeline
+ * continues immediately creating two execution contexts
+ * @param {Function} fn - the function to start - can be async or generator
+ */
+export function branch(fn) {
+    return function (params) {
+        let result = fn.call(this, params)
+        if (result) {
+            if (result.next) {
+                run(result).catch(console.error)
+            } else if (result.then) {
+                result.catch(console.error)
+            }
+        }
+        return params
+    }
+}
+
+/**
+ * Create a version of a function with its end
+ * parameters supplied
+ * @param {Function|GeneratorFunction|AsyncFunction} fn - the function to configure
+ * @param {...any[]} config - the additional parameters to pass
+ * @returns {Function}
+ */
+export function call(fn, ...config) {
+    return function(...params) {
+        return fn.apply(this, [...params, ...config])
+    }
+}
+
+/**
+ * Create a function that repeats a function multiple times
+ * passing the output of each iteration as the input to the next
+ * @param {Function} fn - the function to repeat
+ * @param {Number} times - the number of times to repeat
+ * @returns {AsyncFunction} - a async function that repeats the operation
+ */
+export function repeat(fn, times) {
+    return async function(params) {
+        let result = params
+        for(let i = 0; i < times; i++) {
+            result = fn.call(this, result)
+            if (result.next) {
+                result = await run(result)
+            } else if (result.then) {
+                result = await result
+            }
+        }
+        return result
+    }
 }
 
 export default run

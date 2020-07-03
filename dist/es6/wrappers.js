@@ -1,6 +1,6 @@
 
 
-import run from "./coroutines";
+import run, {call} from './coroutines'
 
 /**
  * Wraps a normal function into a generator function
@@ -36,13 +36,24 @@ export function yielding(fn, frequency = 8) {
  * and pass them on to the coroutine.
  *
  * @param {Coroutine} coroutine - The coroutine to run
- * @returns {PromiseFn} a function that can be called to execute the coroutine
+ * @returns {PromiseFn|Function} a function that can be called to execute the coroutine
  * and return its result on completion
  */
 export function wrapAsPromise(coroutine) {
-  return function (...params) {
-    return run(function* () {
-      return yield* coroutine(...params);
-    });
+  const result = function (...params) {
+    return run(coroutine(...params))
   };
+  result.with = function (...params) {
+    return call(result, ...params)
+  }
+  return result
+}
+
+export function curryRight(fn, supplied, execute) {
+    if(fn.length > supplied.length) {
+      return function(...params) {
+        return curryRight.call(this, fn, [...params, ...supplied], execute)
+      }
+    }
+    return execute.apply(this, supplied)
 }

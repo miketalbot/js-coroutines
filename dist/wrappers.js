@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -7,10 +9,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.yielding = yielding;
 exports.wrapAsPromise = wrapAsPromise;
+exports.curryRight = curryRight;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _coroutines = _interopRequireDefault(require("./coroutines"));
+var _coroutines = _interopRequireWildcard(require("./coroutines"));
 
 /**
  * Wraps a normal function into a generator function
@@ -66,33 +71,37 @@ function yielding(fn) {
  * and pass them on to the coroutine.
  *
  * @param {Coroutine} coroutine - The coroutine to run
- * @returns {PromiseFn} a function that can be called to execute the coroutine
+ * @returns {PromiseFn|Function} a function that can be called to execute the coroutine
  * and return its result on completion
  */
 
 
 function wrapAsPromise(coroutine) {
-  return function () {
+  var result = function result() {
+    return (0, _coroutines.default)(coroutine.apply(void 0, arguments));
+  };
+
+  result.with = function () {
     for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
       params[_key] = arguments[_key];
     }
 
-    return (0, _coroutines.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      return _regenerator.default.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              return _context2.delegateYield(coroutine.apply(void 0, params), "t0", 1);
-
-            case 1:
-              return _context2.abrupt("return", _context2.t0);
-
-            case 2:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }));
+    return _coroutines.call.apply(void 0, [result].concat(params));
   };
+
+  return result;
+}
+
+function curryRight(fn, supplied, execute) {
+  if (fn.length > supplied.length) {
+    return function () {
+      for (var _len2 = arguments.length, params = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        params[_key2] = arguments[_key2];
+      }
+
+      return curryRight.call(this, fn, [].concat(params, (0, _toConsumableArray2.default)(supplied)), execute);
+    };
+  }
+
+  return execute.apply(this, supplied);
 }

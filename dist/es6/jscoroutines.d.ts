@@ -65,6 +65,7 @@ export declare function stringifyAsync(data: any): Promise<String>;
  */
 export declare function parseAsync(json: string): Promise<any>;
 
+
 /**
  * Sort an array (in place) by a sorting function
  * @example
@@ -316,3 +317,8 @@ export declare function yielding(fn: (...params: any[]) => any, frequency?: numb
  */
 export declare function wrapAsPromise(coroutine: Function): Function;
 
+export declare function pipe(...functions: Array<Function>|Array<Array<Function>>) : any
+export declare function tap(fn: Function) : Function;
+export declare function branch(fn: Function) : Function;
+export declare function repeat(fn: Function, times: Number) : Function;
+export declare function call(fn: Function, ...parameters: any[]) : Function

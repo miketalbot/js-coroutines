@@ -5,12 +5,21 @@ import {sort} from './timsort'
 import {append, concat, every, filter, find, findIndex, forEach, map, reduce, some,} from './array-utilities'
 import {LZStringGenerator} from './lz-string/lz-string'
 import {Base64StringGenerator} from './lz-string/base64-string'
+import {call, run} from './coroutines'
 
+/**
+ * Create a promised function
+ * @param {Function} fn
+ * @returns {Function}
+ */
 function wrapAsPromiseAndYieldFn(fn) {
-    let yielder = wrapAsPromise(fn)
-    return function (array, fn) {
-        return yielder(array, yielding(fn))
+    const result = function(array, processor) {
+        return run(fn(array, yielding(processor)))
     }
+    result.with = function(...params) {
+        return call(result, ...params)
+    }
+    return result
 }
 
 /**

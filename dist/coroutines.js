@@ -8,6 +8,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.run = run;
 exports.update = update;
 exports.runAsync = runAsync;
+exports.pipe = pipe;
+exports.tap = tap;
+exports.branch = branch;
+exports.call = call;
+exports.repeat = repeat;
 exports.default = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -101,7 +106,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  */
 function run(coroutine) {
   var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 16 * 10;
+  var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 32 * 10;
   var terminated = false;
   var resolver = null;
   var result = new Promise(function (resolve, reject) {
@@ -119,7 +124,7 @@ function run(coroutine) {
 
     function _run() {
       _run = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(api) {
-        var minTime, _iterator$next, value, done;
+        var minTime, time, now, _iterator$next, value, done;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -138,13 +143,15 @@ function run(coroutine) {
               case 4:
                 minTime = Math.max(0.5, loopWhileMsRemains);
                 _context.prev = 5;
+                time = api.timeRemaining() | 0;
+                now = Date.now();
 
-              case 6:
+              case 8:
                 _context.t0 = iterator;
-                _context.next = 9;
+                _context.next = 11;
                 return parameter;
 
-              case 9:
+              case 11:
                 _context.t1 = _context.sent;
                 _iterator$next = _context.t0.next.call(_context.t0, _context.t1);
                 value = _iterator$next.value;
@@ -152,22 +159,22 @@ function run(coroutine) {
                 parameter = undefined;
 
                 if (!done) {
-                  _context.next = 17;
+                  _context.next = 19;
                   break;
                 }
 
                 resolve(value);
                 return _context.abrupt("return");
 
-              case 17:
+              case 19:
                 if (!(value === true)) {
-                  _context.next = 21;
+                  _context.next = 23;
                   break;
                 }
 
-                return _context.abrupt("break", 23);
+                return _context.abrupt("break", 25);
 
-              case 21:
+              case 23:
                 if (typeof value === 'number') {
                   minTime = +value;
                   if (isNaN(minTime)) minTime = 1;
@@ -175,34 +182,34 @@ function run(coroutine) {
                   parameter = value;
                 }
 
-              case 22:
-                if (api.timeRemaining() > minTime) {
-                  _context.next = 6;
+              case 24:
+                if (time - (Date.now() - now) > minTime) {
+                  _context.next = 8;
                   break;
                 }
 
-              case 23:
-                _context.next = 29;
+              case 25:
+                _context.next = 31;
                 break;
 
-              case 25:
-                _context.prev = 25;
+              case 27:
+                _context.prev = 27;
                 _context.t2 = _context["catch"](5);
                 reject(_context.t2);
                 return _context.abrupt("return");
 
-              case 29:
+              case 31:
                 // Request an idle callback
                 window.requestIdleCallback(run); // Request again on timeout
 
                 id = setTimeout(runFromTimeout, timeout);
 
-              case 31:
+              case 33:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[5, 25]]);
+        }, _callee, null, [[5, 27]]);
       }));
       return _run.apply(this, arguments);
     }
@@ -482,6 +489,309 @@ function runAsync(coroutine) {
   };
 
   return result;
+}
+/**
+ * @callback GeneratorFunction
+ * @generator
+ * @param {...*} params - the parameters to pass
+ * @returns {*} the result of the coroutine
+ */
+
+/**
+ * @callback AsyncFunction
+ * @param {*} params - the parameters to pass
+ * @async
+ * @returns {*} result of calling the function
+ */
+
+/**
+ * Create a function that executes a pipeline of
+ * functions asynchronously
+ * @param {...(Function|Promise|Array<(Promise|Function|GeneratorFunction|AsyncFunction)>|GeneratorFunction|AsyncFunction)} fns - the pipeline to execute
+ * @returns {AsyncFunction} an async function to execute the pipeline
+ */
+
+
+function pipe() {
+  for (var _len2 = arguments.length, fns = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    fns[_key2] = arguments[_key2];
+  }
+
+  return /*#__PURE__*/function () {
+    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(params) {
+      var result, _iterator2, _step2, fn, nextResult;
+
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              result = params;
+              _iterator2 = _createForOfIteratorHelper(fns.flat(Infinity));
+              _context4.prev = 2;
+
+              _iterator2.s();
+
+            case 4:
+              if ((_step2 = _iterator2.n()).done) {
+                _context4.next = 23;
+                break;
+              }
+
+              fn = _step2.value;
+              nextResult = fn.call(this, result);
+
+              if (!nextResult) {
+                _context4.next = 21;
+                break;
+              }
+
+              if (!nextResult.next) {
+                _context4.next = 14;
+                break;
+              }
+
+              _context4.next = 11;
+              return run(nextResult);
+
+            case 11:
+              result = _context4.sent;
+              _context4.next = 21;
+              break;
+
+            case 14:
+              if (!nextResult.then) {
+                _context4.next = 20;
+                break;
+              }
+
+              _context4.next = 17;
+              return nextResult;
+
+            case 17:
+              result = _context4.sent;
+              _context4.next = 21;
+              break;
+
+            case 20:
+              result = nextResult;
+
+            case 21:
+              _context4.next = 4;
+              break;
+
+            case 23:
+              _context4.next = 28;
+              break;
+
+            case 25:
+              _context4.prev = 25;
+              _context4.t0 = _context4["catch"](2);
+
+              _iterator2.e(_context4.t0);
+
+            case 28:
+              _context4.prev = 28;
+
+              _iterator2.f();
+
+              return _context4.finish(28);
+
+            case 31:
+              return _context4.abrupt("return", result);
+
+            case 32:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, this, [[2, 25, 28, 31]]);
+    }));
+
+    return function (_x5) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+}
+/**
+ * Tap into a pipeline to call a function that will probably
+ * perform side effects but should not modify the result, its
+ * return value is ignored
+ * @param {Function} fn - a function to be called at this point in
+ * the pipeline
+ * @returns {AsyncFunction} returning the passed in parameters
+ */
+
+
+function tap(fn) {
+  return /*#__PURE__*/function () {
+    var _ref3 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5(params) {
+      var result;
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              result = fn.call(this, params);
+
+              if (!result) {
+                _context5.next = 10;
+                break;
+              }
+
+              if (!result.next) {
+                _context5.next = 7;
+                break;
+              }
+
+              _context5.next = 5;
+              return run(result);
+
+            case 5:
+              _context5.next = 10;
+              break;
+
+            case 7:
+              if (!result.then) {
+                _context5.next = 10;
+                break;
+              }
+
+              _context5.next = 10;
+              return result;
+
+            case 10:
+              return _context5.abrupt("return", params);
+
+            case 11:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, this);
+    }));
+
+    return function (_x6) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+}
+/**
+ * Branches a pipeline by starting another "continuation" with
+ * the current parameters.  Starts a function but the pipeline
+ * continues immediately creating two execution contexts
+ * @param {Function} fn - the function to start - can be async or generator
+ */
+
+
+function branch(fn) {
+  return function (params) {
+    var result = fn.call(this, params);
+
+    if (result) {
+      if (result.next) {
+        run(result).catch(console.error);
+      } else if (result.then) {
+        result.catch(console.error);
+      }
+    }
+
+    return params;
+  };
+}
+/**
+ * Create a version of a function with its end
+ * parameters supplied
+ * @param {Function|GeneratorFunction|AsyncFunction} fn - the function to configure
+ * @param {...any[]} config - the additional parameters to pass
+ * @returns {Function}
+ */
+
+
+function call(fn) {
+  for (var _len3 = arguments.length, config = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+    config[_key3 - 1] = arguments[_key3];
+  }
+
+  return function () {
+    for (var _len4 = arguments.length, params = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      params[_key4] = arguments[_key4];
+    }
+
+    return fn.apply(this, [].concat(params, config));
+  };
+}
+/**
+ * Create a function that repeats a function multiple times
+ * passing the output of each iteration as the input to the next
+ * @param {Function} fn - the function to repeat
+ * @param {Number} times - the number of times to repeat
+ * @returns {AsyncFunction} - a async function that repeats the operation
+ */
+
+
+function repeat(fn, times) {
+  return /*#__PURE__*/function () {
+    var _ref4 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee6(params) {
+      var result, i;
+      return _regenerator.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              result = params;
+              i = 0;
+
+            case 2:
+              if (!(i < times)) {
+                _context6.next = 17;
+                break;
+              }
+
+              result = fn.call(this, result);
+
+              if (!result.next) {
+                _context6.next = 10;
+                break;
+              }
+
+              _context6.next = 7;
+              return run(result);
+
+            case 7:
+              result = _context6.sent;
+              _context6.next = 14;
+              break;
+
+            case 10:
+              if (!result.then) {
+                _context6.next = 14;
+                break;
+              }
+
+              _context6.next = 13;
+              return result;
+
+            case 13:
+              result = _context6.sent;
+
+            case 14:
+              i++;
+              _context6.next = 2;
+              break;
+
+            case 17:
+              return _context6.abrupt("return", result);
+
+            case 18:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, this);
+    }));
+
+    return function (_x7) {
+      return _ref4.apply(this, arguments);
+    };
+  }();
 }
 
 var _default = run;
