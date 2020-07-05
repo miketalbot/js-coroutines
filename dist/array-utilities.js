@@ -834,7 +834,6 @@ function keyBy(collection, fn) {
     while (1) {
       switch (_context23.prev = _context23.next) {
         case 0:
-          debugger;
           result = {};
           return _context23.delegateYield(forEach(collection, /*#__PURE__*/_regenerator.default.mark(function _callee9(value, key) {
             var newKey;
@@ -842,25 +841,24 @@ function keyBy(collection, fn) {
               while (1) {
                 switch (_context22.prev = _context22.next) {
                   case 0:
-                    debugger;
-                    return _context22.delegateYield(fn(value, key, collection), "t0", 2);
+                    return _context22.delegateYield(fn(value, key, collection), "t0", 1);
 
-                  case 2:
+                  case 1:
                     newKey = _context22.t0;
                     result[newKey] = value;
 
-                  case 4:
+                  case 3:
                   case "end":
                     return _context22.stop();
                 }
               }
             }, _callee9);
-          })), "t0", 3);
+          })), "t0", 2);
 
-        case 3:
+        case 2:
           return _context23.abrupt("return", result);
 
-        case 4:
+        case 3:
         case "end":
           return _context23.stop();
       }

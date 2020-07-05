@@ -305,10 +305,8 @@ export function* lastIndexOf(array, value) {
  * @returns {Generator<*, {}, *>} a generator for the new object
  */
 export function* keyBy(collection, fn) {
-    debugger
     let result = {}
     yield* forEach(collection, function* (value, key) {
-        debugger
         let newKey = yield* fn(value, key, collection)
         result[newKey] = value
     })

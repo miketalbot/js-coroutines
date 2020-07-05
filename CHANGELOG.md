@@ -1,3 +1,7 @@
+#### 2.3.63
+
+-   Remove the `debugger` - oops
+
 #### 2.3.62
 
 -   Update docs

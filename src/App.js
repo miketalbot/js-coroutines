@@ -116,6 +116,8 @@ function App() {
         let justIds = await groupByAsync(o, (v) => {
             return v._id
         })
+        let index = await keyByAsync(o, v=>v._id)
+        console.log({index})
         add(`ASYNC: mapped the ids from objects in the array to an index of ${format(Object.keys(justIds).length)} items`)
         output = await stringifyAsync(justIds)
         add(`ASYNC: stringified the index to a ${format(output.length)} character string`)
