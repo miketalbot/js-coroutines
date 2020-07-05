@@ -53,7 +53,7 @@
  *     latter helps when you must provide parameters to the coroutine.
  * </p>
  * @param {Coroutine|Iterator} coroutine the routine to run or an iterator for an already started coroutine
- * @param {number} [loopWhileMsRemains=1 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
+ * @param {number} [loopWhileMsRemains=2 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
  * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
  * @returns {Promise<any>} the result of the coroutine
  * <strong>The promise returned by <code>run</code> has a <code>terminate()</code> method
@@ -77,7 +77,7 @@
  *     let answer = await run(someCoroutine(param))
  * }
  */
-export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 10) {
+export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
     let terminated = false
     let resolver = null
     const result = new Promise( function (resolve, reject) {

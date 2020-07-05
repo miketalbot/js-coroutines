@@ -7,7 +7,7 @@ import {
     concatAsync,
     decompressAsync,
     every,
-    forEach,
+    forEach, groupByAsync, keyByAsync,
     map,
     mapAsync,
     parse,
@@ -45,7 +45,7 @@ function App() {
             tap((o) => add(`PIPE: decompressed data to a string of ${format(o.length)}`)),
             parseAsync,
             tap((o) => add(`PIPE: hydrated ${format(o.length)} items`)),
-            mapAsync.with((v) => v.id),
+            mapAsync.with((v) => v._id),
             tap((o) => add(`PIPE: mapped the ids from objects in the array to a new array of ${format(o.length)}`)),
             stringifyAsync,
             tap((o) => add(`PIPE: new array to a string of length ${format(o.length)}`))
@@ -113,11 +113,14 @@ function App() {
                 decompressed === output ? 'Matches' : "Didn't match"
             }`
         )
-
-        let justIds = await mapAsync(o, (v) => v.id)
-        add(`ASYNC: mapped the ids from objects in the array to a new array of ${format(justIds.length)} items`)
+        let justIds = await groupByAsync(o, (v) => {
+            return v._id
+        })
+        add(`ASYNC: mapped the ids from objects in the array to an index of ${format(Object.keys(justIds).length)} items`)
         output = await stringifyAsync(justIds)
-        add(`ASYNC: stringified just the ids in the array to a ${format(output.length)} character string`)
+        add(`ASYNC: stringified the index to a ${format(output.length)} character string`)
+
+
     }
 
     async function calculateAsync() {

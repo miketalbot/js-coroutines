@@ -1,18 +1,15 @@
 import {yielding} from './wrappers'
 
-/**
- * @callback Process
- * @param {any} element
- * @param {number} index
- * @param {Array} collection
- */
+function isObject(v) {
+    return typeof v === 'object' && !Array.isArray(v)
+}
 
 /**
  * @callback Filter
  * @param {any} element
  * @param {number} index
  * @param {Array} collection
- * @returns {boolean} true if included in the filter
+ * @returns {Generator} a generator for a value of true if included in the filter
  */
 
 /**
@@ -32,51 +29,90 @@ import {yielding} from './wrappers'
  * @returns {any} updated value
  */
 
+/**
+ * @callback Process
+ * @param {any} value - the value being processed
+ * @param {number|string} key - the key or index of the value
+ * @param {Array} collection - the collection being iterated
+ */
+
+const doReturn = Symbol('return')
+
+export function exitWith(value) {
+    return {[doReturn]: true, value}
+}
 
 /**
  * @generator
- * @param {Array} array
- * @param {process} fn
+ * @param {Array} collection
+ * @param {Process} fn
+ * @param {number|string} [start]
+ * @returns {Generator<*, *, *>}
  */
-export function* forEach(array, fn) {
-    for (let index = 0, length = array.length; index < length; index++) {
-        yield* fn(array[index], index, array)
+export function* forEach(collection, fn, start) {
+    if (isObject(collection)) {
+        let started = !start
+        for (let key in collection) {
+            if (!started) {
+                started = key === start
+            }
+            if (started) {
+                if (Object.prototype.hasOwnProperty.call(collection, key)) {
+                    let result = yield* fn(collection[key], key, collection)
+                    if (result && result[doReturn]) return result.value
+                }
+            }
+        }
+    } else {
+        for (let index = start || 0, length = collection.length; index < length; index++) {
+            let result = yield* fn(collection[index], index, collection)
+            if (result && result[doReturn]) return result.value
+        }
     }
 }
 
 /**
  * @generator
- * @param {Array} array
+ * @param {Array|Object} collection
  * @param {Filter} fn
- * @returns array of elements matching the filter
+ * @returns {Generator<*, Object|Array, *>} collection of elements matching the filter
  */
-export function* filter(array, fn) {
-    let result = []
-    let index = 0
-    for (let item of array) {
-        if (yield* fn(item, index++, array)) result.push(item)
+export function* filter(collection, fn) {
+    if (isObject(collection)) {
+        let result = {}
+        yield* forEach(collection, function* (value, key, array) {
+            if (yield* fn(value, key, array)) {
+                result[key] = value
+            }
+        })
+    } else {
+        let result = []
+        yield* forEach(collection, function* (value, key, array) {
+            if (yield* fn(value, key, array)) {
+                result.push(value)
+            }
+        })
+        return result
     }
-    return result
 }
 
 /**
- * @param {Array} array
+ * @param {Array|Object} target
  * @param {Reduce} fn
  * @param {any} [initial]
- * @returns The result of processing the reduction function on all
- * of the items in the array
+ * @returns {Generator<*, *, *>} The result of processing the reduction function on all
+ * of the items in the target
  * @example
  *
  * async function sumAge(items) {
  *     const output = await reduceAsync(items, (acc,cur)=>acc += cur.age, 0)
  * }
  */
-export function* reduce(array, fn, initial) {
-    let result = initial !== undefined ? initial : array[0]
-    let index = 0
-    for (let item of array) {
-        result = yield* fn(result, item, index, array)
-    }
+export function* reduce(target, fn, initial) {
+    let result = initial !== undefined ? initial : target[0]
+    yield* forEach(target, function* (item, key) {
+        result = yield* fn(result, item, key, target)
+    })
     return result
 }
 
@@ -85,7 +121,7 @@ export function* reduce(array, fn, initial) {
  * @generator
  * @param {Array} array1
  * @param {Array} array2
- * @returns {Array} the concatenated arrays
+ * @returns {Generator<*, Array, *>} the concatenated arrays
  */
 export function* concat(array1, array2) {
     yield true
@@ -108,7 +144,7 @@ export function* concat(array1, array2) {
  * @generator
  * @param {Array} array1 - the destination
  * @param {Array} array2 - the source
- * @returns {Array} returns <code>array1</code>
+ * @returns {Generator<*, Array, *>} returns <code>array1</code>
  */
 export function* append(array1, array2) {
     const l = array1.length
@@ -125,77 +161,208 @@ export function* append(array1, array2) {
 
 /**
  * @generator
- * @param {Array} array
+ * @param {Array|Object} collection
  * @param {Map} fn
- * @returns {Array} new array of mapped values
+ * @returns {Generator<*, Array|Object, *>} new collection of mapped values
  */
-export function* map(array, fn) {
-    yield true
-    let result = new Array(array.length)
-    yield
-    let index = 0
-    for (let item of array) {
-        result[index++] = yield* fn(item, index, array)
-    }
+export function* map(collection, fn) {
+    let result = isObject(collection) ? {} : []
+    yield* forEach(collection, function* (value, key) {
+        result[key] = yield* fn(value, key, collection)
+    })
     return result
 }
 
 /**
  * @generator
- * @param {Array} array
+ * @param {Array|Object} collection
  * @param {Filter} fn
- * @returns {any} the first matching value in the array or null
+ * @param {any} [start] - the key to start at
+ * @returns {Generator<*, *, *>} the first matching value in the collection or null
  */
-export function* find(array, fn) {
-    let index = 0
-    for (let item of array) {
-        let result = yield* fn(item, index++, array)
-        if (result) return item
-    }
-    return undefined
+export function* find(collection, fn, start) {
+    let output = undefined
+    yield* forEach(
+        collection,
+        function* (value, key) {
+            let result = yield* fn(value, key, collection)
+            if (result) {
+                output = value
+                return exitWith(value)
+            }
+        },
+        start
+    )
+    return output
 }
 
 /**
  * @generator
- * @param {Array} array
+ * @param {Array|Object} collection
  * @param {Filter} fn
- * @returns {number} Index of matching element or -1
+ * @returns {Generator<*, number, *>} Index of matching element or -1
  */
-export function* findIndex(array, fn) {
-    let index = 0
-    for (let item of array) {
-        let result = yield* fn(item, index++, array)
-        if (result) return index
-    }
-    return -1
+export function* findIndex(collection, fn, start) {
+    let output = -1
+    yield* forEach(
+        collection,
+        function* (value, key) {
+            let result = yield* fn(value, key, collection)
+            if (result) {
+                output = key
+                return exitWith(key)
+            }
+        },
+        start
+    )
+    return output
 }
 
 /**
  * @generator
- * @param {Array} array
+ * @param {Array|Object} collection
  * @param {Filter} fn
- * @returns {boolean} true if at least one item matched the filter
+ * @returns {Generator<*, boolean, *>} true if at least one item matched the filter
  */
-export function* some(array, fn) {
-    let index = 0
-    for (let item of array) {
-        let result = yield* fn(item, index++, array)
-        if (result) return true
+export function* some(collection, fn) {
+    let result = false
+    yield* forEach(collection, function* (value, key) {
+        if (yield* fn(value, key, collection)) {
+            result = true
+            return exitWith(true)
+        }
+    })
+    return result
+}
+
+/**
+ * @generator
+ * @param {Array|Object} collection
+ * @param {Filter} fn
+ * @returns {Generator<*, boolean, *>} true if all of the collection items matched the filter
+ */
+export function* every(collection, fn) {
+    let result = true
+    yield* forEach(collection, function* (value, key) {
+        if (!(yield* fn(value, key, collection))) {
+            result = false
+            return exitWith(false)
+        }
+    })
+    return result
+}
+
+/**
+ * Returns true if an array includes a value
+ * @param {Array} array
+ * @param {any} value
+ * @returns {Generator<*, boolean, *>}
+ */
+export function* includes(array, value) {
+    for (let i = 0, l = array.length; i < l; i++) {
+        if (array[i] === value) return true
+        if ((i & 63) === 0) yield
     }
     return false
 }
 
 /**
- * @generator
- * @param {Array} array
- * @param {Filter} fn
- * @returns {boolean} true if all of the array items matched the filter
+ * Returns a generator for an index of an item in an array
+ * @param {Array} array - the array to scan
+ * @param {*} value - the value to search for
+ * @returns {Generator<*, number, *>}
  */
-export function* every(array, fn) {
+export function* indexOf(array, value) {
+    for (let i = 0, l = array.length; i < l; i++) {
+        if (array[i] === value) return i
+        if ((i & 63) === 0) yield
+    }
+    return -1
+}
+
+/**
+ * Returns a generator for an index of an item in an array
+ * @param {Array} array - the array to scan
+ * @param {*} value - the value to search for
+ * @returns {Generator<*, number, *>}
+ */
+export function* lastIndexOf(array, value) {
+    for (let i = array.length - 1; i >= 0; i--) {
+        if (array[i] === value) return i
+        if ((i & 63) === 0) yield
+    }
+    return -1
+}
+
+/**
+ * Creates an object composed of keys generated from the results
+ * of running each element of collection thru then supplied function.
+ * The corresponding value of each key is the last element responsible
+ * for generating the key.
+ *
+ * @param {Array|Object} collection
+ * @param {Map} fn
+ * @returns {Generator<*, {}, *>} a generator for the new object
+ */
+export function* keyBy(collection, fn) {
+    debugger
+    let result = {}
+    yield* forEach(collection, function* (value, key) {
+        debugger
+        let newKey = yield* fn(value, key, collection)
+        result[newKey] = value
+    })
+    return result
+}
+
+/**
+ * Creates an object composed of keys generated from the results
+ * of running each element of collection thru then supplied function.
+ * The corresponding value of each key is an collection of the elements responsible
+ * for generating the key.
+ *
+ * @param {Array|Object} collection
+ * @param {Map} fn
+ * @returns {Generator<*, {}, *>} a generator for the new object
+ */
+export function* groupBy(collection, fn) {
+    let result = {}
+    let index = 0
+    for (let item of collection) {
+        let key = yield* fn(item, index++, collection)
+        const array = (result[key] = result[key] || [])
+        array.push(item)
+    }
+    return result
+}
+
+/**
+ * Create an array with the unique values from the
+ * input array, the routine is supplied with a
+ * function that determines on what the array should
+ * be made unique.
+ * @param {Array} array
+ * @param {Map} [fn] - the function to determine uniqueness, if
+ * omitted then the item itself is used
+ * @returns {Generator<*, [], *>}
+ */
+export function* uniqueBy(array, fn) {
+    let set = new Set()
+    let output = []
     let index = 0
     for (let item of array) {
-        let result = yield* fn(item, index++, array)
-        if (!result) return false
+        if(fn) {
+            let key = yield* fn(item, index++, array)
+            if (!set.has(key)) {
+                output.push(item)
+                set.add(key)
+            }
+        } else {
+            if(!set.has(item)) {
+                output.push(item)
+                set.add(item)
+            }
+        }
     }
-    return true
+    return output
 }

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.base64Decompress = exports.base64decompressFromUTF16Async = exports.decompressAsync = exports.decompressFromEncodedURIComponentAsync = exports.decompressFromUint8ArrayAsync = exports.decompressFromUTF16Async = exports.decompressFromBase64Async = exports.base64Compress = exports.base64CompressToUTF16Async = exports.compressAsync = exports.compressToEncodedURIComponentAsync = exports.compressToUint8ArrayAsync = exports.compressToUTF16Async = exports.compressToBase64Async = exports.everyAsync = exports.someAsync = exports.forEachAsync = exports.concatAsync = exports.appendAsync = exports.reduceAsync = exports.filterAsync = exports.mapAsync = exports.findIndexAsync = exports.findAsync = exports.sortAsync = exports.parseAsync = exports.stringifyAsync = void 0;
+exports.uniqueByAsync = exports.groupByAsync = exports.keyByAsync = exports.lastIndexOfAsync = exports.indexOfAsync = exports.includesAsync = exports.base64Decompress = exports.base64decompressFromUTF16Async = exports.decompressAsync = exports.decompressFromEncodedURIComponentAsync = exports.decompressFromUint8ArrayAsync = exports.decompressFromUTF16Async = exports.decompressFromBase64Async = exports.base64Compress = exports.base64CompressToUTF16Async = exports.compressAsync = exports.compressToEncodedURIComponentAsync = exports.compressToUint8ArrayAsync = exports.compressToUTF16Async = exports.compressToBase64Async = exports.everyAsync = exports.someAsync = exports.forEachAsync = exports.concatAsync = exports.appendAsync = exports.reduceAsync = exports.filterAsync = exports.mapAsync = exports.findIndexAsync = exports.findAsync = exports.sortAsync = exports.parseAsync = exports.stringifyAsync = void 0;
 
 var _wrappers = require("./wrappers");
 
@@ -321,4 +321,74 @@ var base64decompressFromUTF16Async = (0, _wrappers.wrapAsPromise)(_base64String.
 
 exports.base64decompressFromUTF16Async = base64decompressFromUTF16Async;
 var base64Decompress = (0, _wrappers.wrapAsPromise)(_base64String.Base64StringGenerator.decompress);
+/**
+ * Returns a promise returning true if an array includes a value
+ * @param array
+ * @param value
+ * @returns Promise<Boolean>
+ * @example
+ * if(await includesAsync(someArray, 'error')) {
+ *     ...
+ * }
+ */
+
 exports.base64Decompress = base64Decompress;
+var includesAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.includes);
+/**
+ * Returns a promise for the first index of an item in an array
+ * @param array - the array to scan
+ * @param value - the value to search for
+ * @returns {Promise<Number>}
+ */
+
+exports.includesAsync = includesAsync;
+var indexOfAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.indexOf);
+/**
+ * Returns a promise for the last index of an item in an array
+ * @param array - the array to scan
+ * @param value - the value to search for
+ * @returns {Promise<Number>}
+ */
+
+exports.indexOfAsync = indexOfAsync;
+var lastIndexOfAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.lastIndexOf);
+/**
+ * Promises the creation an object composed of keys generated from the results
+ * of running each element of collection thru then supplied function.
+ * The corresponding value of each key is the last element responsible
+ * for generating the key.
+ *
+ * @param {Array|Object} collection
+ * @param {Map} fn
+ * @returns {Promise<{}>}
+ */
+
+exports.lastIndexOfAsync = lastIndexOfAsync;
+var keyByAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.keyBy);
+/**
+ * Promises the creation of an object composed of keys generated from the results
+ * of running each element of collection thru then supplied function.
+ * The corresponding value of each key is an collection of the elements responsible
+ * for generating the key.
+ *
+ * @param {Array|Object} collection
+ * @param {Map} fn
+ * @returns {Promise<{}>}
+ */
+
+exports.keyByAsync = keyByAsync;
+var groupByAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.groupBy);
+/**
+ * Promises the creation of an array with the unique values from the
+ * input array, the routine is supplied with a
+ * function that determines on what the array should
+ * be made unique.
+ * @param {Array} array
+ * @param {Map} [fn] - the function to determine uniqueness, if
+ * omitted then the item itself is used
+ * @returns {Promise<Array>} unique array
+ */
+
+exports.groupByAsync = groupByAsync;
+var uniqueByAsync = wrapAsPromiseAndYieldFn(_arrayUtilities.uniqueBy);
+exports.uniqueByAsync = uniqueByAsync;

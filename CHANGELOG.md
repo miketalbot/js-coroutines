@@ -1,6 +1,11 @@
+#### 2.3.61
+
+-   Added functionality for keyBy, uniqueBy, indexOf, lastIndexOf, groupBy, includes
+-   Made filter/every/some/forEach handle objects and arrays (per lodash)
+
 #### 2.2.60
 
-- enabled falsey values in the pipeline to make composition easier
+-   enabled falsey values in the pipeline to make composition easier
 
 #### 2.2.59
 

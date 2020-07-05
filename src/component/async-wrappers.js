@@ -2,7 +2,20 @@ import {wrapAsPromise, yielding} from './wrappers'
 import {stringify} from './json'
 import {parse} from './yastjson/lib/parse'
 import {sort} from './timsort'
-import {append, concat, every, filter, find, findIndex, forEach, map, reduce, some,} from './array-utilities'
+import {
+    append,
+    concat,
+    every,
+    filter,
+    find,
+    findIndex,
+    forEach, groupBy,
+    includes,
+    indexOf, keyBy, lastIndexOf,
+    map,
+    reduce,
+    some, uniqueBy,
+} from './array-utilities'
 import {LZStringGenerator} from './lz-string/lz-string'
 import {Base64StringGenerator} from './lz-string/base64-string'
 import {call, run} from './coroutines'
@@ -159,6 +172,8 @@ export const everyAsync = wrapAsPromiseAndYieldFn(every)
 export const compressToBase64Async = wrapAsPromise(
     LZStringGenerator.compressToBase64
 )
+
+
 /**
  * Asynchronously compress a string to a utf16 string
  * @function compressToUTF16Async
@@ -266,3 +281,71 @@ export const base64decompressFromUTF16Async = wrapAsPromise(
  * @returns {Promise.<String>} a promise for the uncompressed data
  */
 export const base64Decompress = wrapAsPromise(Base64StringGenerator.decompress)
+
+
+/**
+ * Returns a promise returning true if an array includes a value
+ * @param array
+ * @param value
+ * @returns Promise<Boolean>
+ * @example
+ * if(await includesAsync(someArray, 'error')) {
+ *     ...
+ * }
+ */
+export const includesAsync = wrapAsPromiseAndYieldFn(includes)
+
+/**
+ * Returns a promise for the first index of an item in an array
+ * @param array - the array to scan
+ * @param value - the value to search for
+ * @returns {Promise<Number>}
+ */
+export const indexOfAsync = wrapAsPromiseAndYieldFn(indexOf)
+
+
+/**
+ * Returns a promise for the last index of an item in an array
+ * @param array - the array to scan
+ * @param value - the value to search for
+ * @returns {Promise<Number>}
+ */
+export const lastIndexOfAsync = wrapAsPromiseAndYieldFn(lastIndexOf)
+
+
+/**
+ * Promises the creation an object composed of keys generated from the results
+ * of running each element of collection thru then supplied function.
+ * The corresponding value of each key is the last element responsible
+ * for generating the key.
+ *
+ * @param {Array|Object} collection
+ * @param {Map} fn
+ * @returns {Promise<{}>}
+ */
+export const keyByAsync = wrapAsPromiseAndYieldFn(keyBy)
+
+
+/**
+ * Promises the creation of an object composed of keys generated from the results
+ * of running each element of collection thru then supplied function.
+ * The corresponding value of each key is an collection of the elements responsible
+ * for generating the key.
+ *
+ * @param {Array|Object} collection
+ * @param {Map} fn
+ * @returns {Promise<{}>}
+ */
+export const groupByAsync = wrapAsPromiseAndYieldFn(groupBy)
+
+/**
+ * Promises the creation of an array with the unique values from the
+ * input array, the routine is supplied with a
+ * function that determines on what the array should
+ * be made unique.
+ * @param {Array} array
+ * @param {Map} [fn] - the function to determine uniqueness, if
+ * omitted then the item itself is used
+ * @returns {Promise<Array>} unique array
+ */
+export const uniqueByAsync = wrapAsPromiseAndYieldFn(uniqueBy)
