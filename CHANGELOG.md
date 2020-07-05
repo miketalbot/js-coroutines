@@ -1,3 +1,7 @@
+#### 2.3.62
+
+-   Update docs
+
 #### 2.3.61
 
 -   Added functionality for keyBy, uniqueBy, indexOf, lastIndexOf, groupBy, includes

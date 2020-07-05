@@ -946,7 +946,7 @@ function groupBy(collection, fn) {
  * @param {Array} array
  * @param {Map} [fn] - the function to determine uniqueness, if
  * omitted then the item itself is used
- * @returns {Generator<*, [], *>}
+ * @returns {Generator<*, Array, *>}
  */
 
 
