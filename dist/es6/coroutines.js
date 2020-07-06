@@ -98,7 +98,7 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
             }
             let minTime = Math.max(0.5, loopWhileMsRemains)
             try {
-                let time = api.timeRemaining() | 0
+                let time = api.timeRemaining()
                 let now = Date.now()
                 console.log("avail", time)
                 do {
@@ -117,6 +117,7 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
                         parameter = value
                     }
                 } while (api.timeRemaining() > minTime)
+
                 console.log("end", Date.now() - now)
             } catch (e) {
                 reject(e)

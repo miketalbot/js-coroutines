@@ -1,6 +1,6 @@
 {
   "name": "debug-js-coroutines",
-  "version": "2.3.66",
+  "version": "2.3.67",
   "private": false,
   "files": [
     "dist",

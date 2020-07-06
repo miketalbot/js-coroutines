@@ -143,7 +143,7 @@ function run(coroutine) {
               case 4:
                 minTime = Math.max(0.5, loopWhileMsRemains);
                 _context.prev = 5;
-                time = api.timeRemaining() | 0;
+                time = api.timeRemaining();
                 now = Date.now();
                 console.log("avail", time);
 
