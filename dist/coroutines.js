@@ -145,13 +145,14 @@ function run(coroutine) {
                 _context.prev = 5;
                 time = api.timeRemaining() | 0;
                 now = Date.now();
+                console.log("avail", time);
 
-              case 8:
+              case 9:
                 _context.t0 = iterator;
-                _context.next = 11;
+                _context.next = 12;
                 return parameter;
 
-              case 11:
+              case 12:
                 _context.t1 = _context.sent;
                 _iterator$next = _context.t0.next.call(_context.t0, _context.t1);
                 value = _iterator$next.value;
@@ -159,22 +160,22 @@ function run(coroutine) {
                 parameter = undefined;
 
                 if (!done) {
-                  _context.next = 19;
+                  _context.next = 20;
                   break;
                 }
 
                 resolve(value);
                 return _context.abrupt("return");
 
-              case 19:
+              case 20:
                 if (!(value === true)) {
-                  _context.next = 23;
+                  _context.next = 24;
                   break;
                 }
 
-                return _context.abrupt("break", 25);
+                return _context.abrupt("break", 26);
 
-              case 23:
+              case 24:
                 if (typeof value === 'number') {
                   minTime = +value;
                   if (isNaN(minTime)) minTime = 1;
@@ -182,34 +183,35 @@ function run(coroutine) {
                   parameter = value;
                 }
 
-              case 24:
+              case 25:
                 if (api.timeRemaining() > minTime) {
-                  _context.next = 8;
+                  _context.next = 9;
                   break;
                 }
 
-              case 25:
-                _context.next = 31;
+              case 26:
+                console.log("end", Date.now() - now);
+                _context.next = 33;
                 break;
 
-              case 27:
-                _context.prev = 27;
+              case 29:
+                _context.prev = 29;
                 _context.t2 = _context["catch"](5);
                 reject(_context.t2);
                 return _context.abrupt("return");
 
-              case 31:
+              case 33:
                 // Request an idle callback
                 window.requestIdleCallback(run); // Request again on timeout
 
                 id = setTimeout(runFromTimeout, timeout);
 
-              case 33:
+              case 35:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[5, 27]]);
+        }, _callee, null, [[5, 29]]);
       }));
       return _run.apply(this, arguments);
     }
