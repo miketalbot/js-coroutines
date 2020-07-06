@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setEngine = setEngine;
+exports.useInternalEngine = useInternalEngine;
 exports.run = run;
 exports.update = update;
 exports.runAsync = runAsync;
@@ -29,8 +29,14 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var request = window.requestIdleCallback;
+/**
+ * Call with true to use the polyfilled version of
+ * the idle callback, can be more table in certain
+ * circumstances
+ * @param internal
+ */
 
-function setEngine(internal) {
+function useInternalEngine(internal) {
   request = internal ? (0, _polyfill.getCallback)() : request;
 }
 /**

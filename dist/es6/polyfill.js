@@ -85,7 +85,7 @@ let cached = null
 
 export function getCallback() {
     if(cached) return cached
-    const MAX_TIME = 16
+    const MAX_TIME = 15.5
     let callbacks = []
     let result = (fn) => {
         callbacks.push(fn)

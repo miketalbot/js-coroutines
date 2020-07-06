@@ -1,3 +1,7 @@
+#### 2.3.66
+
+-   Add useInternalEngine(true) call to enable the polyfilled version in all circumstances
+
 #### 2.3.65
 
 -   Enable the override of standard yielding function for asyncs

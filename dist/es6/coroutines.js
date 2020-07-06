@@ -47,7 +47,13 @@ import {getCallback} from './polyfill'
 
 let request = window.requestIdleCallback
 
-export function setEngine(internal) {
+/**
+ * Call with true to use the polyfilled version of
+ * the idle callback, can be more table in certain
+ * circumstances
+ * @param internal
+ */
+export function useInternalEngine(internal) {
     request = internal ? getCallback() : request
 }
 
