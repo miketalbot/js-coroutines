@@ -43,6 +43,8 @@
  * @returns the result of the function if any to be returned to the caller
  */
 
+import {getCallback} from './polyfill'
+
 /**
  * <p>
  *     Starts an idle time coroutine and returns a promise for its completion and
@@ -84,7 +86,7 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
         resolver = resolve
         const iterator = coroutine.next ? coroutine : coroutine()
         // Request a callback during idle
-        window.requestIdleCallback(run)
+        getCallback()(run)
         // Handle background processing when tab is not active
         let id = setTimeout(runFromTimeout, timeout)
         let parameter = undefined
@@ -124,7 +126,7 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
                 return
             }
             // Request an idle callback
-            window.requestIdleCallback(run)
+            getCallback()(run)
             // Request again on timeout
             id = setTimeout(runFromTimeout, timeout)
         }

@@ -80,3 +80,44 @@ try {
 } catch (e) {
     console.error(e)
 }
+
+let cached = null
+
+export function getCallback() {
+    if(cached) return cached
+    const MAX_TIME = 16
+    let callbacks = []
+    let result = (fn) => {
+        callbacks.push(fn)
+    }
+
+    (function idle() {
+
+        requestAnimationFrame(startFrame)
+
+        function startFrame() {
+            const time = Date.now()
+            setTimeout(() => endOfWork(time))
+        }
+
+        function endOfWork(time = 100) {
+            const api = {
+                timeRemaining() {
+
+                    return MAX_TIME - (Date.now() - time)
+                }
+            }
+            while (callbacks.length > 0 && api.timeRemaining() > 1) {
+                const cb = callbacks.pop()
+                try {
+                    cb(api)
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+            requestAnimationFrame(startFrame)
+        }
+    })()
+    cached = result
+    return result
+}

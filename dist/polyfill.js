@@ -1,5 +1,9 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getCallback = getCallback;
 var initialized = false;
 
 if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
@@ -91,4 +95,51 @@ try {
   }
 } catch (e) {
   console.error(e);
+}
+
+var cached = null;
+
+function getCallback() {
+  if (cached) return cached;
+  var MAX_TIME = 16;
+  var callbacks = [];
+
+  var result = function result(fn) {
+    callbacks.push(fn);
+  };
+
+  (function idle() {
+    requestAnimationFrame(startFrame);
+
+    function startFrame() {
+      var time = Date.now();
+      setTimeout(function () {
+        return endOfWork(time);
+      });
+    }
+
+    function endOfWork() {
+      var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
+      var api = {
+        timeRemaining: function timeRemaining() {
+          return MAX_TIME - (Date.now() - time);
+        }
+      };
+
+      while (callbacks.length > 0 && api.timeRemaining() > 1) {
+        var cb = callbacks.pop();
+
+        try {
+          cb(api);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      requestAnimationFrame(startFrame);
+    }
+  })();
+
+  cached = result;
+  return result;
 }

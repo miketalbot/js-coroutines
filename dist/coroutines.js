@@ -19,56 +19,13 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _polyfill = require("./polyfill");
+
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-/**
- *<p>
- * A coroutine to be run during the gaps in other processing and animation.
- *</p>
- * <p>
- * The coroutine should <code>yield</code> regularly to do a time check.  A plain <code>yield</code> will cause
- * a check against the standard time remaining specified when running.  <code>yield {number}</code> will
- * check that <code>number</code> milliseconds are available and <code>yield true</code> will abandon any more
- * processing on the current frame.
- *</p>
- * @callback Coroutine
- * @generator
- * @yields {number} either undefined to perform a standard time remaining check, a number of milliseconds required for the next step or true if we should abandon the current frame
- * @returns the result of the function if any to be returned to the caller
- */
-
-/**
- * @typedef IteratorResult
- * @object
- * @property {any} [value] - the returned value
- * @property {boolean} done - whether the iterator is complete
- */
-
-/**
- * @interface Iterator
- */
-
-/**
- * Get the next value
- * @function
- * @name Iterator#next
- * @param {any} value - value to send to the coroutine
- * @returns {IteratorResult}
- */
-
-/**
- * A coroutine to be used in high priority to animate.
- *
- * Executing a <code>yield</code> will cause the routine to resume at the start
- * of the next frame.
- * @callback AnimationCoroutine
- * @generator
- * @returns the result of the function if any to be returned to the caller
- */
 
 /**
  * <p>
@@ -113,7 +70,7 @@ function run(coroutine) {
     resolver = resolve;
     var iterator = coroutine.next ? coroutine : coroutine(); // Request a callback during idle
 
-    window.requestIdleCallback(run); // Handle background processing when tab is not active
+    (0, _polyfill.getCallback)()(run); // Handle background processing when tab is not active
 
     var id = setTimeout(runFromTimeout, timeout);
     var parameter = undefined;
@@ -202,7 +159,7 @@ function run(coroutine) {
 
               case 33:
                 // Request an idle callback
-                window.requestIdleCallback(run); // Request again on timeout
+                (0, _polyfill.getCallback)()(run); // Request again on timeout
 
                 id = setTimeout(runFromTimeout, timeout);
 
