@@ -115,7 +115,7 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
                     } else if (value && value.then) {
                         parameter = value
                     }
-                } while (time - (Date.now()-now) > minTime)
+                } while (api.timeRemaining() > minTime)
             } catch (e) {
                 reject(e)
                 return

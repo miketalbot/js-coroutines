@@ -183,7 +183,7 @@ function run(coroutine) {
                 }
 
               case 24:
-                if (time - (Date.now() - now) > minTime) {
+                if (api.timeRemaining() > minTime) {
                   _context.next = 8;
                   break;
                 }
