@@ -101,7 +101,7 @@ var cached = null;
 
 function getCallback() {
   if (cached) return cached;
-  var MAX_TIME = 16;
+  var MAX_TIME = 15;
   var callbacks = [];
 
   var result = function result(fn) {

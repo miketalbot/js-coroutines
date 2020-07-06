@@ -45,6 +45,12 @@
 
 import {getCallback} from './polyfill'
 
+let request = window.requestIdleCallback
+
+export function setEngine(internal) {
+    request = internal ? getCallback() : request
+}
+
 /**
  * <p>
  *     Starts an idle time coroutine and returns a promise for its completion and
@@ -86,7 +92,7 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
         resolver = resolve
         const iterator = coroutine.next ? coroutine : coroutine()
         // Request a callback during idle
-        getCallback()(run)
+        request(run)
         // Handle background processing when tab is not active
         let id = setTimeout(runFromTimeout, timeout)
         let parameter = undefined
@@ -100,9 +106,6 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
             }
             let minTime = Math.max(0.5, loopWhileMsRemains)
             try {
-                let time = api.timeRemaining()
-                let now = Date.now()
-                console.log("avail", time)
                 do {
                     const {value, done} = iterator.next(await parameter)
                     parameter = undefined
@@ -119,14 +122,12 @@ export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
                         parameter = value
                     }
                 } while (api.timeRemaining() > minTime)
-
-                console.log("end", Date.now() - now)
             } catch (e) {
                 reject(e)
                 return
             }
             // Request an idle callback
-            getCallback()(run)
+            request(run)
             // Request again on timeout
             id = setTimeout(runFromTimeout, timeout)
         }

@@ -5,6 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.setEngine = setEngine;
 exports.run = run;
 exports.update = update;
 exports.runAsync = runAsync;
@@ -27,6 +28,11 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+var request = window.requestIdleCallback;
+
+function setEngine(internal) {
+  request = internal ? (0, _polyfill.getCallback)() : request;
+}
 /**
  * <p>
  *     Starts an idle time coroutine and returns a promise for its completion and
@@ -61,6 +67,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  *     let answer = await run(someCoroutine(param))
  * }
  */
+
+
 function run(coroutine) {
   var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
   var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 32 * 10;
@@ -70,7 +78,7 @@ function run(coroutine) {
     resolver = resolve;
     var iterator = coroutine.next ? coroutine : coroutine(); // Request a callback during idle
 
-    (0, _polyfill.getCallback)()(run); // Handle background processing when tab is not active
+    request(run); // Handle background processing when tab is not active
 
     var id = setTimeout(runFromTimeout, timeout);
     var parameter = undefined;
@@ -81,7 +89,7 @@ function run(coroutine) {
 
     function _run() {
       _run = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(api) {
-        var minTime, time, now, _iterator$next, value, done;
+        var minTime, _iterator$next, value, done;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -100,16 +108,13 @@ function run(coroutine) {
               case 4:
                 minTime = Math.max(0.5, loopWhileMsRemains);
                 _context.prev = 5;
-                time = api.timeRemaining();
-                now = Date.now();
-                console.log("avail", time);
 
-              case 9:
+              case 6:
                 _context.t0 = iterator;
-                _context.next = 12;
+                _context.next = 9;
                 return parameter;
 
-              case 12:
+              case 9:
                 _context.t1 = _context.sent;
                 _iterator$next = _context.t0.next.call(_context.t0, _context.t1);
                 value = _iterator$next.value;
@@ -117,22 +122,22 @@ function run(coroutine) {
                 parameter = undefined;
 
                 if (!done) {
-                  _context.next = 20;
+                  _context.next = 17;
                   break;
                 }
 
                 resolve(value);
                 return _context.abrupt("return");
 
-              case 20:
+              case 17:
                 if (!(value === true)) {
-                  _context.next = 24;
+                  _context.next = 21;
                   break;
                 }
 
-                return _context.abrupt("break", 26);
+                return _context.abrupt("break", 23);
 
-              case 24:
+              case 21:
                 if (typeof value === 'number') {
                   minTime = +value;
                   if (isNaN(minTime)) minTime = 1;
@@ -140,35 +145,34 @@ function run(coroutine) {
                   parameter = value;
                 }
 
-              case 25:
+              case 22:
                 if (api.timeRemaining() > minTime) {
-                  _context.next = 9;
+                  _context.next = 6;
                   break;
                 }
 
-              case 26:
-                console.log("end", Date.now() - now);
-                _context.next = 33;
+              case 23:
+                _context.next = 29;
                 break;
 
-              case 29:
-                _context.prev = 29;
+              case 25:
+                _context.prev = 25;
                 _context.t2 = _context["catch"](5);
                 reject(_context.t2);
                 return _context.abrupt("return");
 
-              case 33:
+              case 29:
                 // Request an idle callback
-                (0, _polyfill.getCallback)()(run); // Request again on timeout
+                request(run); // Request again on timeout
 
                 id = setTimeout(runFromTimeout, timeout);
 
-              case 35:
+              case 31:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[5, 29]]);
+        }, _callee, null, [[5, 25]]);
       }));
       return _run.apply(this, arguments);
     }
