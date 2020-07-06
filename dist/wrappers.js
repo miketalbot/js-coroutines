@@ -28,12 +28,14 @@ var _coroutines = _interopRequireWildcard(require("./coroutines"));
  * version of the function passed
  */
 function yielding(fn) {
-  var frequency = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 8;
+  var frequency = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 16;
   var yieldCount = 0;
-  return /*#__PURE__*/_regenerator.default.mark(function _callee() {
+  if (fn._yielding) return fn;
+
+  var result = /*#__PURE__*/_regenerator.default.mark(function result() {
     var result,
         _args = arguments;
-    return _regenerator.default.wrap(function _callee$(_context) {
+    return _regenerator.default.wrap(function result$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -55,8 +57,11 @@ function yielding(fn) {
             return _context.stop();
         }
       }
-    }, _callee);
+    }, result);
   });
+
+  result._yielding = true;
+  return result;
 }
 /**
  * @callback PromiseFn

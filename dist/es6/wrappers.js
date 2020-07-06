@@ -12,15 +12,18 @@ import run, {call} from './coroutines'
  * @returns {Coroutine} The wrapped yielding
  * version of the function passed
  */
-export function yielding(fn, frequency = 8) {
+export function yielding(fn, frequency = 16) {
   let yieldCount = 0;
-  return function* (...params) {
+  if(fn._yielding) return fn;
+  let result = function* (...params) {
     let result = fn(...params);
     if (yieldCount++ % frequency === 0) {
       yield;
     }
     return result;
   };
+  result._yielding = true
+  return result
 }
 
 /**
