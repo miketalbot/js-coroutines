@@ -85,7 +85,7 @@ let cached = null
 
 export function getCallback() {
     if(cached) return cached
-    const MAX_TIME = 15
+    const MAX_TIME = 16
     let callbacks = []
     let result = (fn) => {
         callbacks.push(fn)
@@ -101,6 +101,7 @@ export function getCallback() {
         }
 
         function endOfWork(time = 100) {
+            requestAnimationFrame(startFrame)
             const api = {
                 timeRemaining() {
 
@@ -115,7 +116,7 @@ export function getCallback() {
                     console.error(e)
                 }
             }
-            requestAnimationFrame(startFrame)
+
         }
     })()
     cached = result

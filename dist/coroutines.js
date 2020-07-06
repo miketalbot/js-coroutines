@@ -70,7 +70,7 @@ function setEngine(internal) {
 
 
 function run(coroutine) {
-  var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+  var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
   var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 32 * 10;
   var terminated = false;
   var resolver = null;

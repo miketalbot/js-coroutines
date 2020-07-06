@@ -85,7 +85,7 @@ export function setEngine(internal) {
  *     let answer = await run(someCoroutine(param))
  * }
  */
-export function run(coroutine, loopWhileMsRemains = 2, timeout = 32 * 10) {
+export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 10) {
     let terminated = false
     let resolver = null
     const result = new Promise( function (resolve, reject) {
