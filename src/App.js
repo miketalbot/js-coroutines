@@ -7,7 +7,9 @@ import {
     concatAsync,
     decompressAsync,
     every,
-    forEach, groupByAsync, keyByAsync,
+    forEach,
+    groupByAsync,
+    keyByAsync,
     map,
     mapAsync,
     parse,
@@ -15,22 +17,91 @@ import {
     pipe,
     reduce,
     repeat,
+    singleton,
     sort,
     stringify,
     stringifyAsync,
     tap,
+    update,
     yielding
 } from './component'
 import isEqual from 'lodash/isEqual'
 import test from './component/yastjson/test/test.json'
-import run, {update} from './component/coroutines'
+
+const {format} = new Intl.NumberFormat()
 
 const json = JSON.stringify(test)
 const referenceObject = JSON.parse(json)
 
+const job = singleton(function* (add) {
+    let results
+    results = new Array(2000000)
+    for (let i = 0; i < 2000000; i++) {
+        if ((i & 127) === 0) yield
+        results[i] = (Math.random() * 10000) | 0
+    }
+    add(`Created ${format(results.length)} items`)
+    //Double all the values
+    yield* forEach(
+        results,
+        yielding((r, i) => (results[i] = r * 2))
+    )
+    add(`Doubled the value of ${format(results.length)} items`)
+
+    const result = yield new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(1234)
+        }, 1000)
+    })
+    add(`Result of a Promise was ${result}`)
+    //Get the square roots
+    const sqrRoot = yield* map(
+        results,
+        yielding((r) => Math.sqrt(r))
+    )
+    add(`Created a new array with the square roots of ${format(sqrRoot.length)} items`)
+    const asAString = yield* stringify(results)
+    add(`Stringified ${format(sqrRoot.length)} items to JSON string length ${format(asAString.length)}`)
+    const copy = yield* parse(asAString)
+    add(`Parsed JSON back to a copy of ${format(copy.length)} array items`)
+
+    const ok = yield* every(
+        copy,
+        yielding((v, i) => results[i] === v)
+    )
+    add(`Validated that ${format(copy.length)} parsed values matched - "${ok ? 'ok' : 'mismatch'}"`)
+
+    for (let i = 0; i < 1000; i++) {
+        yield* parse(json)
+    }
+    const obj = yield* parse(json)
+    if (!isEqual(obj, referenceObject)) {
+        console.log(obj, referenceObject)
+        add(`Parsed example JSON back to an object 1000 times - "error"`)
+    } else {
+        add(`Parsed example JSON back to an object 1000 times - "matched"`)
+    }
+
+    add(
+        `Sum of ${format(results.length)} items is ${format(
+            yield* reduce(
+                results,
+                yielding((c, a) => c + a),
+                0
+            )
+        )}`
+    )
+    //Join the arrays
+    yield* append(results, sqrRoot)
+    add(`Appended the square roots to the normal values making ${format(results.length)} items in the array`)
+    // Sort the results
+    yield* sort(results, (a, b) => a - b)
+    add(`Sorted ${format(results.length)} items`)
+    return results
+}, 'test')
+
 function App() {
     const strings = []
-    const { format } = new Intl.NumberFormat()
     const [process] = React.useState(() =>
         pipe(
             parseAsync,
@@ -126,72 +197,8 @@ function App() {
     }
 
     async function calculateAsync() {
-        return await run(function* () {
-            let results
-            results = new Array(2000000)
-            for (let i = 0; i < 2000000; i++) {
-                if ((i & 127) === 0) yield
-                results[i] = (Math.random() * 10000) | 0
-            }
-            add(`Created ${format(results.length)} items`)
-            //Double all the values
-            yield* forEach(
-                results,
-                yielding((r, i) => (results[i] = r * 2))
-            )
-            add(`Doubled the value of ${format(results.length)} items`)
-
-            const result = yield new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve(1234)
-                }, 1000)
-            })
-            add(`Result of a Promise was ${result}`)
-            //Get the square roots
-            const sqrRoot = yield* map(
-                results,
-                yielding((r) => Math.sqrt(r))
-            )
-            add(`Created a new array with the square roots of ${format(sqrRoot.length)} items`)
-            const asAString = yield* stringify(results)
-            add(`Stringified ${format(sqrRoot.length)} items to JSON string length ${format(asAString.length)}`)
-            const copy = yield* parse(asAString)
-            add(`Parsed JSON back to a copy of ${format(copy.length)} array items`)
-
-            const ok = yield* every(
-                copy,
-                yielding((v, i) => results[i] === v)
-            )
-            add(`Validated that ${format(copy.length)} parsed values matched - "${ok ? 'ok' : 'mismatch'}"`)
-
-            for (let i = 0; i < 1000; i++) {
-                yield* parse(json)
-            }
-            const obj = yield* parse(json)
-            if (!isEqual(obj, referenceObject)) {
-                console.log(obj, referenceObject)
-                add(`Parsed example JSON back to an object 1000 times - "error"`)
-            } else {
-                add(`Parsed example JSON back to an object 1000 times - "matched"`)
-            }
-
-            add(
-                `Sum of ${format(results.length)} items is ${format(
-                    yield* reduce(
-                        results,
-                        yielding((c, a) => c + a),
-                        0
-                    )
-                )}`
-            )
-            //Join the arrays
-            yield* append(results, sqrRoot)
-            add(`Appended the square roots to the normal values making ${format(results.length)} items in the array`)
-            // Sort the results
-            yield* sort(results, (a, b) => a - b)
-            add(`Sorted ${format(results.length)} items`)
-            return results
-        })
+        job(add).then(v=>add(v==='test' ? "TEST SINGLETON PASSED" : 'TEST SINGLETON FAILED'))
+        return await job(add)
     }
 
     function add(message) {

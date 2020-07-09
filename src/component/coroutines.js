@@ -49,9 +49,9 @@ let request = window.requestIdleCallback
 
 /**
  * Call with true to use the polyfilled version of
- * the idle callback, can be more table in certain
+ * the idle callback, can be more stable in certain
  * circumstances
- * @param internal
+ * @param {Boolean} internal
  */
 export function useInternalEngine(internal) {
     request = internal ? getCallback() : request
@@ -66,7 +66,7 @@ export function useInternalEngine(internal) {
  *     You may pass a coroutine function or the result of calling such a function.  The
  *     latter helps when you must provide parameters to the coroutine.
  * </p>
- * @param {Coroutine|Iterator} coroutine the routine to run or an iterator for an already started coroutine
+ * @param {Coroutine|Iterator|Generator<*, *, *>} coroutine the routine to run or an iterator for an already started coroutine
  * @param {number} [loopWhileMsRemains=2 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
  * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
  * @returns {Promise<any>} the result of the coroutine
@@ -407,3 +407,25 @@ export function repeat(fn, times) {
 }
 
 export default run
+
+/**
+ * Creates a singleton executor of a generator function.
+ * If the function is currently running it will be
+ * terminated with the defaultValue and a new one started
+ * @param {Function} fn - the generator function to wrap
+ * @param {any} [defaultValue] - a value to be returned if the current execution is
+ * terminated by a new one starting
+ * @returns {function(...[*]): Promise<any>} a function to execute the
+ * generator and return the value
+ */
+export function singleton(fn, defaultValue) {
+    let promise = null
+    return (...params)=>{
+        if(promise) {
+            promise.terminate(defaultValue)
+        }
+        return promise = run(fn(...params))
+    }
+}
+
+

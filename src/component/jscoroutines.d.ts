@@ -461,3 +461,23 @@ export declare function tap(fn: Function) : Function;
 export declare function branch(fn: Function) : Function;
 export declare function repeat(fn: Function, times: Number) : Function;
 export declare function call(fn: Function, ...parameters: any[]) : Function
+
+/**
+ * Call with true to use the polyfilled version of
+ * the idle callback, can be more stable in certain
+ * circumstances
+ * @param {Boolean} internal
+ */
+export declare function useInternalEngine(internal: Boolean) : void;
+
+/**
+ * Creates a singleton executor of a generator function.
+ * If the function is currently running it will be
+ * terminated with the defaultValue and a new one started
+ * @param {Function} fn - the generator function to wrap
+ * @param {any} [defaultValue] - a value to be returned if the current execution is
+ * terminated by a new one starting
+ * @returns {function(...[*]): Promise<any>} a function to execute the
+ * generator and return the value
+ */
+export declare function singleton(fn: Function, defaultValue: any) : (...params: any[]) => Promise<any>

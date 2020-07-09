@@ -1,3 +1,11 @@
+#### 2.3.68
+
+-   Add a singleton() function wrapper for an easy way to have a cancellable version of a coroutine.
+    Coroutines wrapped in a singleton are run as an async function returning a Promise,
+    but if the previous one hasn't completed it immediately returns with a default value.
+
+-   Improve documentation and add useInternalEngine to typings   
+
 #### 2.3.66
 
 -   Add useInternalEngine(true) call to enable the polyfilled version in all circumstances
