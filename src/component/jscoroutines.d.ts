@@ -1,6 +1,15 @@
 
 
 
+export declare class TerminatablePromise<T> extends Promise<T> {
+    terminate(value: T): void
+}
+
+export declare interface ChainableFunction {
+    (...params: any[]) : TerminatablePromise<any>
+    join(promise: TerminatablePromise<unknown>)
+}
+
 export declare function forEach(collection: any, fn: Function): Generator<any, any, any>;
 
 /**
@@ -139,7 +148,7 @@ export declare function includes(array: [], value: any): Generator<any, boolean,
  * omitted then the item itself is used
  * @returns {Promise<[]>}
  */
-export declare function uniqueByAsync(array: [], fn: Function): Promise<[]>
+export declare function uniqueByAsync(array: [], fn: Function): TerminatablePromise<[]>
 
 /**
  * Creates a promise for an object composed of keys generated from the results
@@ -151,7 +160,7 @@ export declare function uniqueByAsync(array: [], fn: Function): Promise<[]>
  * @param {Map} fn
  * @returns {Promise<{}>} a generator for the new object
  */
-export declare function groupByAsync(collection: [] | {}, fn: Function): Promise<{}>
+export declare function groupByAsync(collection: [] | {}, fn: Function): TerminatablePromise<{}>
 
 /**
  * Creates promise for an object composed of keys generated from the results
@@ -163,7 +172,7 @@ export declare function groupByAsync(collection: [] | {}, fn: Function): Promise
  * @param {Map} fn
  * @returns {Promise<{}>} a generator for the new object
  */
-export declare function keyByAsync(collection: [] | {}, fn: Function): Promise<{}>
+export declare function keyByAsync(collection: [] | {}, fn: Function): TerminatablePromise<{}>
 
 /**
  * Returns a promise for the last index of an item in an array
@@ -171,7 +180,7 @@ export declare function keyByAsync(collection: [] | {}, fn: Function): Promise<{
  * @param value - the value to search for
  * @returns {Promise<Number>} a generator that returns the last index of the item or -1
  */
-export declare function lastIndexOf(array: [], value: any): Promise<Number>
+export declare function lastIndexOf(array: [], value: any): TerminatablePromise<Number>
 
 
 /**
@@ -180,7 +189,7 @@ export declare function lastIndexOf(array: [], value: any): Promise<Number>
  * @param value - the value to search for
  * @returns {Promise<Number>} a generator that returns the index of the item or -1
  */
-export declare function indexOf(array: [], value: any): Promise<number>
+export declare function indexOf(array: [], value: any): TerminatablePromise<number>
 
 /**
  * Returns a promise for true if an array includes a value
@@ -188,7 +197,7 @@ export declare function indexOf(array: [], value: any): Promise<number>
  * @param value
  * @returns {Promise<Boolean>}
  */
-export declare function includes(array: [], value: any): Promise<Boolean>;
+export declare function includes(array: [], value: any): TerminatablePromise<Boolean>;
 
 
 
@@ -205,7 +214,7 @@ export declare function includes(array: [], value: any): Promise<Boolean>;
  *
  * await sortAsync(myArray, v=>v.lastName)
  */
-export declare function sortAsync(array: any[], sort: Function): Promise<any[]>;
+export declare function sortAsync(array: any[], sort: Function): TerminatablePromise<any[]>;
 
 /**
  * Finds an item in an array asynchronously
@@ -214,7 +223,7 @@ export declare function sortAsync(array: any[], sort: Function): Promise<any[]>;
  *
  * const firstToProcess = await findAsync(jobs, job=>job.done === false)
  */
-export declare function findAsync(collection: []|{}, filter: Function): Promise<any | null>;
+export declare function findAsync(collection: []|{}, filter: Function): TerminatablePromise<any | null>;
 
 /**
  * Finds an item index in an array asynchronously
@@ -222,7 +231,7 @@ export declare function findAsync(collection: []|{}, filter: Function): Promise<
  * @example
  * let firstItem = await findIndexAsync(jobs, job=>!!job.error)
  */
-export declare function findIndexAsync(collection: []|{}, filter: Function): Promise<Number>;
+export declare function findIndexAsync(collection: []|{}, filter: Function): TerminatablePromise<Number>;
 
 /**
  * Functions the contents of an array asynchronously
@@ -231,7 +240,7 @@ export declare function findIndexAsync(collection: []|{}, filter: Function): Pro
  *
  * const updated = await mapAsync(myItems, item=>({name: item.name, value: item.quantity * item.cost}))
  */
-export declare function mapAsync(collection: []|{}, mapFn: Function): Promise<[]|{}>;
+export declare function mapAsync(collection: []|{}, mapFn: Function): TerminatablePromise<[]|{}>;
 
 /**
  * Functions an array asynchronously
@@ -239,31 +248,31 @@ export declare function mapAsync(collection: []|{}, mapFn: Function): Promise<[]
  * @example
  * const errorJobs = await filterAsync(
  */
-export declare function filterAsync(collection: []|{}, filter: Function): Promise<[]|{}>;
+export declare function filterAsync(collection: []|{}, filter: Function): TerminatablePromise<[]|{}>;
 
 /**
  * Performs a reduce on an array asynchronously
  * @returns a promise for the reduced value
  */
-export declare function reduceAsync(array: any[], reduceFn: Function, initialValue: any): Promise<any>;
+export declare function reduceAsync(array: any[], reduceFn: Function, initialValue: any): TerminatablePromise<any>;
 
 /**
  * Appends one array to another asynchronously
  * @returns a promise for destination after appending
  */
-export declare function appendAsync(destination: any[], source: any[]): Promise<any[]>;
+export declare function appendAsync(destination: any[], source: any[]): TerminatablePromise<any[]>;
 
 /**
  * Concatenates 2 arrays into a new array
  * @returns a promise for combined array
  */
-export declare function concatAsync(array1: any[], array2: any[]): Promise<any[]>;
+export declare function concatAsync(array1: any[], array2: any[]): TerminatablePromise<any[]>;
 
 /**
  * Asynchronously loop over the elements of an array
  * @returns promise for the end of the operation
  */
-export declare function forEachAsync(collection: []|{}, fn: Function): Promise<void>;
+export declare function forEachAsync(collection: []|{}, fn: Function): TerminatablePromise<void>;
 
 /**
  * Asynchronously apply an array <code>some</code> operation
@@ -271,112 +280,112 @@ export declare function forEachAsync(collection: []|{}, fn: Function): Promise<v
  * one item matches
  * @returns promise for true if at least one item matched the filter
  */
-export declare function someAsync(array: any[], fn: Function): Promise<Boolean>;
+export declare function someAsync(array: any[], fn: Function): TerminatablePromise<Boolean>;
 
 /**
  * Asynchronously check if every element in an array matches
  * a predicate
  * @returns promise for true if all items matched the filter
  */
-export declare function everyAsync(array: any[], fn: Function): Promise<Boolean>;
+export declare function everyAsync(array: any[], fn: Function): TerminatablePromise<Boolean>;
 
 /**
  * Asynchronously compress a string to a base64 format
  * @param source - the data to compress
  * @returns a promise for the base64 compressed data
  */
-export declare function compressToBase64Async(source: string): Promise<String>;
+export declare function compressToBase64Async(source: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously compress a string to a utf16 string
  * @param source - the data to compress
  * @returns a promise for the utf16 compressed data
  */
-export declare function compressToUTF16Async(source: string): Promise<String>;
+export declare function compressToUTF16Async(source: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously compress a string to a Uint8Array
  * @param source - the data to compress
  * @returns a promise for the Uint8Array of compressed data
  */
-export declare function compressToUint8ArrayAsync(source: string): Promise<Uint8Array>;
+export declare function compressToUint8ArrayAsync(source: string): TerminatablePromise<Uint8Array>;
 
 /**
  * Asynchronously compress a string to a URI safe version
  * @param source - the data to compress
  * @returns a promise for the string of compressed data
  */
-export declare function compressToEncodedURIComponentAsync(source: string): Promise<String>;
+export declare function compressToEncodedURIComponentAsync(source: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously compress a string of data with lz-string
  * @param source - the data to compress
  * @returns a promise for the compressed data
  */
-export declare function compressAsync(source: string): Promise<String>;
+export declare function compressAsync(source: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously apply lz-string base64 remapping of a string to utf16
  * @param source - the data to compress
  * @returns a promise for the compressed data
  */
-export declare function base64CompressToUTF16Async(source: string): Promise<String>;
+export declare function base64CompressToUTF16Async(source: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously apply lz-string base64 remapping of a string
  * @param source - the data to compress
  * @returns a promise for the compressed data
  */
-export declare function base64CompressAsync(source: string): Promise<String>;
+export declare function base64CompressAsync(source: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously compress a string to a base64 format
  * @param source - the data to compress
  * @returns a promise for the base64 compressed data
  */
-export declare function compressToBase64Async(source: string): Promise<String>;
+export declare function compressToBase64Async(source: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously decompress a string from a utf16 source
  * @param compressedData - the data to decompress
  * @returns a promise for the uncompressed data
  */
-export declare function decompressFromUTF16Async(compressedData: string): Promise<String>;
+export declare function decompressFromUTF16Async(compressedData: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously decompress a string from a utf16 source
  * @param compressedData - the data to decompress
  * @returns a promise for the uncompressed data
  */
-export declare function decompressFromUint8ArrayAsync(compressedData: string): Promise<String>;
+export declare function decompressFromUint8ArrayAsync(compressedData: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously decompress a string from a URL safe URI Component encoded source
  * @param compressedData - the data to decompress
  * @returns a promise for the uncompressed data
  */
-export declare function decompressFromEncodedURIComponentAsync(compressedData: string): Promise<String>;
+export declare function decompressFromEncodedURIComponentAsync(compressedData: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously decompress a string from a string source
  * @param compressedData - the data to decompress
  * @returns a promise for the uncompressed data
  */
-export declare function decompressAsync(compressedData: string): Promise<String>;
+export declare function decompressAsync(compressedData: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously unmap base64 encoded data to a utf16 destination
  * @param base64Data - the data to decompress
  * @returns a promise for the uncompressed data
  */
-export declare function base64decompressFromUTF16Async(base64Data: string): Promise<String>;
+export declare function base64decompressFromUTF16Async(base64Data: string): TerminatablePromise<String>;
 
 /**
  * Asynchronously unmap base64 encoded data
  * @param base64Data - the data to decompress
  * @returns a promise for the uncompressed data
  */
-export declare function base64Decompress(base64Data: string): Promise<String>;
+export declare function base64Decompress(base64Data: string): TerminatablePromise<String>;
 
 /**
  * <p>
@@ -410,7 +419,7 @@ export declare function base64Decompress(base64Data: string): Promise<String>;
  * @param [timeout = 160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
  * @returns the result of the coroutine
  */
-export declare function run(coroutine: Function|Generator, loopWhileMsRemains?: number, timeout?: number): Promise<any>;
+export declare function run(coroutine: Function|Generator, loopWhileMsRemains?: number, timeout?: number): TerminatablePromise<any>;
 
 /**
  * Start an animation coroutine, the animation will continue until
@@ -421,7 +430,7 @@ export declare function run(coroutine: Function|Generator, loopWhileMsRemains?: 
  * @returns a value that will be returned to the caller
  * when the animation is complete.
  */
-export declare function update(coroutine: Function|Generator, ...params: any[]): Promise<any>;
+export declare function update(coroutine: Function|Generator, ...params: any[]): TerminatablePromise<any>;
 
 /**
  * Starts an idle time coroutine using an async generator - this is NOT normally required
@@ -432,7 +441,7 @@ export declare function update(coroutine: Function|Generator, ...params: any[]):
  * @param [timeout = 160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
  * @returns the result of the coroutine
  */
-export declare function runAsync(coroutine: Function|Generator, loopWhileMsRemains?: number, timeout?: number): Promise<any>;
+export declare function runAsync(coroutine: Function|Generator, loopWhileMsRemains?: number, timeout?: number): TerminatablePromise<any>;
 
 /**
  * Wraps a normal function into a generator function
@@ -480,4 +489,4 @@ export declare function useInternalEngine(internal: Boolean) : void;
  * @returns {function(...[*]): Promise<any>} a function to execute the
  * generator and return the value
  */
-export declare function singleton(fn: Function, defaultValue: any) : (...params: any[]) => Promise<any>
+export declare function singleton(fn: Function, defaultValue: any) : ChainableFunction

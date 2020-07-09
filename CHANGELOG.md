@@ -1,10 +1,15 @@
+#### 2.3.69
+
+-   Add a join for multi-chaining terminated promises from a singleton
+-   Improve typings for singleton and terminatable promises
+
 #### 2.3.68
 
 -   Add a singleton() function wrapper for an easy way to have a cancellable version of a coroutine.
     Coroutines wrapped in a singleton are run as an async function returning a Promise,
     but if the previous one hasn't completed it immediately returns with a default value.
 
--   Improve documentation and add useInternalEngine to typings   
+-   Improve documentation and add useInternalEngine to typings
 
 #### 2.3.66
 
