@@ -1,3 +1,7 @@
+#### 2.3.72
+
+-   Joined promises are chainable
+
 #### 2.3.71
 
 -   Make additional promises only cancel on termination

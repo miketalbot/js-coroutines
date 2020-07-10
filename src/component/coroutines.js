@@ -453,6 +453,7 @@ export function singleton(fn, defaultValue) {
     }
     result.join = function(promise) {
         extraPromises.push(promise)
+        return promise
     }
     return result
 }
