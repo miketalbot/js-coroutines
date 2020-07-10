@@ -26,8 +26,8 @@ import {call, run} from './coroutines'
  * @returns {Function}
  */
 function wrapAsPromiseAndYieldFn(fn) {
-    const result = function(array, processor) {
-        return run(fn(array, yielding(processor)))
+    const result = function(array, processor, ...params) {
+        return run(fn(array, yielding(processor), ...params))
     }
     result.with = function(...params) {
         return call(result, ...params)

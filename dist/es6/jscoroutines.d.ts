@@ -7,7 +7,7 @@ export declare class TerminatablePromise<T> extends Promise<T> {
 
 export declare interface ChainableFunction {
     (...params: any[]) : TerminatablePromise<any>
-    join(promise: TerminatablePromise<unknown>)
+    join(promise: TerminatablePromise<unknown>) : TerminatablePromise<unknown>
 }
 
 export declare function forEach(collection: any, fn: Function): Generator<any, any, any>;
@@ -67,14 +67,14 @@ export declare function every(array: any[], fn: Function): boolean;
  * @param data - Object to store
  * @returns a Promise for the JSON representation of <code>data</code>
  */
-export declare function stringifyAsync(data: any): Promise<String>;
+export declare function stringifyAsync(data: any): TerminatablePromise<String>;
 
 /**
  * Asynchronously parse JSON into an object
  * @param json - the JSON to be parsed
  * @returns a Promise for the parsed JSON
  */
-export declare function parseAsync(json: string): Promise<any>;
+export declare function parseAsync(json: string): TerminatablePromise<any>;
 
 
 /**
@@ -486,7 +486,7 @@ export declare function useInternalEngine(internal: Boolean) : void;
  * @param {Function} fn - the generator function to wrap
  * @param {any} [defaultValue] - a value to be returned if the current execution is
  * terminated by a new one starting
- * @returns {function(...[*]): Promise<any>} a function to execute the
+ * @returns {ChainableFunction} a function to execute the
  * generator and return the value
  */
-export declare function singleton(fn: Function, defaultValue: any) : ChainableFunction
+export declare function singleton(fn: Function, defaultValue?: any) : ChainableFunction

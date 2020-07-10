@@ -28,12 +28,16 @@ var _coroutines = require("./coroutines");
  */
 function wrapAsPromiseAndYieldFn(fn) {
   var result = function result(array, processor) {
-    return (0, _coroutines.run)(fn(array, (0, _wrappers.yielding)(processor)));
+    for (var _len = arguments.length, params = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      params[_key - 2] = arguments[_key];
+    }
+
+    return (0, _coroutines.run)(fn.apply(void 0, [array, (0, _wrappers.yielding)(processor)].concat(params)));
   };
 
   result.with = function () {
-    for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
-      params[_key] = arguments[_key];
+    for (var _len2 = arguments.length, params = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      params[_key2] = arguments[_key2];
     }
 
     return _coroutines.call.apply(void 0, [result].concat(params));

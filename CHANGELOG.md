@@ -1,3 +1,8 @@
+#### 2.3.70
+
+-   Fix typings
+-   Fix reduceAsync
+
 #### 2.3.69
 
 -   Add a join for multi-chaining terminated promises from a singleton
