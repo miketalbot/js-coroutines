@@ -1,3 +1,7 @@
+#### 2.3.71
+
+-   Make additional promises only cancel on termination
+
 #### 2.3.70
 
 -   Fix typings

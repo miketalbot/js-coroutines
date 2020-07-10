@@ -442,16 +442,17 @@ export default run
  */
 export function singleton(fn, defaultValue) {
     let promise = null
+    let extraPromises = []
     let result = (...params)=>{
         if(promise) {
+            extraPromises.forEach(p=>p.terminate())
+            extraPromises = []
             promise.terminate(defaultValue)
         }
         return promise = result._promise = run(fn(...params))
     }
     result.join = function(promise) {
-        result._promise.finally(()=>{
-            promise.terminate()
-        })
+        extraPromises.push(promise)
     }
     return result
 }

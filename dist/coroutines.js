@@ -811,9 +811,14 @@ exports.default = _default;
 
 function singleton(fn, defaultValue) {
   var promise = null;
+  var extraPromises = [];
 
   var result = function result() {
     if (promise) {
+      extraPromises.forEach(function (p) {
+        return p.terminate();
+      });
+      extraPromises = [];
       promise.terminate(defaultValue);
     }
 
@@ -821,9 +826,7 @@ function singleton(fn, defaultValue) {
   };
 
   result.join = function (promise) {
-    result._promise.finally(function () {
-      promise.terminate();
-    });
+    extraPromises.push(promise);
   };
 
   return result;
