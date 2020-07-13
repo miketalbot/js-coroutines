@@ -69,6 +69,8 @@ export class Tokenizer {
 
     * tokenizeArray(src) {
         this.sourceCode = src
+        this.type = 'uint8'
+
         const length = src.length
         while (this.pos < length) {
             if ((this.pos & 15) === 0 && yielder()) yield
@@ -106,6 +108,7 @@ export class Tokenizer {
 
     * tokenize(src) {
         if (src instanceof Uint8Array) return yield* this.tokenizeArray(src)
+        this.type = 'char'
         this.sourceCode = src
         const length = src.length
         while (this.pos < length) {
@@ -151,7 +154,7 @@ export class Tokenizer {
     }
 
     readCharacter() {
-        const c = this.sourceCode[this.pos++]
+        const c = this.sourceCode[this.pos++] /* ? */
         switch (c >> 4) {
             case 0:
             case 1:
@@ -174,12 +177,45 @@ export class Tokenizer {
 
     }
 
+
     peek() {
-        let offset = this.pos
-        while(this.sourceCode[offset] && this.sourceCode[offset].charCodeAt(0) < 32) {
-            offset ++
+        if(this.type === 'char') {
+            let offset = this.pos
+            while (this.sourceCode[offset] && this.sourceCode[offset].charCodeAt(0) < 32) {
+                offset++
+            }
+            return this.sourceCode[offset]
+        } else {
+            let offset = this.pos
+            let code = this.sourceCode
+            let value = read()
+            while (value.charCodeAt(0) < 32 && offset < code.length) {
+                value = read()
+            }
+            return value.charCodeAt(0) === 0 ? undefined : value
+            function read() {
+                const c = code[offset++] /* ? */
+                switch (c >> 4) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        return String.fromCharCode(c)
+                    case 12:
+                    case 13:
+                        return String.fromCharCode(((c & 0x1f) << 6) | (code[offset++] & 0x3f))
+                    case 14:
+                        return String.fromCharCode(((c & 0x0f) << 12) |
+                            ((code[offset++] & 0x3f) << 6) | (code[offset++] & 0x3f))
+                    default:
+                        throw new Error("Bad encoding")
+                }
+            }
         }
-        return this.sourceCode[offset]
     }
 
     initToken(ch) {

@@ -1,6 +1,6 @@
 {
   "name": "js-coroutines",
-  "version": "2.3.72",
+  "version": "2.4.0",
   "private": false,
   "files": [
     "dist",
@@ -17,6 +17,7 @@
     "@babel/polyfill": "^7.10.1",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
+    "@babel/register": "^7.10.4",
     "@pixi/jsdoc-template": "^2.6.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -42,7 +43,7 @@
     "build": "source ./scripts/build.sh",
     "push": "node ./node_modules/versiony-cli/bin/cli.js ./package.json --patch && npm run build && npm publish && git add . && git commit -am build && git push",
     "watch": "NODE_ENV=production babel src/component --watch --ignore \"__tests__\",\"**/*.spec.js\",\"**/*.test.js\",\"__snapshots__\" --out-dir dist",
-    "test": "react-scripts test",
+    "test": "mocha --require @babel/register src/test/**/*.test.js --exit",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -64,6 +65,8 @@
     ]
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.2"
+    "@babel/runtime": "^7.10.2",
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1"
   }
 }

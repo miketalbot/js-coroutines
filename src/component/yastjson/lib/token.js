@@ -24,18 +24,3 @@ export const TokenType = {
   Number: "n",
   String: "s",
 };
-
-export class Token {
-  constructor(text, type) {
-    this.text = text;
-    this.type = type;
-  }
-
-  getType() {
-    return this.type;
-  }
-
-  getText() {
-    return this.text;
-  }
-}

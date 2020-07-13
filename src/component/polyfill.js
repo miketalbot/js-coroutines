@@ -42,7 +42,7 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
     }
 }
 try {
-    if (!initialized && window && !window.requestIdleCallback) {
+    if (!initialized && typeof window !=='undefined' && !window.requestIdleCallback) {
         const MAX_TIME = 14
         let callbacks = []
         window.requestIdleCallback =  (fn) => {
@@ -85,6 +85,7 @@ let cached = null
 
 export function getCallback() {
     if(cached) return cached
+    if(typeof window === 'undefined') return getNodeCallback()
     const MAX_TIME = 14
     let callbacks = []
     let result = (fn) => {
@@ -122,3 +123,40 @@ export function getCallback() {
     cached = result
     return result
 }
+
+
+export function getNodeCallback() {
+    if (cached) return cached
+    const MAX_TIME = 20
+    let callbacks = []
+    let result = (fn) => {
+        callbacks.push(fn)
+    }
+
+    (function idle() {
+
+        setTimeout(endOfWork)
+
+
+        function endOfWork() {
+            const time = Date.now()
+            const api = {
+                timeRemaining() {
+                    return MAX_TIME - (Date.now() - time)
+                }
+            }
+            while (callbacks.length > 0 && api.timeRemaining() > 1) {
+                const cb = callbacks.pop()
+                try {
+                    cb(api)
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+            setTimeout(endOfWork)
+        }
+    })()
+    cached = result
+    return result
+}
+

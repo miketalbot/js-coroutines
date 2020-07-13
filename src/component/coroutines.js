@@ -43,9 +43,9 @@
  * @returns the result of the function if any to be returned to the caller
  */
 
-import {getCallback} from './polyfill'
+import {getCallback, getNodeCallback} from './polyfill'
 
-let request = window.requestIdleCallback
+let request = typeof window === 'undefined' ? getNodeCallback() : window.requestIdleCallback
 
 /**
  * Call with true to use the polyfilled version of
@@ -163,6 +163,7 @@ let requested = false
 let animationCallbacks = []
 
 function nextAnimationFrame(fn) {
+    if(typeof window === 'undefined') throw new Error("Cannot run without a browser")
     if(animationCallbacks.length === 0 && !requested) {
         requested = true
         requestAnimationFrame(process)
@@ -196,6 +197,7 @@ function process() {
  * that can be used to stop the routine.</strong>
  */
 export function update(coroutine, ...params) {
+    if(typeof window === 'undefined') throw new Error("Requires a browser to run")
     let terminated = false
     let resolver = null
     const result = new Promise(function (resolve, reject) {
@@ -232,62 +234,6 @@ export function update(coroutine, ...params) {
     return result
 }
 
-/**
- * @deprecated
- * Starts an idle time coroutine using an async generator - <strong>this is NOT normally required
- * and the performance of such routines is slower than ordinary coroutines</strong>.  This is included
- * in case of an edge case requirement.
- * @param {Coroutine|Iterator} coroutine - the routine to run
- * @param {number} [loopWhileMsRemains=1 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
- * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
- * @returns {Promise<any>} the result of the coroutine
- */
-export function runAsync(coroutine, loopWhileMsRemains = 1, timeout = 160) {
-    const options = {timeout}
-    let terminated = false
-    let resolver = null
-    const result = new Promise(async function (resolve, reject) {
-        resolver = resolve
-        const iterator = coroutine.next ? coroutine : await Promise.resolve(coroutine())
-        window.requestIdleCallback(run)
-
-        async function run(api) {
-            if (terminated) {
-                iterator.return()
-                return
-            }
-            let minTime = Math.max(0.5, loopWhileMsRemains)
-            try {
-                do {
-                    const {value, done} = await iterator.next()
-                    if (done) {
-                        resolve(value)
-                        return
-                    }
-                    if (value === true) {
-                        break
-                    }
-                    if (value) {
-                        minTime = +value
-                        if (isNaN(minTime)) minTime = 1
-                    }
-                } while (api.timeRemaining() > minTime)
-            } catch (e) {
-                reject(e)
-                return
-            }
-
-            window.requestIdleCallback(run, options)
-        }
-    })
-    result.terminate = function (result) {
-        terminated = true
-        if (resolver) {
-            resolver(result)
-        }
-    }
-    return result
-}
 
 /**
  * @callback GeneratorFunction

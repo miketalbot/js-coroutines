@@ -1,3 +1,12 @@
+#### 2.4.1
+
+-   Added NodeJS support
+-   sortAsync/sort return the array for chaining
+-   Uint8Array fixes for JSON
+-   Removed support for array replacer in stringify
+-   Added tests using new NodeJS runner
+-   several bug fixes
+
 #### 2.3.72
 
 -   Joined promises are chainable
