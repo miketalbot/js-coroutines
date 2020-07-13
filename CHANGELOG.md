@@ -1,3 +1,7 @@
+#### 2.4.4
+
+-   Another change, for remote trials
+
 #### 2.4.3
 
 -   Tweak the amount of delay NodeJS allows
