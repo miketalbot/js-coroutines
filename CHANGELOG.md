@@ -1,3 +1,8 @@
+#### 2.4.2
+
+-   Fix some Node issues
+-   Fix a test issue
+
 #### 2.4.1
 
 -   Added NodeJS support

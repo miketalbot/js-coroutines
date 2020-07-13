@@ -1,4 +1,6 @@
 import {mapAsync, parseAsync, pipe, tap, stringifyAsync, singleton, run, repeat, branch} from '../component'
+import {should} from 'chai'
+should()
 
 describe('functional tests', function () {
     it('should be able to run a functional pipeline', async function () {
