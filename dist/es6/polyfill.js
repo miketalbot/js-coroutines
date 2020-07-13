@@ -153,7 +153,7 @@ export function getNodeCallback() {
                     console.error(e)
                 }
             }
-            setTimeout(endOfWork, 5)
+            setImmediate(endOfWork)
         }
     })()
     cached = result

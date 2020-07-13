@@ -175,7 +175,7 @@ function getNodeCallback() {
         }
       }
 
-      setTimeout(endOfWork, 5);
+      setImmediate(endOfWork);
     }
   })();
 

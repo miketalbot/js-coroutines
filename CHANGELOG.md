@@ -1,3 +1,7 @@
+#### 2.4.5
+
+-   Required timeout adjusted again for remote servers
+
 #### 2.4.4
 
 -   Another change, for remote trials
