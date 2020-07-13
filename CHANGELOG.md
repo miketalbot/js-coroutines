@@ -1,6 +1,6 @@
 #### 2.4.5
 
--   Required timeout adjusted again for remote servers
+-   Use setImmediate for NodeJS as it has better performance
 
 #### 2.4.4
 
