@@ -1,3 +1,7 @@
+#### 2.4.3
+
+-   Tweak the amount of delay NodeJS allows
+
 #### 2.4.2
 
 -   Fix some Node issues
