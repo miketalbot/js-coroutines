@@ -44,10 +44,24 @@ export function exitWith(value) {
 
 /**
  * @generator
- * @param {Array} collection
+ * @param {Array|Object} collection
  * @param {Process} fn
  * @param {number|string} [start]
  * @returns {Generator<*, *, *>}
+ * @example
+ * // Loop over all keys/value pairs in an object
+ * yield * forEach(object, yielding((value, key)=> { ... }))
+ *
+ * // Loop over all the values in an array
+ * yield * forEach(array, generatorFunction)
+ *
+ * function * generatorFunction(value, index) {
+ *     let i = 0
+ *     while(i < 10000) {
+ *         doSomething(value)
+ *         if(i % 100 === 0) yield
+ *     }
+ * }
  */
 export function* forEach(collection, fn, start) {
     if (isObject(collection)) {
@@ -76,6 +90,9 @@ export function* forEach(collection, fn, start) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, Object|Array, *>} collection of elements matching the filter
+ * @example
+ *
+ * const filtered = yield * filter(array, yielding(v=>v.value > 1000, 100))
  */
 export function* filter(collection, fn) {
     if (isObject(collection)) {
@@ -85,6 +102,7 @@ export function* filter(collection, fn) {
                 result[key] = value
             }
         })
+        return result
     } else {
         let result = []
         yield* forEach(collection, function* (value, key, array) {
@@ -110,8 +128,14 @@ export function* filter(collection, fn) {
  */
 export function* reduce(target, fn, initial) {
     let result = initial !== undefined ? initial : target[0]
+    let first = true
     yield* forEach(target, function* (item, key) {
-        result = yield* fn(result, item, key, target)
+        if(first && !initial) {
+            result = item
+            first = false
+        } else {
+            result = yield* fn(result, item, key, target)
+        }
     })
     return result
 }
@@ -122,6 +146,9 @@ export function* reduce(target, fn, initial) {
  * @param {Array} array1
  * @param {Array} array2
  * @returns {Generator<*, Array, *>} the concatenated arrays
+ * @example
+ *
+ * const concatenated = yield * concat(array1, array2)
  */
 export function* concat(array1, array2) {
     yield true
@@ -145,6 +172,10 @@ export function* concat(array1, array2) {
  * @param {Array} array1 - the destination
  * @param {Array} array2 - the source
  * @returns {Generator<*, Array, *>} returns <code>array1</code>
+ * @example
+ *
+ * // Updates array1
+ * yield * append(array1, array2)
  */
 export function* append(array1, array2) {
     const l = array1.length
@@ -164,6 +195,10 @@ export function* append(array1, array2) {
  * @param {Array|Object} collection
  * @param {Map} fn
  * @returns {Generator<*, Array|Object, *>} new collection of mapped values
+ * @example
+ *
+ * const values = yield * map(array, yielding(v=>v ** 2))
+ *
  */
 export function* map(collection, fn) {
     let result = isObject(collection) ? {} : []
@@ -179,6 +214,9 @@ export function* map(collection, fn) {
  * @param {Filter} fn
  * @param {any} [start] - the key to start at
  * @returns {Generator<*, *, *>} the first matching value in the collection or null
+ * @example
+ *
+ * const record = yield * find(arrayOfRecords, yielding(v=>v.id === '1234'))
  */
 export function* find(collection, fn, start) {
     let output = undefined
@@ -201,6 +239,10 @@ export function* find(collection, fn, start) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, number, *>} Index of matching element or -1
+ * @example
+ *
+ * if(-1 === yield * findIndex(records, yielding(v=>v.id === '123')))
+ *      return
  */
 export function* findIndex(collection, fn, start) {
     let output = -1
@@ -223,6 +265,12 @@ export function* findIndex(collection, fn, start) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, boolean, *>} true if at least one item matched the filter
+ * @example
+ *
+ *
+ * if(yield * some(collection, yielding(v=>v > 2000)) {
+ *     ...
+ * }
  */
 export function* some(collection, fn) {
     let result = false
@@ -240,6 +288,9 @@ export function* some(collection, fn) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, boolean, *>} true if all of the collection items matched the filter
+ * @example
+ *
+ * if(! yield * every(records, yielding(r=>r.valid))) return
  */
 export function* every(collection, fn) {
     let result = true
@@ -257,6 +308,9 @@ export function* every(collection, fn) {
  * @param {Array} array
  * @param {any} value
  * @returns {Generator<*, boolean, *>}
+ * @example
+ *
+ * prices = price * (yield * includes(items, yielding(v=>v.discount))) ? .4 : 1
  */
 export function* includes(array, value) {
     for (let i = 0, l = array.length; i < l; i++) {
@@ -285,6 +339,10 @@ export function* indexOf(array, value) {
  * @param {Array} array - the array to scan
  * @param {*} value - the value to search for
  * @returns {Generator<*, number, *>}
+ * @example
+ *
+ * let last = yield * lastIndexOf(collection, record)
+ *
  */
 export function* lastIndexOf(array, value) {
     for (let i = array.length - 1; i >= 0; i--) {
@@ -303,6 +361,14 @@ export function* lastIndexOf(array, value) {
  * @param {Array|Object} collection
  * @param {Map} fn
  * @returns {Generator<*, {}, *>} a generator for the new object
+ * @example
+ *
+ * let lookup = yield * keyBy(records, yielding(r=>r.id))
+ *
+ * ...
+ *
+ * let row = lookup[id]
+ *
  */
 export function* keyBy(collection, fn) {
     let result = {}
@@ -322,6 +388,14 @@ export function* keyBy(collection, fn) {
  * @param {Array|Object} collection
  * @param {Map} fn
  * @returns {Generator<*, {}, *>} a generator for the new object
+ * @example
+ *
+ * let groups = yield * groupBy(records, yielding(v=>v.category))
+ *
+ * ...
+ *
+ * console.log(groups['category1']) // -> [{id: 1, ...}, {id: 2, ...}]
+ *
  */
 export function* groupBy(collection, fn) {
     let result = {}
@@ -343,6 +417,10 @@ export function* groupBy(collection, fn) {
  * @param {Map} [fn] - the function to determine uniqueness, if
  * omitted then the item itself is used
  * @returns {Generator<*, Array, *>}
+ * @example
+ *
+ * const uniqueValues = yield * uniqueBy(records, yielding(r=>r.id))
+ *
  */
 export function* uniqueBy(array, fn) {
     let set = new Set()

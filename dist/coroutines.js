@@ -8,7 +8,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.useInternalEngine = useInternalEngine;
 exports.run = run;
 exports.update = update;
-exports.runAsync = runAsync;
 exports.pipe = pipe;
 exports.tap = tap;
 exports.branch = branch;
@@ -29,7 +28,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-var request = window.requestIdleCallback;
+var request = typeof window === 'undefined' ? (0, _polyfill.getNodeCallback)() : window.requestIdleCallback;
 /**
  * Call with true to use the polyfilled version of
  * the idle callback, can be more stable in certain
@@ -210,6 +209,8 @@ var requested = false;
 var animationCallbacks = [];
 
 function nextAnimationFrame(fn) {
+  if (typeof window === 'undefined') throw new Error("Cannot run without a browser");
+
   if (animationCallbacks.length === 0 && !requested) {
     requested = true;
     requestAnimationFrame(process);
@@ -262,6 +263,7 @@ function update(coroutine) {
     params[_key - 1] = arguments[_key];
   }
 
+  if (typeof window === 'undefined') throw new Error("Requires a browser to run");
   var terminated = false;
   var resolver = null;
   var result = new Promise(function (resolve, reject) {
@@ -304,163 +306,6 @@ function update(coroutine) {
   return result;
 }
 /**
- * @deprecated
- * Starts an idle time coroutine using an async generator - <strong>this is NOT normally required
- * and the performance of such routines is slower than ordinary coroutines</strong>.  This is included
- * in case of an edge case requirement.
- * @param {Coroutine|Iterator} coroutine - the routine to run
- * @param {number} [loopWhileMsRemains=1 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
- * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
- * @returns {Promise<any>} the result of the coroutine
- */
-
-
-function runAsync(coroutine) {
-  var loopWhileMsRemains = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 160;
-  var options = {
-    timeout: timeout
-  };
-  var terminated = false;
-  var resolver = null;
-  var result = new Promise( /*#__PURE__*/function () {
-    var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(resolve, reject) {
-      var iterator, run, _run2;
-
-      return _regenerator.default.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _run2 = function _run4() {
-                _run2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(api) {
-                  var minTime, _yield$iterator$next, value, done;
-
-                  return _regenerator.default.wrap(function _callee2$(_context2) {
-                    while (1) {
-                      switch (_context2.prev = _context2.next) {
-                        case 0:
-                          if (!terminated) {
-                            _context2.next = 3;
-                            break;
-                          }
-
-                          iterator.return();
-                          return _context2.abrupt("return");
-
-                        case 3:
-                          minTime = Math.max(0.5, loopWhileMsRemains);
-                          _context2.prev = 4;
-
-                        case 5:
-                          _context2.next = 7;
-                          return iterator.next();
-
-                        case 7:
-                          _yield$iterator$next = _context2.sent;
-                          value = _yield$iterator$next.value;
-                          done = _yield$iterator$next.done;
-
-                          if (!done) {
-                            _context2.next = 13;
-                            break;
-                          }
-
-                          resolve(value);
-                          return _context2.abrupt("return");
-
-                        case 13:
-                          if (!(value === true)) {
-                            _context2.next = 15;
-                            break;
-                          }
-
-                          return _context2.abrupt("break", 17);
-
-                        case 15:
-                          if (value) {
-                            minTime = +value;
-                            if (isNaN(minTime)) minTime = 1;
-                          }
-
-                        case 16:
-                          if (api.timeRemaining() > minTime) {
-                            _context2.next = 5;
-                            break;
-                          }
-
-                        case 17:
-                          _context2.next = 23;
-                          break;
-
-                        case 19:
-                          _context2.prev = 19;
-                          _context2.t0 = _context2["catch"](4);
-                          reject(_context2.t0);
-                          return _context2.abrupt("return");
-
-                        case 23:
-                          window.requestIdleCallback(run, options);
-
-                        case 24:
-                        case "end":
-                          return _context2.stop();
-                      }
-                    }
-                  }, _callee2, null, [[4, 19]]);
-                }));
-                return _run2.apply(this, arguments);
-              };
-
-              run = function _run3(_x4) {
-                return _run2.apply(this, arguments);
-              };
-
-              resolver = resolve;
-
-              if (!coroutine.next) {
-                _context3.next = 7;
-                break;
-              }
-
-              _context3.t0 = coroutine;
-              _context3.next = 10;
-              break;
-
-            case 7:
-              _context3.next = 9;
-              return Promise.resolve(coroutine());
-
-            case 9:
-              _context3.t0 = _context3.sent;
-
-            case 10:
-              iterator = _context3.t0;
-              window.requestIdleCallback(run);
-
-            case 12:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }));
-
-    return function (_x2, _x3) {
-      return _ref.apply(this, arguments);
-    };
-  }());
-
-  result.terminate = function (result) {
-    terminated = true;
-
-    if (resolver) {
-      resolver(result);
-    }
-  };
-
-  return result;
-}
-/**
  * @callback GeneratorFunction
  * @generator
  * @param {...*} params - the parameters to pass
@@ -488,106 +333,106 @@ function pipe() {
   }
 
   return /*#__PURE__*/function () {
-    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(params) {
+    var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(params) {
       var result, _iterator2, _step2, fn, nextResult;
 
-      return _regenerator.default.wrap(function _callee4$(_context4) {
+      return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               result = params;
               _iterator2 = _createForOfIteratorHelper(fns.flat(Infinity));
-              _context4.prev = 2;
+              _context2.prev = 2;
 
               _iterator2.s();
 
             case 4:
               if ((_step2 = _iterator2.n()).done) {
-                _context4.next = 25;
+                _context2.next = 25;
                 break;
               }
 
               fn = _step2.value;
 
               if (fn) {
-                _context4.next = 8;
+                _context2.next = 8;
                 break;
               }
 
-              return _context4.abrupt("continue", 23);
+              return _context2.abrupt("continue", 23);
 
             case 8:
               nextResult = fn.call(this, result);
 
               if (!nextResult) {
-                _context4.next = 23;
+                _context2.next = 23;
                 break;
               }
 
               if (!nextResult.next) {
-                _context4.next = 16;
+                _context2.next = 16;
                 break;
               }
 
-              _context4.next = 13;
+              _context2.next = 13;
               return run(nextResult);
 
             case 13:
-              result = _context4.sent;
-              _context4.next = 23;
+              result = _context2.sent;
+              _context2.next = 23;
               break;
 
             case 16:
               if (!nextResult.then) {
-                _context4.next = 22;
+                _context2.next = 22;
                 break;
               }
 
-              _context4.next = 19;
+              _context2.next = 19;
               return nextResult;
 
             case 19:
-              result = _context4.sent;
-              _context4.next = 23;
+              result = _context2.sent;
+              _context2.next = 23;
               break;
 
             case 22:
               result = nextResult;
 
             case 23:
-              _context4.next = 4;
+              _context2.next = 4;
               break;
 
             case 25:
-              _context4.next = 30;
+              _context2.next = 30;
               break;
 
             case 27:
-              _context4.prev = 27;
-              _context4.t0 = _context4["catch"](2);
+              _context2.prev = 27;
+              _context2.t0 = _context2["catch"](2);
 
-              _iterator2.e(_context4.t0);
+              _iterator2.e(_context2.t0);
 
             case 30:
-              _context4.prev = 30;
+              _context2.prev = 30;
 
               _iterator2.f();
 
-              return _context4.finish(30);
+              return _context2.finish(30);
 
             case 33:
-              return _context4.abrupt("return", result);
+              return _context2.abrupt("return", result);
 
             case 34:
             case "end":
-              return _context4.stop();
+              return _context2.stop();
           }
         }
-      }, _callee4, this, [[2, 27, 30, 33]]);
+      }, _callee2, this, [[2, 27, 30, 33]]);
     }));
 
-    return function (_x5) {
-      return _ref2.apply(this, arguments);
+    return function (_x2) {
+      return _ref.apply(this, arguments);
     };
   }();
 }
@@ -603,53 +448,53 @@ function pipe() {
 
 function tap(fn) {
   return /*#__PURE__*/function () {
-    var _ref3 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5(params) {
+    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(params) {
       var result;
-      return _regenerator.default.wrap(function _callee5$(_context5) {
+      return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
               result = fn.call(this, params);
 
               if (!result) {
-                _context5.next = 10;
+                _context3.next = 10;
                 break;
               }
 
               if (!result.next) {
-                _context5.next = 7;
+                _context3.next = 7;
                 break;
               }
 
-              _context5.next = 5;
+              _context3.next = 5;
               return run(result);
 
             case 5:
-              _context5.next = 10;
+              _context3.next = 10;
               break;
 
             case 7:
               if (!result.then) {
-                _context5.next = 10;
+                _context3.next = 10;
                 break;
               }
 
-              _context5.next = 10;
+              _context3.next = 10;
               return result;
 
             case 10:
-              return _context5.abrupt("return", params);
+              return _context3.abrupt("return", params);
 
             case 11:
             case "end":
-              return _context5.stop();
+              return _context3.stop();
           }
         }
-      }, _callee5, this);
+      }, _callee3, this);
     }));
 
-    return function (_x6) {
-      return _ref3.apply(this, arguments);
+    return function (_x3) {
+      return _ref2.apply(this, arguments);
     };
   }();
 }
@@ -709,66 +554,66 @@ function call(fn) {
 
 function repeat(fn, times) {
   return /*#__PURE__*/function () {
-    var _ref4 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee6(params) {
+    var _ref3 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(params) {
       var result, i;
-      return _regenerator.default.wrap(function _callee6$(_context6) {
+      return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               result = params;
               i = 0;
 
             case 2:
               if (!(i < times)) {
-                _context6.next = 17;
+                _context4.next = 17;
                 break;
               }
 
               result = fn.call(this, result);
 
               if (!result.next) {
-                _context6.next = 10;
+                _context4.next = 10;
                 break;
               }
 
-              _context6.next = 7;
+              _context4.next = 7;
               return run(result);
 
             case 7:
-              result = _context6.sent;
-              _context6.next = 14;
+              result = _context4.sent;
+              _context4.next = 14;
               break;
 
             case 10:
               if (!result.then) {
-                _context6.next = 14;
+                _context4.next = 14;
                 break;
               }
 
-              _context6.next = 13;
+              _context4.next = 13;
               return result;
 
             case 13:
-              result = _context6.sent;
+              result = _context4.sent;
 
             case 14:
               i++;
-              _context6.next = 2;
+              _context4.next = 2;
               break;
 
             case 17:
-              return _context6.abrupt("return", result);
+              return _context4.abrupt("return", result);
 
             case 18:
             case "end":
-              return _context6.stop();
+              return _context4.stop();
           }
         }
-      }, _callee6, this);
+      }, _callee4, this);
     }));
 
-    return function (_x7) {
-      return _ref4.apply(this, arguments);
+    return function (_x4) {
+      return _ref3.apply(this, arguments);
     };
   }();
 }

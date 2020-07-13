@@ -99,10 +99,24 @@ function exitWith(value) {
 }
 /**
  * @generator
- * @param {Array} collection
+ * @param {Array|Object} collection
  * @param {Process} fn
  * @param {number|string} [start]
  * @returns {Generator<*, *, *>}
+ * @example
+ * // Loop over all keys/value pairs in an object
+ * yield * forEach(object, yielding((value, key)=> { ... }))
+ *
+ * // Loop over all the values in an array
+ * yield * forEach(array, generatorFunction)
+ *
+ * function * generatorFunction(value, index) {
+ *     let i = 0
+ *     while(i < 10000) {
+ *         doSomething(value)
+ *         if(i % 100 === 0) yield
+ *     }
+ * }
  */
 
 
@@ -201,6 +215,9 @@ function forEach(collection, fn, start) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, Object|Array, *>} collection of elements matching the filter
+ * @example
+ *
+ * const filtered = yield * filter(array, yielding(v=>v.value > 1000, 100))
  */
 
 
@@ -212,7 +229,7 @@ function filter(collection, fn) {
       switch (_context4.prev = _context4.next) {
         case 0:
           if (!isObject(collection)) {
-            _context4.next = 5;
+            _context4.next = 6;
             break;
           }
 
@@ -241,10 +258,9 @@ function filter(collection, fn) {
           })), "t0", 3);
 
         case 3:
-          _context4.next = 8;
-          break;
+          return _context4.abrupt("return", result);
 
-        case 5:
+        case 6:
           _result2 = [];
           return _context4.delegateYield(forEach(collection, /*#__PURE__*/_regenerator.default.mark(function _callee2(value, key, array) {
             return _regenerator.default.wrap(function _callee2$(_context3) {
@@ -267,12 +283,12 @@ function filter(collection, fn) {
                 }
               }
             }, _callee2);
-          })), "t1", 7);
-
-        case 7:
-          return _context4.abrupt("return", _result2);
+          })), "t1", 8);
 
         case 8:
+          return _context4.abrupt("return", _result2);
+
+        case 9:
         case "end":
           return _context4.stop();
       }
@@ -294,34 +310,46 @@ function filter(collection, fn) {
 
 
 function reduce(target, fn, initial) {
-  var result;
+  var result, first;
   return _regenerator.default.wrap(function reduce$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
           result = initial !== undefined ? initial : target[0];
+          first = true;
           return _context6.delegateYield(forEach(target, /*#__PURE__*/_regenerator.default.mark(function _callee3(item, key) {
             return _regenerator.default.wrap(function _callee3$(_context5) {
               while (1) {
                 switch (_context5.prev = _context5.next) {
                   case 0:
-                    return _context5.delegateYield(fn(result, item, key, target), "t0", 1);
+                    if (!(first && !initial)) {
+                      _context5.next = 5;
+                      break;
+                    }
 
-                  case 1:
+                    result = item;
+                    first = false;
+                    _context5.next = 7;
+                    break;
+
+                  case 5:
+                    return _context5.delegateYield(fn(result, item, key, target), "t0", 6);
+
+                  case 6:
                     result = _context5.t0;
 
-                  case 2:
+                  case 7:
                   case "end":
                     return _context5.stop();
                 }
               }
             }, _callee3);
-          })), "t0", 2);
-
-        case 2:
-          return _context6.abrupt("return", result);
+          })), "t0", 3);
 
         case 3:
+          return _context6.abrupt("return", result);
+
+        case 4:
         case "end":
           return _context6.stop();
       }
@@ -334,6 +362,9 @@ function reduce(target, fn, initial) {
  * @param {Array} array1
  * @param {Array} array2
  * @returns {Generator<*, Array, *>} the concatenated arrays
+ * @example
+ *
+ * const concatenated = yield * concat(array1, array2)
  */
 
 
@@ -378,6 +409,10 @@ function concat(array1, array2) {
  * @param {Array} array1 - the destination
  * @param {Array} array2 - the source
  * @returns {Generator<*, Array, *>} returns <code>array1</code>
+ * @example
+ *
+ * // Updates array1
+ * yield * append(array1, array2)
  */
 
 
@@ -416,6 +451,10 @@ function append(array1, array2) {
  * @param {Array|Object} collection
  * @param {Map} fn
  * @returns {Generator<*, Array|Object, *>} new collection of mapped values
+ * @example
+ *
+ * const values = yield * map(array, yielding(v=>v ** 2))
+ *
  */
 
 
@@ -460,6 +499,9 @@ function map(collection, fn) {
  * @param {Filter} fn
  * @param {any} [start] - the key to start at
  * @returns {Generator<*, *, *>} the first matching value in the collection or null
+ * @example
+ *
+ * const record = yield * find(arrayOfRecords, yielding(v=>v.id === '1234'))
  */
 
 
@@ -512,6 +554,10 @@ function find(collection, fn, start) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, number, *>} Index of matching element or -1
+ * @example
+ *
+ * if(-1 === yield * findIndex(records, yielding(v=>v.id === '123')))
+ *      return
  */
 
 
@@ -564,6 +610,12 @@ function findIndex(collection, fn, start) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, boolean, *>} true if at least one item matched the filter
+ * @example
+ *
+ *
+ * if(yield * some(collection, yielding(v=>v > 2000)) {
+ *     ...
+ * }
  */
 
 
@@ -613,6 +665,9 @@ function some(collection, fn) {
  * @param {Array|Object} collection
  * @param {Filter} fn
  * @returns {Generator<*, boolean, *>} true if all of the collection items matched the filter
+ * @example
+ *
+ * if(! yield * every(records, yielding(r=>r.valid))) return
  */
 
 
@@ -662,6 +717,9 @@ function every(collection, fn) {
  * @param {Array} array
  * @param {any} value
  * @returns {Generator<*, boolean, *>}
+ * @example
+ *
+ * prices = price * (yield * includes(items, yielding(v=>v.discount))) ? .4 : 1
  */
 
 
@@ -768,6 +826,10 @@ function indexOf(array, value) {
  * @param {Array} array - the array to scan
  * @param {*} value - the value to search for
  * @returns {Generator<*, number, *>}
+ * @example
+ *
+ * let last = yield * lastIndexOf(collection, record)
+ *
  */
 
 
@@ -825,6 +887,14 @@ function lastIndexOf(array, value) {
  * @param {Array|Object} collection
  * @param {Map} fn
  * @returns {Generator<*, {}, *>} a generator for the new object
+ * @example
+ *
+ * let lookup = yield * keyBy(records, yielding(r=>r.id))
+ *
+ * ...
+ *
+ * let row = lookup[id]
+ *
  */
 
 
@@ -874,6 +944,14 @@ function keyBy(collection, fn) {
  * @param {Array|Object} collection
  * @param {Map} fn
  * @returns {Generator<*, {}, *>} a generator for the new object
+ * @example
+ *
+ * let groups = yield * groupBy(records, yielding(v=>v.category))
+ *
+ * ...
+ *
+ * console.log(groups['category1']) // -> [{id: 1, ...}, {id: 2, ...}]
+ *
  */
 
 
@@ -945,6 +1023,10 @@ function groupBy(collection, fn) {
  * @param {Map} [fn] - the function to determine uniqueness, if
  * omitted then the item itself is used
  * @returns {Generator<*, Array, *>}
+ * @example
+ *
+ * const uniqueValues = yield * uniqueBy(records, yielding(r=>r.id))
+ *
  */
 
 

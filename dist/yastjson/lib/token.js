@@ -1,15 +1,9 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Token = exports.TokenType = void 0;
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+exports.TokenType = void 0;
 
 /**
  * Copyright (c) 2020 5u9ar (zhuyingda)
@@ -38,26 +32,3 @@ var TokenType = {
   String: "s"
 };
 exports.TokenType = TokenType;
-
-var Token = /*#__PURE__*/function () {
-  function Token(text, type) {
-    (0, _classCallCheck2.default)(this, Token);
-    this.text = text;
-    this.type = type;
-  }
-
-  (0, _createClass2.default)(Token, [{
-    key: "getType",
-    value: function getType() {
-      return this.type;
-    }
-  }, {
-    key: "getText",
-    value: function getText() {
-      return this.text;
-    }
-  }]);
-  return Token;
-}();
-
-exports.Token = Token;

@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getCallback = getCallback;
+exports.getNodeCallback = getNodeCallback;
 var initialized = false;
 
 if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
@@ -53,7 +54,7 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
 }
 
 try {
-  if (!initialized && window && !window.requestIdleCallback) {
+  if (!initialized && typeof window !== 'undefined' && !window.requestIdleCallback) {
     var _MAX_TIME = 14;
     var _callbacks = [];
 
@@ -101,6 +102,7 @@ var cached = null;
 
 function getCallback() {
   if (cached) return cached;
+  if (typeof window === 'undefined') return getNodeCallback();
   var MAX_TIME = 14;
   var callbacks = [];
 
@@ -136,6 +138,44 @@ function getCallback() {
           console.error(e);
         }
       }
+    }
+  })();
+
+  cached = result;
+  return result;
+}
+
+function getNodeCallback() {
+  if (cached) return cached;
+  var MAX_TIME = 20;
+  var callbacks = [];
+
+  var result = function result(fn) {
+    callbacks.push(fn);
+  };
+
+  (function idle() {
+    setTimeout(endOfWork);
+
+    function endOfWork() {
+      var time = Date.now();
+      var api = {
+        timeRemaining: function timeRemaining() {
+          return MAX_TIME - (Date.now() - time);
+        }
+      };
+
+      while (callbacks.length > 0 && api.timeRemaining() > 1) {
+        var cb = callbacks.pop();
+
+        try {
+          cb(api);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      setTimeout(endOfWork);
     }
   })();
 

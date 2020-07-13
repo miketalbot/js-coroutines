@@ -90,67 +90,68 @@ var Tokenizer = /*#__PURE__*/function () {
           switch (_context.prev = _context.next) {
             case 0:
               this.sourceCode = src;
+              this.type = 'uint8';
               length = src.length;
 
-            case 2:
+            case 3:
               if (!(this.pos < length)) {
-                _context.next = 27;
+                _context.next = 28;
                 break;
               }
 
               if (!((this.pos & 15) === 0 && (0, _yielder.yielder)())) {
-                _context.next = 6;
+                _context.next = 7;
                 break;
               }
 
-              _context.next = 6;
+              _context.next = 7;
               return;
 
-            case 6:
+            case 7:
               text = this.readCharacter();
               _context.t0 = this.state;
-              _context.next = _context.t0 === STATE_INIT ? 10 : _context.t0 === STATE_KW_NULL ? 12 : _context.t0 === STATE_KW_TRUE ? 14 : _context.t0 === STATE_KW_FALSE ? 16 : _context.t0 === STATE_NUMBER ? 18 : _context.t0 === STATE_STRING ? 20 : _context.t0 === STATE_STRING_ESCAPE ? 22 : 24;
+              _context.next = _context.t0 === STATE_INIT ? 11 : _context.t0 === STATE_KW_NULL ? 13 : _context.t0 === STATE_KW_TRUE ? 15 : _context.t0 === STATE_KW_FALSE ? 17 : _context.t0 === STATE_NUMBER ? 19 : _context.t0 === STATE_STRING ? 21 : _context.t0 === STATE_STRING_ESCAPE ? 23 : 25;
               break;
 
-            case 10:
+            case 11:
               this.initToken(text);
-              return _context.abrupt("break", 25);
+              return _context.abrupt("break", 26);
 
-            case 12:
+            case 13:
               this.handleTokenNull(text);
-              return _context.abrupt("break", 25);
+              return _context.abrupt("break", 26);
 
-            case 14:
+            case 15:
               this.handleTokenTrue(text);
-              return _context.abrupt("break", 25);
+              return _context.abrupt("break", 26);
 
-            case 16:
+            case 17:
               this.handleTokenFalse(text);
-              return _context.abrupt("break", 25);
+              return _context.abrupt("break", 26);
 
-            case 18:
+            case 19:
               this.handleTokenNumber(text);
-              return _context.abrupt("break", 25);
+              return _context.abrupt("break", 26);
 
-            case 20:
+            case 21:
               this.handleTokenString(text);
-              return _context.abrupt("break", 25);
+              return _context.abrupt("break", 26);
 
-            case 22:
+            case 23:
               this.handleTokenStringEscape(text);
-              return _context.abrupt("break", 25);
-
-            case 24:
-              throw new Error("finite state machine get an unexpected state: ".concat(this.state));
+              return _context.abrupt("break", 26);
 
             case 25:
-              _context.next = 2;
+              throw new Error("finite state machine get an unexpected state: ".concat(this.state));
+
+            case 26:
+              _context.next = 3;
               break;
 
-            case 27:
+            case 28:
               return _context.abrupt("return", this.tokens);
 
-            case 28:
+            case 29:
             case "end":
               return _context.stop();
           }
@@ -176,68 +177,69 @@ var Tokenizer = /*#__PURE__*/function () {
               return _context2.abrupt("return", _context2.t0);
 
             case 3:
+              this.type = 'char';
               this.sourceCode = src;
               length = src.length;
 
-            case 5:
+            case 6:
               if (!(this.pos < length)) {
-                _context2.next = 30;
+                _context2.next = 31;
                 break;
               }
 
               if (!((this.pos & 7) === 0 && (0, _yielder.yielder)())) {
-                _context2.next = 9;
+                _context2.next = 10;
                 break;
               }
 
-              _context2.next = 9;
+              _context2.next = 10;
               return;
 
-            case 9:
+            case 10:
               text = this.read();
               _context2.t1 = this.state;
-              _context2.next = _context2.t1 === STATE_INIT ? 13 : _context2.t1 === STATE_KW_NULL ? 15 : _context2.t1 === STATE_KW_TRUE ? 17 : _context2.t1 === STATE_KW_FALSE ? 19 : _context2.t1 === STATE_NUMBER ? 21 : _context2.t1 === STATE_STRING ? 23 : _context2.t1 === STATE_STRING_ESCAPE ? 25 : 27;
+              _context2.next = _context2.t1 === STATE_INIT ? 14 : _context2.t1 === STATE_KW_NULL ? 16 : _context2.t1 === STATE_KW_TRUE ? 18 : _context2.t1 === STATE_KW_FALSE ? 20 : _context2.t1 === STATE_NUMBER ? 22 : _context2.t1 === STATE_STRING ? 24 : _context2.t1 === STATE_STRING_ESCAPE ? 26 : 28;
               break;
 
-            case 13:
+            case 14:
               this.initToken(text);
-              return _context2.abrupt("break", 28);
+              return _context2.abrupt("break", 29);
 
-            case 15:
+            case 16:
               this.handleTokenNull(text);
-              return _context2.abrupt("break", 28);
+              return _context2.abrupt("break", 29);
 
-            case 17:
+            case 18:
               this.handleTokenTrue(text);
-              return _context2.abrupt("break", 28);
+              return _context2.abrupt("break", 29);
 
-            case 19:
+            case 20:
               this.handleTokenFalse(text);
-              return _context2.abrupt("break", 28);
+              return _context2.abrupt("break", 29);
 
-            case 21:
+            case 22:
               this.handleTokenNumber(text);
-              return _context2.abrupt("break", 28);
+              return _context2.abrupt("break", 29);
 
-            case 23:
+            case 24:
               this.handleTokenString(text);
-              return _context2.abrupt("break", 28);
+              return _context2.abrupt("break", 29);
 
-            case 25:
+            case 26:
               this.handleTokenStringEscape(text);
-              return _context2.abrupt("break", 28);
-
-            case 27:
-              throw new Error("finite state machine get an unexpected state: ".concat(this.state));
+              return _context2.abrupt("break", 29);
 
             case 28:
-              _context2.next = 5;
+              throw new Error("finite state machine get an unexpected state: ".concat(this.state));
+
+            case 29:
+              _context2.next = 6;
               break;
 
-            case 30:
+            case 31:
               return _context2.abrupt("return", this.tokens);
 
-            case 31:
+            case 32:
             case "end":
               return _context2.stop();
           }
@@ -259,6 +261,7 @@ var Tokenizer = /*#__PURE__*/function () {
     key: "readCharacter",
     value: function readCharacter() {
       var c = this.sourceCode[this.pos++];
+      /* ? */
 
       switch (c >> 4) {
         case 0:
@@ -285,13 +288,52 @@ var Tokenizer = /*#__PURE__*/function () {
   }, {
     key: "peek",
     value: function peek() {
-      var offset = this.pos;
+      if (this.type === 'char') {
+        var offset = this.pos;
 
-      while (this.sourceCode[offset] && this.sourceCode[offset].charCodeAt(0) < 32) {
-        offset++;
+        while (this.sourceCode[offset] && this.sourceCode[offset].charCodeAt(0) < 32) {
+          offset++;
+        }
+
+        return this.sourceCode[offset];
+      } else {
+        var read = function read() {
+          var c = code[_offset++];
+          /* ? */
+
+          switch (c >> 4) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+              return String.fromCharCode(c);
+
+            case 12:
+            case 13:
+              return String.fromCharCode((c & 0x1f) << 6 | code[_offset++] & 0x3f);
+
+            case 14:
+              return String.fromCharCode((c & 0x0f) << 12 | (code[_offset++] & 0x3f) << 6 | code[_offset++] & 0x3f);
+
+            default:
+              throw new Error("Bad encoding");
+          }
+        };
+
+        var _offset = this.pos;
+        var code = this.sourceCode;
+        var value = read();
+
+        while (value.charCodeAt(0) < 32 && _offset < code.length) {
+          value = read();
+        }
+
+        return value.charCodeAt(0) === 0 ? undefined : value;
       }
-
-      return this.sourceCode[offset];
     }
   }, {
     key: "initToken",

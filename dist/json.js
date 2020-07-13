@@ -189,107 +189,55 @@ function str(key, holder, ctrl) {
           return _context2.abrupt("return", v + "]");
 
         case 34:
-          if (!(rep && (0, _typeof2.default)(rep) === "object")) {
-            _context2.next = 56;
-            break;
-          }
+          _context2.t7 = _regenerator.default.keys(value);
 
-          length = rep.length;
-          i = 0;
-
-        case 37:
-          if (!(i < length)) {
-            _context2.next = 54;
-            break;
-          }
-
-          if (!(typeof rep[i] === "string")) {
+        case 35:
+          if ((_context2.t8 = _context2.t7()).done) {
             _context2.next = 51;
             break;
           }
 
-          k = rep[i];
-          return _context2.delegateYield(str(k, value, ctrl), "t7", 41);
-
-        case 41:
-          v = _context2.t7;
-
-          if (!v) {
-            _context2.next = 51;
-            break;
-          }
-
-          _context2.t8 = partial;
-          return _context2.delegateYield(quote(k), "t9", 45);
-
-        case 45:
-          _context2.t10 = _context2.t9;
-          _context2.t11 = gap ? ": " : ":";
-          _context2.t12 = _context2.t10 + _context2.t11;
-          _context2.t13 = v;
-          _context2.t14 = _context2.t12 + _context2.t13;
-
-          _context2.t8.push.call(_context2.t8, _context2.t14);
-
-        case 51:
-          i += 1;
-          _context2.next = 37;
-          break;
-
-        case 54:
-          _context2.next = 73;
-          break;
-
-        case 56:
-          _context2.t15 = _regenerator.default.keys(value);
-
-        case 57:
-          if ((_context2.t16 = _context2.t15()).done) {
-            _context2.next = 73;
-            break;
-          }
-
-          k = _context2.t16.value;
+          k = _context2.t8.value;
 
           if (!Object.prototype.hasOwnProperty.call(value, k)) {
-            _context2.next = 71;
+            _context2.next = 49;
             break;
           }
 
-          return _context2.delegateYield(str(k, value, ctrl), "t17", 61);
+          return _context2.delegateYield(str(k, value, ctrl), "t9", 39);
 
-        case 61:
-          v = _context2.t17;
+        case 39:
+          v = _context2.t9;
 
           if (!v) {
-            _context2.next = 71;
+            _context2.next = 49;
             break;
           }
 
-          _context2.t18 = partial;
-          return _context2.delegateYield(quote(k), "t19", 65);
+          _context2.t10 = partial;
+          return _context2.delegateYield(quote(k), "t11", 43);
 
-        case 65:
-          _context2.t20 = _context2.t19;
-          _context2.t21 = gap ? ": " : ":";
-          _context2.t22 = _context2.t20 + _context2.t21;
-          _context2.t23 = v;
-          _context2.t24 = _context2.t22 + _context2.t23;
+        case 43:
+          _context2.t12 = _context2.t11;
+          _context2.t13 = gap ? ": " : ":";
+          _context2.t14 = _context2.t12 + _context2.t13;
+          _context2.t15 = v;
+          _context2.t16 = _context2.t14 + _context2.t15;
 
-          _context2.t18.push.call(_context2.t18, _context2.t24);
+          _context2.t10.push.call(_context2.t10, _context2.t16);
 
-        case 71:
-          _context2.next = 57;
+        case 49:
+          _context2.next = 35;
           break;
 
-        case 73:
+        case 51:
           // Join all of the member texts together, separated with commas,
           // and wrap them in braces.
           v = partial.length === 0 ? "{}" : gap ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}" : "{" + partial.join(",") + "}";
           gap = mind;
           return _context2.abrupt("return", v);
 
-        case 76:
+        case 54:
         case "end":
           return _context2.stop();
       }

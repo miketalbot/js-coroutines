@@ -124,18 +124,6 @@ function* str(key, holder, ctrl) {
 
       // If the replacer is an array, use it to select the members to be stringified.
 
-      if (rep && typeof rep === "object") {
-        length = rep.length;
-        for (i = 0; i < length; i += 1) {
-          if (typeof rep[i] === "string") {
-            k = rep[i];
-            v = yield* str(k, value, ctrl);
-            if (v) {
-              partial.push((yield* quote(k)) + (gap ? ": " : ":") + v);
-            }
-          }
-        }
-      } else {
         // Otherwise, iterate through all of the keys in the object.
         for (k in value) {
           if (Object.prototype.hasOwnProperty.call(value, k)) {
@@ -145,7 +133,6 @@ function* str(key, holder, ctrl) {
             }
           }
         }
-      }
 
       // Join all of the member texts together, separated with commas,
       // and wrap them in braces.

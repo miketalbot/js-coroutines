@@ -1800,6 +1800,7 @@ var TimSort = /*#__PURE__*/function () {
  * @param {number} [lo] - First element in the range (inclusive).
  * @param {number} [hi] - Last element in the range.
  *     comparator.
+ * @returns {array} the sorted array
  */
 
 
@@ -1855,7 +1856,7 @@ function sort(array, compare, lo, hi) {
             break;
           }
 
-          return _context10.abrupt("return");
+          return _context10.abrupt("return", array);
 
         case 8:
           runLength = 0; // On small arrays binary sort can be used directly
@@ -1874,7 +1875,7 @@ function sort(array, compare, lo, hi) {
           return;
 
         case 15:
-          return _context10.abrupt("return");
+          return _context10.abrupt("return", array);
 
         case 16:
           ts = new TimSort(array, compare);
@@ -1924,6 +1925,9 @@ function sort(array, compare, lo, hi) {
           return _context10.delegateYield(ts.forceMergeRuns(), "t3", 33);
 
         case 33:
+          return _context10.abrupt("return", array);
+
+        case 34:
         case "end":
           return _context10.stop();
       }

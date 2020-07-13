@@ -1025,6 +1025,7 @@ class TimSort {
  * @param {number} [lo] - First element in the range (inclusive).
  * @param {number} [hi] - Last element in the range.
  *     comparator.
+ * @returns {array} the sorted array
  */
 export function* sort(array, compare, lo, hi) {
   if (!Array.isArray(array)) {
@@ -1064,7 +1065,7 @@ export function* sort(array, compare, lo, hi) {
 
   // The array is already sorted
   if (remaining < 2) {
-    return;
+    return array;
   }
 
   let runLength = 0;
@@ -1073,7 +1074,7 @@ export function* sort(array, compare, lo, hi) {
     runLength = yield* makeAscendingRun(array, lo, hi, compare);
     binaryInsertionSort(array, lo, hi, lo + runLength, compare);
     yield;
-    return;
+    return array;
   }
 
   let ts = new TimSort(array, compare);
@@ -1103,4 +1104,5 @@ export function* sort(array, compare, lo, hi) {
 
   // Force merging of remaining runs
   yield* ts.forceMergeRuns();
+  return array
 }
