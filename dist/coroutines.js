@@ -158,22 +158,23 @@ function run(coroutine) {
                 }
 
               case 23:
-                _context.next = 29;
+                _context.next = 30;
                 break;
 
               case 25:
                 _context.prev = 25;
                 _context.t2 = _context["catch"](5);
+                console.error(_context.t2);
                 reject(_context.t2);
                 return _context.abrupt("return");
 
-              case 29:
+              case 30:
                 // Request an idle callback
                 request(run); // Request again on timeout
 
                 id = setTimeout(runFromTimeout, timeout);
 
-              case 31:
+              case 32:
               case "end":
                 return _context.stop();
             }

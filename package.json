@@ -1,6 +1,6 @@
 {
   "name": "js-coroutines",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "private": false,
   "files": [
     "dist",
@@ -28,7 +28,7 @@
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.4",
     "showdown": "^1.9.1",
     "tern": "^0.24.3",
     "tsd-jsdoc": "^2.5.0",

@@ -1,3 +1,7 @@
+#### 2.4.6
+
+-   Update dependencies for audit fix
+
 #### 2.4.5
 
 -   Use setImmediate for NodeJS as it has better performance

@@ -129,6 +129,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 10) {
                     }
                 } while (api.timeRemaining() > minTime)
             } catch (e) {
+                console.error(e)
                 reject(e)
                 return
             }
