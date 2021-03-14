@@ -1,5 +1,7 @@
 "use strict";
 
+var _regeneratorRuntime2 = require("@babel/runtime/regenerator");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -31,28 +33,28 @@ var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _wrappers = require("./wrappers");
 
-function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-var _marked = /*#__PURE__*/_regenerator.default.mark(forEach),
-    _marked2 = /*#__PURE__*/_regenerator.default.mark(filter),
-    _marked3 = /*#__PURE__*/_regenerator.default.mark(reduce),
-    _marked4 = /*#__PURE__*/_regenerator.default.mark(concat),
-    _marked5 = /*#__PURE__*/_regenerator.default.mark(append),
-    _marked6 = /*#__PURE__*/_regenerator.default.mark(map),
-    _marked7 = /*#__PURE__*/_regenerator.default.mark(find),
-    _marked8 = /*#__PURE__*/_regenerator.default.mark(findIndex),
-    _marked9 = /*#__PURE__*/_regenerator.default.mark(some),
-    _marked10 = /*#__PURE__*/_regenerator.default.mark(every),
-    _marked11 = /*#__PURE__*/_regenerator.default.mark(includes),
-    _marked12 = /*#__PURE__*/_regenerator.default.mark(indexOf),
-    _marked13 = /*#__PURE__*/_regenerator.default.mark(lastIndexOf),
-    _marked14 = /*#__PURE__*/_regenerator.default.mark(keyBy),
-    _marked15 = /*#__PURE__*/_regenerator.default.mark(groupBy),
-    _marked16 = /*#__PURE__*/_regenerator.default.mark(uniqueBy);
+var _marked = /*#__PURE__*/_regeneratorRuntime2.mark(forEach),
+    _marked2 = /*#__PURE__*/_regeneratorRuntime2.mark(filter),
+    _marked3 = /*#__PURE__*/_regeneratorRuntime2.mark(reduce),
+    _marked4 = /*#__PURE__*/_regeneratorRuntime2.mark(concat),
+    _marked5 = /*#__PURE__*/_regeneratorRuntime2.mark(append),
+    _marked6 = /*#__PURE__*/_regeneratorRuntime2.mark(map),
+    _marked7 = /*#__PURE__*/_regeneratorRuntime2.mark(find),
+    _marked8 = /*#__PURE__*/_regeneratorRuntime2.mark(findIndex),
+    _marked9 = /*#__PURE__*/_regeneratorRuntime2.mark(some),
+    _marked10 = /*#__PURE__*/_regeneratorRuntime2.mark(every),
+    _marked11 = /*#__PURE__*/_regeneratorRuntime2.mark(includes),
+    _marked12 = /*#__PURE__*/_regeneratorRuntime2.mark(indexOf),
+    _marked13 = /*#__PURE__*/_regeneratorRuntime2.mark(lastIndexOf),
+    _marked14 = /*#__PURE__*/_regeneratorRuntime2.mark(keyBy),
+    _marked15 = /*#__PURE__*/_regeneratorRuntime2.mark(groupBy),
+    _marked16 = /*#__PURE__*/_regeneratorRuntime2.mark(uniqueBy);
 
 function isObject(v) {
   return (0, _typeof2.default)(v) === 'object' && !Array.isArray(v);

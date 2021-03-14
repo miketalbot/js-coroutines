@@ -755,7 +755,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeRuns",
-    value: /*#__PURE__*/_regenerator.default.mark(function mergeRuns() {
+    value:
+    /*#__PURE__*/
+    _regenerator.default.mark(function mergeRuns() {
       var n;
       return _regenerator.default.wrap(function mergeRuns$(_context5) {
         while (1) {
@@ -808,7 +810,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "forceMergeRuns",
-    value: /*#__PURE__*/_regenerator.default.mark(function forceMergeRuns() {
+    value:
+    /*#__PURE__*/
+    _regenerator.default.mark(function forceMergeRuns() {
       var n;
       return _regenerator.default.wrap(function forceMergeRuns$(_context6) {
         while (1) {
@@ -847,7 +851,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeAt",
-    value: /*#__PURE__*/_regenerator.default.mark(function mergeAt(i) {
+    value:
+    /*#__PURE__*/
+    _regenerator.default.mark(function mergeAt(i) {
       var compare, array, start1, length1, start2, length2, k;
       return _regenerator.default.wrap(function mergeAt$(_context7) {
         while (1) {
@@ -941,7 +947,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeLow",
-    value: /*#__PURE__*/_regenerator.default.mark(function mergeLow(start1, length1, start2, length2) {
+    value:
+    /*#__PURE__*/
+    _regenerator.default.mark(function mergeLow(start1, length1, start2, length2) {
       var compare, array, tmp, i, cursor1, cursor2, dest, minGallop, count1, count2, exit;
       return _regenerator.default.wrap(function mergeLow$(_context8) {
         while (1) {
@@ -1368,7 +1376,9 @@ var TimSort = /*#__PURE__*/function () {
 
   }, {
     key: "mergeHigh",
-    value: /*#__PURE__*/_regenerator.default.mark(function mergeHigh(start1, length1, start2, length2) {
+    value:
+    /*#__PURE__*/
+    _regenerator.default.mark(function mergeHigh(start1, length1, start2, length2) {
       var compare, array, tmp, i, cursor1, cursor2, dest, customCursor, customDest, minGallop, count1, count2, exit;
       return _regenerator.default.wrap(function mergeHigh$(_context9) {
         while (1) {

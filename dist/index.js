@@ -41,6 +41,7 @@ var _lzString = require("./lz-string/lz-string");
 Object.keys(_lzString).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _lzString[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
@@ -56,6 +57,7 @@ var _arrayUtilities = require("./array-utilities");
 Object.keys(_arrayUtilities).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _arrayUtilities[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
@@ -69,6 +71,7 @@ var _wrappers = require("./wrappers");
 Object.keys(_wrappers).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _wrappers[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
@@ -82,6 +85,7 @@ var _coroutines = require("./coroutines");
 Object.keys(_coroutines).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _coroutines[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
@@ -95,6 +99,7 @@ var _asyncWrappers = require("./async-wrappers");
 Object.keys(_asyncWrappers).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _asyncWrappers[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
@@ -108,6 +113,7 @@ var _base64String = require("./lz-string/base64-string");
 Object.keys(_base64String).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _base64String[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
