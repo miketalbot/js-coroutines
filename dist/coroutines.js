@@ -29,6 +29,11 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var request = typeof window === 'undefined' ? (0, _polyfill.getNodeCallback)() : window.requestIdleCallback;
+var performance = typeof window !== 'undefined' && window.performance ? window.performance : {
+  now: function now() {
+    return Date.now();
+  }
+};
 /**
  * Call with true to use the polyfilled version of
  * the idle callback, can be more stable in certain

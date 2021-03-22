@@ -46,7 +46,7 @@ function quote(string) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          result = '"';
+          result = ['"'];
           i = 0, l = string.length;
 
         case 2:
@@ -66,16 +66,16 @@ function quote(string) {
         case 6:
           c = string[i];
 
-          if (rx_escapable.test(c)) {
+          if (c === '"' || rx_escapable.test(c)) {
             r = meta[c];
 
             if (typeof r === "string") {
-              result += r;
+              result.push(r);
             } else {
-              result += "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4);
+              result.push("\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4));
             }
           } else if (!rx_dangerous.test(c)) {
-            result += c;
+            result.push(c);
           }
 
         case 8:
@@ -84,9 +84,10 @@ function quote(string) {
           break;
 
         case 11:
-          return _context.abrupt("return", result + '"');
+          result.push('"');
+          return _context.abrupt("return", result.join(''));
 
-        case 12:
+        case 13:
         case "end":
           return _context.stop();
       }

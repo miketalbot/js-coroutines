@@ -47,6 +47,10 @@ import {getCallback, getNodeCallback} from './polyfill'
 
 let request = typeof window === 'undefined' ? getNodeCallback() : window.requestIdleCallback
 
+const performance = typeof window !== 'undefined' && window.performance ? window.performance : {
+    now() { return Date.now()}
+}
+
 /**
  * Call with true to use the polyfilled version of
  * the idle callback, can be more stable in certain

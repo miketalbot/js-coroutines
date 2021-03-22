@@ -1,3 +1,13 @@
+#### 2.4.8
+
+-   Fix issue with stringifying empty strings (#10)
+-   Polyfill performance.now() (#9)
+-   Fix issue with parsing JSON including whitespace (#7)
+
+#### 2.4.7
+
+-   Update dependencies
+
 #### 2.4.6
 
 -   Update dependencies for audit fix

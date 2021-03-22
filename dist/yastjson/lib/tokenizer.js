@@ -338,6 +338,10 @@ var Tokenizer = /*#__PURE__*/function () {
   }, {
     key: "initToken",
     value: function initToken(ch) {
+      while (ch && ch.charCodeAt(0) <= 32) {
+        ch = this.sourceCode[this.pos++];
+      }
+
       var type = INITIAL_STATE[ch];
 
       if (!type && !INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(ch.charCodeAt(0))) {
@@ -348,6 +352,11 @@ var Tokenizer = /*#__PURE__*/function () {
         text: ch,
         type: type
       });
+
+      while (this.peek() === ' ') {
+        this.pos++;
+      }
+
       var nextCh = this.peek();
 
       if (nextCh === undefined) {

@@ -24,22 +24,23 @@ function yielder() {
 }
 
 function* quote(string) {
-  let result = '"';
+  let result = ['"'];
   for (let i = 0, l = string.length; i < l; i++) {
     if ((i & 7) === 0 && yielder()) yield;
     let c = string[i];
-    if (rx_escapable.test(c)) {
+    if (c === '"' || rx_escapable.test(c)) {
       const r = meta[c];
       if (typeof r === "string") {
-        result += r;
+        result.push(r)
       } else {
-        result += "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4);
+        result.push( "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4));
       }
     } else if (!rx_dangerous.test(c)) {
-      result += c;
+      result.push(c);
     }
   }
-  return result + '"';
+  result.push('"')
+  return result.join('')
 }
 
 function* str(key, holder, ctrl) {

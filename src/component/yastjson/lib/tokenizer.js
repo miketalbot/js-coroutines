@@ -219,11 +219,17 @@ export class Tokenizer {
     }
 
     initToken(ch) {
+        while(ch && ch.charCodeAt(0) <= 32) {
+            ch = this.sourceCode[this.pos++]
+        }
         const type = INITIAL_STATE[ch]
         if (!type && !INVISIBLE_CHAR_CODE_TOKEN_LIST.includes(ch.charCodeAt(0))) {
             throw new Error(`state INIT, unexpected token ${ch}`)
         }
         this.tokens.push({text: ch, type})
+        while(this.peek() === ' ') {
+            this.pos++
+        }
         let nextCh = this.peek()
         if (nextCh === undefined) {
             return
