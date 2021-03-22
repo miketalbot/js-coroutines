@@ -18,7 +18,7 @@ system so it can animate and do the rest of the work, then resume in the next ga
 
 ## How it works?
 
-[This dev.to article goes into detail about how js-coutines works](https://dev.to/miketalbot/60fps-javascript-while-stringfying-and-parsing-100mbs-of-json-84l)
+[This dev.to article goes into detail about how js-coroutines works](https://dev.to/miketalbot/60fps-javascript-while-stringfying-and-parsing-100mbs-of-json-84l)
 
 ## Demo
 
