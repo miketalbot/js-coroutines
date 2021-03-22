@@ -135,12 +135,13 @@ var LZStringGenerator = function () {
             case 2:
               return _context3.delegateYield(LZString._compress(input, 15, function (a) {
                 return f(a + 32);
-              }) + ' ', "t0", 3);
+              }), "t0", 3);
 
             case 3:
-              return _context3.abrupt("return", _context3.t0);
+              _context3.t1 = _context3.t0;
+              return _context3.abrupt("return", _context3.t1 + ' ');
 
-            case 4:
+            case 5:
             case "end":
               return _context3.stop();
           }

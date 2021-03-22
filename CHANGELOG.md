@@ -1,3 +1,7 @@
+#### 2.4.10
+
+-   Merge PR1/2
+
 #### 2.4.9
 
 -   Fix NodeJS version 

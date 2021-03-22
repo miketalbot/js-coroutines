@@ -59,9 +59,9 @@ var LZStringGenerator = (function () {
 
         compressToUTF16: function* (input) {
             if (input === null) return ''
-            return yield* LZString._compress(input, 15, function (a) {
+            return (yield* LZString._compress(input, 15, function (a) {
                 return f(a + 32)
-            }) + ' '
+            })) + ' '
         },
 
         decompressFromUTF16: function* (compressed) {
