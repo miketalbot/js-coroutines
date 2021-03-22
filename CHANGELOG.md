@@ -1,3 +1,7 @@
+#### 2.4.9
+
+-   Fix NodeJS version 
+
 #### 2.4.8
 
 -   Fix issue with stringifying empty strings (#10)

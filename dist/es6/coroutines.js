@@ -174,6 +174,7 @@ function nextAnimationFrame(fn) {
         requestAnimationFrame(process)
     }
     animationCallbacks.push(fn)
+    if(animationCallbacks.length > 10000) animationCallbacks = animationCallbacks.slice(-9000)
 }
 
 function process() {

@@ -55,6 +55,7 @@ if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
 
 try {
   if (!initialized && typeof window !== 'undefined' && !window.requestIdleCallback) {
+    initialized = true;
     var _MAX_TIME = 14;
     var _callbacks = [];
 
@@ -145,40 +146,38 @@ function getCallback() {
   return result;
 }
 
+var nodeCallbacks = [];
+var NODE_MAX_TIME = 20;
+
 function getNodeCallback() {
   if (cached) return cached;
-  var MAX_TIME = 20;
-  var callbacks = [];
 
   var result = function result(fn) {
-    callbacks.push(fn);
+    nodeCallbacks.push(fn);
   };
 
-  (function idle() {
-    setTimeout(endOfWork);
-
-    function endOfWork() {
-      var time = Date.now();
-      var api = {
-        timeRemaining: function timeRemaining() {
-          return MAX_TIME - (Date.now() - time);
-        }
-      };
-
-      while (callbacks.length > 0 && api.timeRemaining() > 1) {
-        var cb = callbacks.pop();
-
-        try {
-          cb(api);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-
-      setImmediate(endOfWork);
-    }
-  })();
-
+  setTimeout(endOfWork);
   cached = result;
   return result;
+}
+
+function endOfWork() {
+  var time = Date.now();
+  var api = {
+    timeRemaining: function timeRemaining() {
+      return NODE_MAX_TIME - (Date.now() - time);
+    }
+  };
+
+  while (nodeCallbacks.length > 0 && api.timeRemaining() > 1) {
+    var cb = nodeCallbacks.pop();
+
+    try {
+      cb(api);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  setImmediate(endOfWork);
 }
