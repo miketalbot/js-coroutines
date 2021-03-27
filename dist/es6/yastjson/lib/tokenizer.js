@@ -179,22 +179,21 @@ export class Tokenizer {
 
 
     peek() {
+        let o = this.pos
         if(this.type === 'char') {
-            let offset = this.pos
-            while (this.sourceCode[offset] && this.sourceCode[offset].charCodeAt(0) < 32) {
-                offset++
+            while (this.sourceCode[o] && this.sourceCode[o].charCodeAt(0) < 32) {
+                o++
             }
-            return this.sourceCode[offset]
+            return this.sourceCode[o]
         } else {
-            let offset = this.pos
             let code = this.sourceCode
             let value = read()
-            while (value.charCodeAt(0) < 32 && offset < code.length) {
+            while (value.charCodeAt(0) < 32 && o < code.length) {
                 value = read()
             }
             return value.charCodeAt(0) === 0 ? undefined : value
             function read() {
-                const c = code[offset++] /* ? */
+                const c = code[o++] /* ? */
                 switch (c >> 4) {
                     case 0:
                     case 1:
@@ -207,10 +206,10 @@ export class Tokenizer {
                         return String.fromCharCode(c)
                     case 12:
                     case 13:
-                        return String.fromCharCode(((c & 0x1f) << 6) | (code[offset++] & 0x3f))
+                        return String.fromCharCode(((c & 0x1f) << 6) | (code[o++] & 0x3f))
                     case 14:
                         return String.fromCharCode(((c & 0x0f) << 12) |
-                            ((code[offset++] & 0x3f) << 6) | (code[offset++] & 0x3f))
+                            ((code[o++] & 0x3f) << 6) | (code[o++] & 0x3f))
                     default:
                         throw new Error("Bad encoding")
                 }

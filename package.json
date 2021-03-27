@@ -1,6 +1,6 @@
 {
   "name": "js-coroutines",
-  "version": "2.4.11",
+  "version": "2.4.12",
   "private": false,
   "files": [
     "dist",
@@ -22,6 +22,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.3",
+    "babel-plugin-minify-mangle-names": "^0.5.0",
     "babel-preset-minify": "^0.5.1",
     "chai": "^4.3.4",
     "docdash": "^1.2.0",

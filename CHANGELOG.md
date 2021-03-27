@@ -1,3 +1,7 @@
+#### 2.4.12
+
+-   Additional package size reduction
+
 #### 2.4.11
 
 -   Reduce package size of build

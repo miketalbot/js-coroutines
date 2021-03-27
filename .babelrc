@@ -6,8 +6,9 @@
       {
         "builtIns": false,
         "deadcode": true,
-        "mangle": false
+        "mangle": true
       }
     ]],
-  "plugins": ["@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"]
+  "plugins": [
+    "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"]
 }
