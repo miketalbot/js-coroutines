@@ -10,164 +10,168 @@
 //
 // Base64 compression / decompression for already compressed content (gif, png, jpg, mp3, ...)
 // version 1.4.1
+const fcc = String.fromCharCode
+const _k ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+
+
 export const Base64StringGenerator = {
   compressToUTF16: function* (input) {
-    var output = [],
+    var o = [],
       i,
       c,
-      current,
-      status = 0;
+      cr,
+      st = 0;
 
     input = yield* this.compress(input);
 
     for (i = 0; i < input.length; i++) {
       if ((i & 511) === 0) yield;
       c = input.charCodeAt(i);
-      switch (status++) {
+      switch (st++) {
         case 0:
-          output.push(String.fromCharCode((c >> 1) + 32));
-          current = (c & 1) << 14;
+          o.push(fcc((c >> 1) + 32));
+          cr = (c & 1) << 14;
           break;
         case 1:
-          output.push(String.fromCharCode(current + (c >> 2) + 32));
-          current = (c & 3) << 13;
+          o.push(fcc(cr + (c >> 2) + 32));
+          cr = (c & 3) << 13;
           break;
         case 2:
-          output.push(String.fromCharCode(current + (c >> 3) + 32));
-          current = (c & 7) << 12;
+          o.push(fcc(cr + (c >> 3) + 32));
+          cr = (c & 7) << 12;
           break;
         case 3:
-          output.push(String.fromCharCode(current + (c >> 4) + 32));
-          current = (c & 15) << 11;
+          o.push(fcc(cr + (c >> 4) + 32));
+          cr = (c & 15) << 11;
           break;
         case 4:
-          output.push(String.fromCharCode(current + (c >> 5) + 32));
-          current = (c & 31) << 10;
+          o.push(fcc(cr + (c >> 5) + 32));
+          cr = (c & 31) << 10;
           break;
         case 5:
-          output.push(String.fromCharCode(current + (c >> 6) + 32));
-          current = (c & 63) << 9;
+          o.push(fcc(cr + (c >> 6) + 32));
+          cr = (c & 63) << 9;
           break;
         case 6:
-          output.push(String.fromCharCode(current + (c >> 7) + 32));
-          current = (c & 127) << 8;
+          o.push(fcc(cr + (c >> 7) + 32));
+          cr = (c & 127) << 8;
           break;
         case 7:
-          output.push(String.fromCharCode(current + (c >> 8) + 32));
-          current = (c & 255) << 7;
+          o.push(fcc(cr + (c >> 8) + 32));
+          cr = (c & 255) << 7;
           break;
         case 8:
-          output.push(String.fromCharCode(current + (c >> 9) + 32));
-          current = (c & 511) << 6;
+          o.push(fcc(cr + (c >> 9) + 32));
+          cr = (c & 511) << 6;
           break;
         case 9:
-          output.push(String.fromCharCode(current + (c >> 10) + 32));
-          current = (c & 1023) << 5;
+          o.push(fcc(cr + (c >> 10) + 32));
+          cr = (c & 1023) << 5;
           break;
         case 10:
-          output.push(String.fromCharCode(current + (c >> 11) + 32));
-          current = (c & 2047) << 4;
+          o.push(fcc(cr + (c >> 11) + 32));
+          cr = (c & 2047) << 4;
           break;
         case 11:
-          output.push(String.fromCharCode(current + (c >> 12) + 32));
-          current = (c & 4095) << 3;
+          o.push(fcc(cr + (c >> 12) + 32));
+          cr = (c & 4095) << 3;
           break;
         case 12:
-          output.push(String.fromCharCode(current + (c >> 13) + 32));
-          current = (c & 8191) << 2;
+          o.push(fcc(cr + (c >> 13) + 32));
+          cr = (c & 8191) << 2;
           break;
         case 13:
-          output.push(String.fromCharCode(current + (c >> 14) + 32));
-          current = (c & 16383) << 1;
+          o.push(fcc(cr + (c >> 14) + 32));
+          cr = (c & 16383) << 1;
           break;
         case 14:
-          output.push(
-            String.fromCharCode(current + (c >> 15) + 32, (c & 32767) + 32)
+          o.push(
+            fcc(cr + (c >> 15) + 32, (c & 32767) + 32)
           );
-          status = 0;
+          st = 0;
           break;
         default:
           break;
       }
     }
-    output.push(String.fromCharCode(current + 32));
-    return output.join("");
+    o.push(fcc(cr + 32));
+    return o.join("");
   },
 
   decompressFromUTF16: function* (input) {
-    var output = [],
-      current,
+    var o = [],
+      cr,
       c,
-      status = 0,
+      s = 0,
       i = 0;
 
     while (i < input.length) {
       if ((i && 511) === 0) yield;
       c = input.charCodeAt(i) - 32;
 
-      switch (status++) {
+      switch (s++) {
         case 0:
-          current = c << 1;
+          cr = c << 1;
           break;
         case 1:
-          output.push(String.fromCharCode(current | (c >> 14)));
-          current = (c & 16383) << 2;
+          o.push(fcc(cr | (c >> 14)));
+          cr = (c & 16383) << 2;
           break;
         case 2:
-          output.push(String.fromCharCode(current | (c >> 13)));
-          current = (c & 8191) << 3;
+          o.push(fcc(cr | (c >> 13)));
+          cr = (c & 8191) << 3;
           break;
         case 3:
-          output.push(String.fromCharCode(current | (c >> 12)));
-          current = (c & 4095) << 4;
+          o.push(fcc(cr | (c >> 12)));
+          cr = (c & 4095) << 4;
           break;
         case 4:
-          output.push(String.fromCharCode(current | (c >> 11)));
-          current = (c & 2047) << 5;
+          o.push(fcc(cr | (c >> 11)));
+          cr = (c & 2047) << 5;
           break;
         case 5:
-          output.push(String.fromCharCode(current | (c >> 10)));
-          current = (c & 1023) << 6;
+          o.push(fcc(cr | (c >> 10)));
+          cr = (c & 1023) << 6;
           break;
         case 6:
-          output.push(String.fromCharCode(current | (c >> 9)));
-          current = (c & 511) << 7;
+          o.push(fcc(cr | (c >> 9)));
+          cr = (c & 511) << 7;
           break;
         case 7:
-          output.push(String.fromCharCode(current | (c >> 8)));
-          current = (c & 255) << 8;
+          o.push(fcc(cr | (c >> 8)));
+          cr = (c & 255) << 8;
           break;
         case 8:
-          output.push(String.fromCharCode(current | (c >> 7)));
-          current = (c & 127) << 9;
+          o.push(fcc(cr | (c >> 7)));
+          cr = (c & 127) << 9;
           break;
         case 9:
-          output.push(String.fromCharCode(current | (c >> 6)));
-          current = (c & 63) << 10;
+          o.push(fcc(cr | (c >> 6)));
+          cr = (c & 63) << 10;
           break;
         case 10:
-          output.push(String.fromCharCode(current | (c >> 5)));
-          current = (c & 31) << 11;
+          o.push(fcc(cr | (c >> 5)));
+          cr = (c & 31) << 11;
           break;
         case 11:
-          output.push(String.fromCharCode(current | (c >> 4)));
-          current = (c & 15) << 12;
+          o.push(fcc(cr | (c >> 4)));
+          cr = (c & 15) << 12;
           break;
         case 12:
-          output.push(String.fromCharCode(current | (c >> 3)));
-          current = (c & 7) << 13;
+          o.push(fcc(cr | (c >> 3)));
+          cr = (c & 7) << 13;
           break;
         case 13:
-          output.push(String.fromCharCode(current | (c >> 2)));
-          current = (c & 3) << 14;
+          o.push(fcc(cr | (c >> 2)));
+          cr = (c & 3) << 14;
           break;
         case 14:
-          output.push(String.fromCharCode(current | (c >> 1)));
-          current = (c & 1) << 15;
+          o.push(fcc(cr | (c >> 1)));
+          cr = (c & 1) << 15;
           break;
         case 15:
-          output.push(String.fromCharCode(current | c));
-          status = 0;
+          o.push(fcc(cr | c));
+          s = 0;
           break;
         default:
           break;
@@ -176,15 +180,14 @@ export const Base64StringGenerator = {
       i++;
     }
 
-    return yield* this.decompress(output.join(""));
-    //return output;
+    return yield* this.decompress(o.join(""));
+    //return o;
   },
 
   // private property
-  _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-
+  
   decompress: function* (input) {
-    var output = [];
+    var o = [];
     var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
     var i = 1;
     var odd = input.charCodeAt(0) >> 8;
@@ -216,17 +219,17 @@ export const Base64StringGenerator = {
         enc4 = 64;
       }
 
-      output.push(this._keyStr.charAt(enc1));
-      output.push(this._keyStr.charAt(enc2));
-      output.push(this._keyStr.charAt(enc3));
-      output.push(this._keyStr.charAt(enc4));
+      o.push(_k.charAt(enc1));
+      o.push(_k.charAt(enc2));
+      o.push(_k.charAt(enc3));
+      o.push(_k.charAt(enc4));
     }
 
-    return output.join("");
+    return o.join("");
   },
 
   compress: function* (input) {
-    var output = [],
+    var o = [],
       ol = 1,
       output_,
       chr1,
@@ -243,10 +246,10 @@ export const Base64StringGenerator = {
 
     while (i < input.length) {
       if ((i && 1023) === 0) yield;
-      enc1 = this._keyStr.indexOf(input.charAt(i++));
-      enc2 = this._keyStr.indexOf(input.charAt(i++));
-      enc3 = this._keyStr.indexOf(input.charAt(i++));
-      enc4 = this._keyStr.indexOf(input.charAt(i++));
+      enc1 = _k.indexOf(input.charAt(i++));
+      enc2 = _k.indexOf(input.charAt(i++));
+      enc3 = _k.indexOf(input.charAt(i++));
+      enc4 = _k.indexOf(input.charAt(i++));
 
       chr1 = (enc1 << 2) | (enc2 >> 4);
       chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
@@ -257,7 +260,7 @@ export const Base64StringGenerator = {
         flush = true;
 
         if (enc3 !== 64) {
-          output.push(String.fromCharCode(output_ | chr2));
+          o.push(fcc(output_ | chr2));
           flush = false;
         }
         if (enc4 !== 64) {
@@ -265,7 +268,7 @@ export const Base64StringGenerator = {
           flush = true;
         }
       } else {
-        output.push(String.fromCharCode(output_ | chr1));
+        o.push(fcc(output_ | chr1));
         flush = false;
 
         if (enc3 !== 64) {
@@ -273,7 +276,7 @@ export const Base64StringGenerator = {
           flush = true;
         }
         if (enc4 !== 64) {
-          output.push(String.fromCharCode(output_ | chr3));
+          o.push(fcc(output_ | chr3));
           flush = false;
         }
       }
@@ -281,14 +284,14 @@ export const Base64StringGenerator = {
     }
     yield;
     if (flush) {
-      output.push(String.fromCharCode(output_));
-      output = output.join("");
-      output =
-        String.fromCharCode(output.charCodeAt(0) | 256) + output.substring(1);
+      o.push(fcc(output_));
+      o = o.join("");
+      o =
+        fcc(o.charCodeAt(0) | 256) + o.substring(1);
     } else {
-      output = output.join("");
+      o = o.join("");
     }
 
-    return output;
+    return o;
   },
 };

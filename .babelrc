@@ -1,4 +1,13 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "comments": false,
+  "presets": ["@babel/preset-env", "@babel/preset-react",
+    [
+      'minify',
+      {
+        "builtIns": false,
+        "deadcode": true,
+        "mangle": false
+      }
+    ]],
   "plugins": ["@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"]
 }

@@ -1,3 +1,7 @@
+#### 2.4.11
+
+-   Reduce package size of build
+
 #### 2.4.10
 
 -   Merge PR1/2

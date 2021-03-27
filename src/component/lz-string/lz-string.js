@@ -14,25 +14,25 @@ const YIELD_MASK = 15
 var LZStringGenerator = (function () {
     // private property
     var f = String.fromCharCode
-    var keyStrBase64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
-    var keyStrUriSafe = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$'
-    var baseReverseDic = {}
+    var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+    var safe = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$'
+    var rev = {}
 
     function getBaseValue(alphabet, character) {
-        if (!baseReverseDic[alphabet]) {
-            baseReverseDic[alphabet] = {}
+        if (!rev[alphabet]) {
+            rev[alphabet] = {}
             for (var i = 0; i < alphabet.length; i++) {
-                baseReverseDic[alphabet][alphabet.charAt(i)] = i
+                rev[alphabet][alphabet.charAt(i)] = i
             }
         }
-        return baseReverseDic[alphabet][character]
+        return rev[alphabet][character]
     }
 
     var LZString = {
         compressToBase64: function* (input) {
             if (input === null) return ''
             var res = yield* LZString._compress(input, 6, function (a) {
-                return keyStrBase64.charAt(a)
+                return b64.charAt(a)
             })
             switch (
                 res.length % 4 // To produce valid Base64
@@ -53,7 +53,7 @@ var LZStringGenerator = (function () {
             if (input === null) return ''
             if (input === '') return null
             return yield* LZString._decompress(input.length, 32, function (index) {
-                return getBaseValue(keyStrBase64, input.charAt(index))
+                return getBaseValue(b64, input.charAt(index))
             })
         },
 
@@ -105,7 +105,7 @@ var LZStringGenerator = (function () {
         compressToEncodedURIComponent: function* (input) {
             if (input === null) return ''
             return yield* LZString._compress(input, 6, function (a) {
-                return keyStrUriSafe.charAt(a)
+                return safe.charAt(a)
             })
         },
 
@@ -115,7 +115,7 @@ var LZStringGenerator = (function () {
             if (input === '') return null
             input = input.replace(/ /g, '+')
             return yield* LZString._decompress(input.length, 32, function (index) {
-                return getBaseValue(keyStrUriSafe, input.charAt(index))
+                return getBaseValue(safe, input.charAt(index))
             })
         },
 
@@ -354,7 +354,7 @@ var LZStringGenerator = (function () {
         },
 
         _decompress: function* (length, resetValue, getNextValue) {
-            var dictionary = [],
+            var d = [],
                 enlargeIn = 4,
                 dictSize = 4,
                 numBits = 3,
@@ -370,7 +370,7 @@ var LZStringGenerator = (function () {
                 data = { val: getNextValue(0), position: resetValue, index: 1 }
 
             for (i = 0; i < 3; i += 1) {
-                dictionary[i] = i
+                d[i] = i
             }
 
             bits = 0
@@ -425,7 +425,7 @@ var LZStringGenerator = (function () {
                 default:
                     break
             }
-            dictionary[3] = c
+            d[3] = c
             w = c
             result.push(c)
             let ic = 0
@@ -467,7 +467,7 @@ var LZStringGenerator = (function () {
                             power <<= 1
                         }
 
-                        dictionary[dictSize++] = f(bits)
+                        d[dictSize++] = f(bits)
                         c = dictSize - 1
                         enlargeIn--
                         break
@@ -486,7 +486,7 @@ var LZStringGenerator = (function () {
                             bits |= (resb > 0 ? 1 : 0) * power
                             power <<= 1
                         }
-                        dictionary[dictSize++] = f(bits)
+                        d[dictSize++] = f(bits)
                         c = dictSize - 1
                         enlargeIn--
                         break
@@ -501,8 +501,8 @@ var LZStringGenerator = (function () {
                     numBits++
                 }
 
-                if (dictionary[c]) {
-                    entry = dictionary[c]
+                if (d[c]) {
+                    entry = d[c]
                 } else {
                     if (c === dictSize) {
                         entry = w + w.charAt(0)
@@ -512,8 +512,8 @@ var LZStringGenerator = (function () {
                 }
                 result.push(entry)
 
-                // Add w+entry[0] to the dictionary.
-                dictionary[dictSize++] = w + entry.charAt(0)
+                // Add w+entry[0] to the d.
+                d[dictSize++] = w + entry.charAt(0)
                 enlargeIn--
 
                 w = entry
