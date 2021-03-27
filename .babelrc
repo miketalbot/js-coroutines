@@ -6,7 +6,9 @@
       {
         "builtIns": false,
         "deadcode": true,
-        "mangle": true
+        "mangle": {
+            "exclude": ["r", "o", "n"]
+        }
       }
     ]],
   "plugins": [
