@@ -1,6 +1,6 @@
-#### 2.4.20
+#### 2.4.21
 
--   Change timing calculation for remaining as it appears slower with more free time!
+-   Adjust timing
 
 #### 2.4.19
 

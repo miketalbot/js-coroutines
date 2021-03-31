@@ -115,8 +115,6 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 30) {
                 return
             }
             let minTime = Math.max(0.5, loopWhileMsRemains)
-            let time = api.timeRemaining()
-            let now = performance.now()
             try {
                 do {
                     const {value, done} = iterator.next(await parameter)
@@ -133,10 +131,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 30) {
                     } else if (value && value.then) {
                         parameter = value
                     }
-                    let thisMoment = performance.now()
-                    time -= thisMoment - now
-                    now = thisMoment
-                } while (time > minTime)
+                } while (api.timeRemaining() > minTime)
             } catch (e) {
                 console.error(e)
                 reject(e)
