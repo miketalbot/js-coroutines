@@ -1001,6 +1001,10 @@ class TimSort {
   }
 }
 
+function simpleCompare(a,b) {
+  return a===b ? 0 : a > b ? 1 : -1
+}
+
 /**
  * Sort an array in the range [lo, hi) using TimSort.
  *
@@ -1022,11 +1026,11 @@ export function* sort(array, compare, lo, hi) {
    * lexicographic sorting
    */
   if (!compare) {
-    compare = alphabeticalCompare;
+    compare = simpleCompare;
   } else if (typeof compare !== "function") {
     hi = lo;
     lo = compare;
-    compare = alphabeticalCompare;
+    compare = simpleCompare;
   } else {
     if (compare.length === 1) {
       let itemExtract = compare;

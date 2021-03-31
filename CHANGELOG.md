@@ -1,3 +1,7 @@
+#### 2.4.19
+
+-   Provide simpler default sort comparison
+
 #### 2.4.18
 
 -   Reduce timeout overlaps
