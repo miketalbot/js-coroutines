@@ -95,7 +95,7 @@ export function useInternalEngine(internal) {
  *     let answer = await run(someCoroutine(param))
  * }
  */
-export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 10) {
+export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 30) {
     let terminated = false
     let resolver = null
     const result = new Promise( function (resolve, reject) {
@@ -138,17 +138,18 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 10) {
                 return
             }
             // Request an idle callback
-            request(run)
+            if(!api.timeout) request(run)
             // Request again on timeout
             id = setTimeout(runFromTimeout, timeout)
         }
 
         function runFromTimeout() {
             const budget = 8.5
-            const start = performance.now()
+            const start = Date.now()
             run({
+                timeout: true,
                 timeRemaining() {
-                    return budget - (performance.now() - start)
+                    return budget - (Date.now() - start)
                 },
             })
         }

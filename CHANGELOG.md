@@ -1,3 +1,7 @@
+#### 2.4.18
+
+-   Reduce timeout overlaps
+
 #### 2.4.17
 
 -   Optimise sort algorithm
