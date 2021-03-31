@@ -1,3 +1,7 @@
+#### 2.4.15
+
+-   Tune default sequence yields
+
 #### 2.4.13
 
 -   Fix minification bugs

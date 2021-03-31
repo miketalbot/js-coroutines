@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 const DEFAULT_MIN_MERGE = 32;
 
-const YIELD_FREQ = 63;
+const YIELD_FREQ = 127;
 
 /**
  * Minimum ordered subsequece required to do galloping.
