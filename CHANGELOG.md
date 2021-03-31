@@ -1,3 +1,7 @@
+#### 2.4.20
+
+-   Change timing calculation for remaining as it appears slower with more free time!
+
 #### 2.4.19
 
 -   Provide simpler default sort comparison
