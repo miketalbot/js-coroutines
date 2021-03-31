@@ -79,6 +79,28 @@ function log10(x) {
   return 9;
 }
 
+function* copy(target, source, items, offset = 0, offset2 = 0) {
+  let loop = items & 7
+  let bigLoops = (items & ~7) + offset
+  let i = offset
+  let j = offset2
+  for (; i < bigLoops; i += 8, j += 8) {
+    target[i] = source[j]
+    target[i + 1] = source[j + 1]
+    target[i + 2] = source[j + 2]
+    target[i + 3] = source[j + 3]
+    target[i + 4] = source[j + 4]
+    target[i + 5] = source[j + 5]
+    target[i + 6] = source[j + 6]
+    target[i + 7] = source[j + 7]
+    if (checkYield()) yield;
+  }
+  let end = loop + i
+  for (; i < end; i++, j++) {
+    target[i] = source[j]
+  }
+}
+
 /**
  * Default alphabetical comparison of items.
  *
@@ -641,11 +663,7 @@ class TimSort {
     let array = this.array;
     let tmp = this.tmp;
     let i = 0;
-
-    for (i = 0; i < length1; i++) {
-      if (checkYield()) yield;
-      tmp[i] = array[start1 + i];
-    }
+    yield * copy(tmp, array, length1, 0, start1)
 
     let cursor1 = 0;
     let cursor2 = start2;
@@ -654,18 +672,12 @@ class TimSort {
     array[dest++] = array[cursor2++];
 
     if (--length2 === 0) {
-      for (i = 0; i < length1; i++) {
-        if (checkYield()) yield;
-        array[dest + i] = tmp[cursor1 + i];
-      }
+      yield * copy(array, tmp, length1, dest, cursor1)
       return;
     }
 
     if (length1 === 1) {
-      for (i = 0; i < length2; i++) {
-        if (checkYield()) yield;
-        array[dest + i] = array[cursor2 + i];
-      }
+      yield * copy(array, array, length2, dest, cursor2)
       array[dest + length2] = tmp[cursor1];
       return;
     }
@@ -715,10 +727,7 @@ class TimSort {
         );
 
         if (count1 !== 0) {
-          for (i = 0; i < count1; i++) {
-            if (checkYield()) yield;
-            array[dest + i] = tmp[cursor1 + i];
-          }
+          yield * copy(array, tmp, count1, dest, cursor1)
 
           dest += count1;
           cursor1 += count1;
@@ -746,10 +755,7 @@ class TimSort {
         );
 
         if (count2 !== 0) {
-          for (i = 0; i < count2; i++) {
-            if (checkYield()) yield;
-            array[dest + i] = array[cursor2 + i];
-          }
+          yield * copy(array, array, count2, dest, cursor2)
 
           dest += count2;
           cursor2 += count2;
@@ -791,18 +797,13 @@ class TimSort {
     }
 
     if (length1 === 1) {
-      for (i = 0; i < length2; i++) {
-        if (checkYield()) yield;
-        array[dest + i] = array[cursor2 + i];
-      }
+      yield * copy(array, array, length2, dest, cursor2)
       array[dest + length2] = tmp[cursor1];
     } else if (length1 === 0) {
       throw new Error("mergeLow preconditions were not respected");
     } else {
-      for (i = 0; i < length1; i++) {
-        if (checkYield()) yield;
-        array[dest + i] = tmp[cursor1 + i];
-      }
+      yield * copy(array, tmp, length1, dest, cursor1)
+
     }
   }
 
@@ -824,11 +825,7 @@ class TimSort {
     let array = this.array;
     let tmp = this.tmp;
     let i = 0;
-
-    for (i = 0; i < length2; i++) {
-      if (checkYield()) yield;
-      tmp[i] = array[start2 + i];
-    }
+    yield * copy(tmp, array, length2, 0, start2)
 
     let cursor1 = start1 + length1 - 1;
     let cursor2 = length2 - 1;
@@ -840,11 +837,7 @@ class TimSort {
 
     if (--length1 === 0) {
       customCursor = dest - (length2 - 1);
-
-      for (i = 0; i < length2; i++) {
-        if (checkYield()) yield;
-        array[customCursor + i] = tmp[i];
-      }
+      yield * copy(array, tmp, length2, customCursor, 0)
 
       return;
     }
@@ -914,7 +907,6 @@ class TimSort {
           length1 -= count1;
           customDest = dest + 1;
           customCursor = cursor1 + 1;
-
           for (i = count1 - 1; i >= 0; i--) {
             if (checkYield()) yield;
             array[customDest + i] = array[customCursor + i];
@@ -950,11 +942,7 @@ class TimSort {
           length2 -= count2;
           customDest = dest + 1;
           customCursor = cursor2 + 1;
-
-          for (i = 0; i < count2; i++) {
-            if (checkYield()) yield;
-            array[customDest + i] = tmp[customCursor + i];
-          }
+          yield * copy(array, tmp, count2, customDest, customCursor)
 
           if (length2 <= 1) {
             exit = true;
@@ -1008,10 +996,7 @@ class TimSort {
       throw new Error("mergeHigh preconditions were not respected");
     } else {
       customCursor = dest - (length2 - 1);
-      for (i = 0; i < length2; i++) {
-        if (checkYield()) yield;
-        array[customCursor + i] = tmp[i];
-      }
+      yield * copy(array, tmp, length2, customCursor, 0)
     }
   }
 }

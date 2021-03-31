@@ -1,3 +1,7 @@
+#### 2.4.17
+
+-   Optimise sort algorithm
+
 #### 2.4.15
 
 -   Tune default sequence yields
