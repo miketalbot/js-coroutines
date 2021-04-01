@@ -1,3 +1,8 @@
+#### 2.4.23
+
+-   Tune timeout parameters
+-   Animation balancing
+
 #### 2.4.22
 
 -   Change looping order for conditions where multiple idle callbacks overlap

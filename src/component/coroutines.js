@@ -63,6 +63,8 @@ export function useInternalEngine(internal) {
     request = internal ? getCallback() : request
 }
 
+function nothing() {}
+
 /**
  * <p>
  *     Starts an idle time coroutine and returns a promise for its completion and
@@ -110,18 +112,20 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout) {
         let parameter = undefined
         let running = false
 
+
+
         async function run(api) {
             if (running) return
             try {
                 running = true
-
+                requestAnimationFrame(nothing)
                 clearTimeout(id)
                 // Stop the timeout version
                 if (terminated) {
                     iterator.return()
                     return
                 }
-                let minTime = Math.max(2, loopWhileMsRemains)
+                let minTime = Math.max(1.75, loopWhileMsRemains)
                 try {
                     while (api.timeRemaining() > minTime) {
                         const {value, done} = iterator.next(await parameter)
