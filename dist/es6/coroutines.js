@@ -48,7 +48,9 @@ import {getCallback, getNodeCallback} from './polyfill'
 let request = typeof window === 'undefined' ? getNodeCallback() : window.requestIdleCallback
 
 const performance = typeof window !== 'undefined' && window.performance ? window.performance : {
-    now() { return Date.now()}
+    now() {
+        return Date.now()
+    }
 }
 
 /**
@@ -95,52 +97,63 @@ export function useInternalEngine(internal) {
  *     let answer = await run(someCoroutine(param))
  * }
  */
-export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 30) {
+export function run(coroutine, loopWhileMsRemains = 1, timeout) {
     let terminated = false
     let resolver = null
-    const result = new Promise( function (resolve, reject) {
+    const result = new Promise(function (resolve, reject) {
         resolver = resolve
         const iterator = coroutine.next ? coroutine : coroutine()
         // Request a callback during idle
         request(run)
         // Handle background processing when tab is not active
-        let id = setTimeout(runFromTimeout, timeout)
+        let id = 0
         let parameter = undefined
+        let running = false
 
         async function run(api) {
-            clearTimeout(id)
-            // Stop the timeout version
-            if (terminated) {
-                iterator.return()
-                return
-            }
-            let minTime = Math.max(0.5, loopWhileMsRemains)
+            if (running) return
             try {
-                do {
-                    const {value, done} = iterator.next(await parameter)
-                    parameter = undefined
-                    if (done) {
-                        resolve(value)
-                        return
+                running = true
+
+                clearTimeout(id)
+                // Stop the timeout version
+                if (terminated) {
+                    iterator.return()
+                    return
+                }
+                let minTime = Math.max(2, loopWhileMsRemains)
+                try {
+                    while (api.timeRemaining() > minTime) {
+                        const {value, done} = iterator.next(await parameter)
+                        parameter = undefined
+                        if (done) {
+                            resolve(value)
+                            return
+                        }
+                        if (value === true) {
+                            break
+                        } else if (typeof value === 'number') {
+                            minTime = +value
+                            if (isNaN(minTime)) minTime = 1.5
+                        } else if (value && value.then) {
+                            parameter = value
+                        }
                     }
-                    if (value === true) {
-                        break
-                    } else if (typeof value === 'number') {
-                        minTime = +value
-                        if (isNaN(minTime)) minTime = 1
-                    } else if (value && value.then) {
-                        parameter = value
-                    }
-                } while (api.timeRemaining() > minTime)
-            } catch (e) {
-                console.error(e)
-                reject(e)
-                return
+                } catch (e) {
+                    console.error(e)
+                    reject(e)
+                    return
+                }
+                // Request an idle callback
+                request(run)
+                // Request again on timeout
+                if (timeout) {
+                    id = setTimeout(runFromTimeout, timeout)
+                }
+            } finally {
+                running = false
             }
-            // Request an idle callback
-            if(!api.timeout) request(run)
-            // Request again on timeout
-            id = setTimeout(runFromTimeout, timeout)
+
         }
 
         function runFromTimeout() {
@@ -169,13 +182,13 @@ let requested = false
 let animationCallbacks = []
 
 function nextAnimationFrame(fn) {
-    if(typeof window === 'undefined') throw new Error("Cannot run without a browser")
-    if(animationCallbacks.length === 0 && !requested) {
+    if (typeof window === 'undefined') throw new Error('Cannot run without a browser')
+    if (animationCallbacks.length === 0 && !requested) {
         requested = true
         requestAnimationFrame(process)
     }
     animationCallbacks.push(fn)
-    if(animationCallbacks.length > 10000) animationCallbacks = animationCallbacks.slice(-9000)
+    if (animationCallbacks.length > 10000) animationCallbacks = animationCallbacks.slice(-9000)
 }
 
 function process() {
@@ -204,7 +217,7 @@ function process() {
  * that can be used to stop the routine.</strong>
  */
 export function update(coroutine, ...params) {
-    if(typeof window === 'undefined') throw new Error("Requires a browser to run")
+    if (typeof window === 'undefined') throw new Error('Requires a browser to run')
     let terminated = false
     let resolver = null
     const result = new Promise(function (resolve, reject) {
@@ -263,15 +276,15 @@ export function update(coroutine, ...params) {
  * @returns {AsyncFunction} an async function to execute the pipeline
  */
 export function pipe(...fns) {
-    return async function(params) {
+    return async function (params) {
         let result = params
-        for(let fn of fns.flat(Infinity)) {
-            if(!fn) continue
+        for (let fn of fns.flat(Infinity)) {
+            if (!fn) continue
             let nextResult = fn.call(this, result)
-            if(nextResult) {
-                if(nextResult.next) {
+            if (nextResult) {
+                if (nextResult.next) {
                     result = await run(nextResult)
-                } else if(nextResult.then) {
+                } else if (nextResult.then) {
                     result = await nextResult
                 } else {
                     result = nextResult
@@ -295,7 +308,7 @@ export function compose(...fns) {
         let result = params
 
         let list = fns.flat(Infinity)
-        for (let i = list.length-1; i>=0; i--) {
+        for (let i = list.length - 1; i >= 0; i--) {
             let fn = list[i]
             if (!fn) continue
             let nextResult = fn.call(this, result)
@@ -322,7 +335,7 @@ export function compose(...fns) {
  * @returns {AsyncFunction} returning the passed in parameters
  */
 export function tap(fn) {
-    return async function(params) {
+    return async function (params) {
         let result = fn.call(this, params)
         if (result) {
             if (result.next) {
@@ -363,7 +376,7 @@ export function branch(fn) {
  * @returns {Function}
  */
 export function call(fn, ...config) {
-    return function(...params) {
+    return function (...params) {
         return fn.apply(this, [...params, ...config])
     }
 }
@@ -376,9 +389,9 @@ export function call(fn, ...config) {
  * @returns {AsyncFunction} - a async function that repeats the operation
  */
 export function repeat(fn, times) {
-    return async function(params) {
+    return async function (params) {
         let result = params
-        for(let i = 0; i < times; i++) {
+        for (let i = 0; i < times; i++) {
             result = fn.call(this, result)
             if (result.next) {
                 result = await run(result)
@@ -427,15 +440,15 @@ export default run
 export function singleton(fn, defaultValue) {
     let promise = null
     let extraPromises = []
-    let result = (...params)=>{
-        if(promise) {
-            extraPromises.forEach(p=>p.terminate())
+    let result = (...params) => {
+        if (promise) {
+            extraPromises.forEach(p => p.terminate())
             extraPromises = []
             promise.terminate(defaultValue)
         }
         return promise = result._promise = run(fn(...params))
     }
-    result.join = function(promise) {
+    result.join = function (promise) {
         extraPromises.push(promise)
         return promise
     }

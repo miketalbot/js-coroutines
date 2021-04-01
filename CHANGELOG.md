@@ -1,3 +1,8 @@
+#### 2.4.22
+
+-   Change looping order for conditions where multiple idle callbacks overlap
+-   Remove default timeout for idles as it tends to cause animation glitches
+
 #### 2.4.21
 
 -   Adjust timing
