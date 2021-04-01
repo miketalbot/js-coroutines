@@ -1,4 +1,4 @@
-#### 2.4.23
+#### 2.4.24
 
 -   Tune timeout parameters
 -   Animation balancing

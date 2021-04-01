@@ -45,6 +45,8 @@
 
 import {getCallback, getNodeCallback} from './polyfill'
 
+const minRemainingTime = 1.75
+
 let request = typeof window === 'undefined' ? getNodeCallback() : window.requestIdleCallback
 
 const performance = typeof window !== 'undefined' && window.performance ? window.performance : {
@@ -62,8 +64,6 @@ const performance = typeof window !== 'undefined' && window.performance ? window
 export function useInternalEngine(internal) {
     request = internal ? getCallback() : request
 }
-
-function nothing() {}
 
 /**
  * <p>
@@ -118,14 +118,13 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout) {
             if (running) return
             try {
                 running = true
-                requestAnimationFrame(nothing)
                 clearTimeout(id)
                 // Stop the timeout version
                 if (terminated) {
                     iterator.return()
                     return
                 }
-                let minTime = Math.max(1.75, loopWhileMsRemains)
+                let minTime = Math.max(minRemainingTime, loopWhileMsRemains)
                 try {
                     while (api.timeRemaining() > minTime) {
                         const {value, done} = iterator.next(await parameter)
@@ -138,7 +137,7 @@ export function run(coroutine, loopWhileMsRemains = 1, timeout) {
                             break
                         } else if (typeof value === 'number') {
                             minTime = +value
-                            if (isNaN(minTime)) minTime = 1.5
+                            if (isNaN(minTime)) minTime = minRemainingTime
                         } else if (value && value.then) {
                             parameter = value
                         }
