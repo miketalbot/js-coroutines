@@ -25,6 +25,6 @@ describe('sorting', function () {
     it('should sort a numeric array', async function () {
         const result = await sortAsync([...INPUT_ARRAY])
         result[0].should.eq(1)
-        result[12].should.eq(20)
+        result[12].should.eq(13)
     })
 })

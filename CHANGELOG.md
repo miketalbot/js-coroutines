@@ -1,3 +1,7 @@
+#### 2.4.25
+
+-   Split out async wrapped functions and add webpack sideEffects
+
 #### 2.4.24
 
 -   Tune timeout parameters

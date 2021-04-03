@@ -1,6 +1,9 @@
 {
   "name": "js-coroutines",
-  "version": "2.4.24",
+  "sideEffects": [
+    "./dist/polyfill.js"
+  ],
+  "version": "2.4.25",
   "private": false,
   "files": [
     "dist",

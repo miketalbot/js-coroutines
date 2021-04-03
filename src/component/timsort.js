@@ -43,42 +43,6 @@ const DEFAULT_MIN_GALLOPING = 7;
  */
 const DEFAULT_TMP_STORAGE_LENGTH = 256;
 
-/**
- * Pre-computed powers of 10 for efficient lexicographic comparison of
- * small integers.
- */
-const POWERS_OF_TEN = [1, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9];
-
-/**
- * Estimate the logarithm base 10 of a small integer.
- *
- * @param {number} x - The integer to estimate the logarithm of.
- * @return {number} - The estimated logarithm of the integer.
- */
-function log10(x) {
-  if (x < 1e5) {
-    if (x < 1e2) {
-      return x < 1e1 ? 0 : 1;
-    }
-
-    if (x < 1e4) {
-      return x < 1e3 ? 2 : 3;
-    }
-
-    return 4;
-  }
-
-  if (x < 1e7) {
-    return x < 1e6 ? 5 : 6;
-  }
-
-  if (x < 1e9) {
-    return x < 1e8 ? 7 : 8;
-  }
-
-  return 9;
-}
-
 function* copy(target, source, items, offset = 0, offset2 = 0) {
   let loop = items & 7
   let bigLoops = (items & ~7) + offset
@@ -99,69 +63,6 @@ function* copy(target, source, items, offset = 0, offset2 = 0) {
   for (; i < end; i++, j++) {
     target[i] = source[j]
   }
-}
-
-/**
- * Default alphabetical comparison of items.
- *
- * @param {string|object|number} a - First element to compare.
- * @param {string|object|number} b - Second element to compare.
- * @return {number} - A positive number if a.toString() > b.toString(), a
- * negative number if .toString() < b.toString(), 0 otherwise.
- */
-function alphabeticalCompare(a, b) {
-  if (a === b) {
-    return 0;
-  }
-
-  if (~~a === a && ~~b === b) {
-    if (a === 0 || b === 0) {
-      return a < b ? -1 : 1;
-    }
-
-    if (a < 0 || b < 0) {
-      if (b >= 0) {
-        return -1;
-      }
-
-      if (a >= 0) {
-        return 1;
-      }
-
-      a = -a;
-      b = -b;
-    }
-
-    const al = log10(a);
-    const bl = log10(b);
-
-    let t = 0;
-
-    if (al < bl) {
-      a *= POWERS_OF_TEN[bl - al - 1];
-      b /= 10;
-      t = -1;
-    } else if (al > bl) {
-      b *= POWERS_OF_TEN[al - bl - 1];
-      a /= 10;
-      t = 1;
-    }
-
-    if (a === b) {
-      return t;
-    }
-
-    return a < b ? -1 : 1;
-  }
-
-  let aStr = String(a);
-  let bStr = String(b);
-
-  if (aStr === bStr) {
-    return 0;
-  }
-
-  return aStr < bStr ? -1 : 1;
 }
 
 /**
@@ -662,7 +563,6 @@ class TimSort {
     let compare = this.compare;
     let array = this.array;
     let tmp = this.tmp;
-    let i = 0;
     yield * copy(tmp, array, length1, 0, start1)
 
     let cursor1 = 0;
@@ -1009,8 +909,7 @@ function simpleCompare(a,b) {
  * Sort an array in the range [lo, hi) using TimSort.
  *
  * @param {array} array - The array to sort.
- * @param {function} compare - Item comparison function. Default is
- *     alphabetical
+ * @param {function} compare - Item comparison function.
  * @param {number} [lo] - First element in the range (inclusive).
  * @param {number} [hi] - Last element in the range.
  *     comparator.
