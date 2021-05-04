@@ -17,7 +17,7 @@ export function yielding(fn, frequency = 16) {
   if(fn._yielding) return fn;
   let result = function* (...params) {
     let result = fn(...params);
-    if(result.then) {
+    if(result && result.then) {
       result = yield result
     }
     if (yieldCount++ % frequency === 0) {

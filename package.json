@@ -3,7 +3,7 @@
   "sideEffects": [
     "./dist/polyfill.js"
   ],
-  "version": "2.4.26",
+  "version": "2.4.27",
   "private": false,
   "files": [
     "dist",
