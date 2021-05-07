@@ -153,6 +153,11 @@ function endOfWork() {
             console.error(e)
         }
     }
-    setImmediate(endOfWork)
+    if(nodeCallbacks.length) {
+        setImmediate(endOfWork)
+    } else {
+        setTimeout(endOfWork, 50)
+    }
+
 }
 

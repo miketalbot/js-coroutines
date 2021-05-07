@@ -1,3 +1,8 @@
+#### 2.4.28
+
+-   NodeJS idles more when not busy
+
+
 #### 2.4.26
 
 -   Enable yielding functions to return a promise
