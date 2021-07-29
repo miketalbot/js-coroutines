@@ -147,7 +147,32 @@ async function asyncFunctions() {
 
 ## Getting Started With Function Pipelines
 
-You can use some helper functions to 
+You can also create pure functional pipelines using pipe, tap, branch, repeat and call
+
+```js
+      import {pipe, parseAsync, tap, mapAsync} from 'js-coroutines'
+
+      const process = pipe(
+             parseAsync,
+             function * (data) {
+                let i = 0
+                let output = []
+                for(let item of data) {
+                    output.push({...item, total: item.units * item.price})
+                    if((i++ % 100)==0) yield
+                }
+                return output
+             },
+             mapAsync.with(v=>({value: v.total, item: v.item})),
+             tap(console.log),
+             stringifyAsync
+         )
+         
+      ...
+      
+      console.log(await process(data))
+ ```               
+                    
 
 
 ## Getting Started Writing Your Own Generators
