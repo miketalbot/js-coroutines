@@ -19,7 +19,7 @@ system so it can animate and do the rest of the work, then resume in the next ga
 
 ## Quick Start
 
-The projects main web site contains examples of js-coroutines in operation, explains how it can provide
+The project's main web site contains examples of js-coroutines in operation, explains how it can provide
 benefits to your project and has links to the full API docs plus some examples.
 
 [JS-COROUTINES Overview and API docs](http://js-coroutines.com)
