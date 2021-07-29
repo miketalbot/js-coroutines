@@ -3,8 +3,9 @@
 [![Logo](http://js-coroutines.com/splash.png)](http://js-coroutines.com)
 [![Stargazers repo roster for js-coroutines](https://reporoster.com/stars/miketalbot/js-coroutines)](https://github.com/miketalbot/js-coroutines/stargazers)
 
+## Quick Start
 
-[*JS-COROUTINES Home Page and API docs*](http://js-coroutines.com)
+[JS-COROUTINES Overview and API docs](http://js-coroutines.com)
 
 **Supports all browsers and React Native**
 
