@@ -39,7 +39,9 @@ Another super useful way of using coroutines is to animate and control complex s
 `update` method that runs every frame in high priority. 
 
 There's an example of how to write your own animation later and you 
-can see [this CodeSandbox demo](https://codesandbox.io/s/coroutines-examples-zeq33) of stateful animations for more.
+can see [this CodeSandbox demo](https://codesandbox.io/s/coroutines-examples-zeq33) of stateful animations, or [this game built using js-corutines](https://codesandbox.io/s/condescending-waterfall-v8mxq) for more.
+
+
 
 
 ## Commonly required asynchronous operations
