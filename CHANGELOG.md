@@ -1,4 +1,4 @@
-#### 2.4.29
+#### 2.4.30
 
 -   Update NPM license info
 
