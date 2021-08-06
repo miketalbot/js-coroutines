@@ -1,3 +1,7 @@
+#### 2.4.29
+
+-   Update NPM license info
+
 #### 2.4.28
 
 -   NodeJS idles more when not busy
