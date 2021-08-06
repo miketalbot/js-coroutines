@@ -2,7 +2,8 @@
 
 [![Logo](http://js-coroutines.com/splash.png)](http://js-coroutines.com)
 
-[*JS-COROUTINES Home Page and API docs*](http://js-coroutines.com)
+   [![Stargazers repo roster for js-coroutines](https://reporoster.com/stars/miketalbot/js-coroutines)](https://github.com/miketalbot/js-coroutines/stargazers)
+
 
 **Supports all browsers and React Native**
 
@@ -15,6 +16,14 @@ system is idle. If only you could write something to use up that time and then r
 system so it can animate and do the rest of the work, then resume in the next gap. Well now you can...
 
 **Get 60fps while sorting an array of 10 million items with _js-coroutines_**
+
+## Quick Start
+
+The project's main web site contains examples of js-coroutines in operation, explains how it can provide
+benefits to your project and has links to the full API docs plus some examples.
+
+[JS-COROUTINES Overview and API docs](http://js-coroutines.com)
+
 
 ## How it works?
 
@@ -30,7 +39,9 @@ Another super useful way of using coroutines is to animate and control complex s
 `update` method that runs every frame in high priority. 
 
 There's an example of how to write your own animation later and you 
-can see [this CodeSandbox demo](https://codesandbox.io/s/coroutines-examples-zeq33) of stateful animations for more.
+can see [this CodeSandbox demo](https://codesandbox.io/s/coroutines-examples-zeq33) of stateful animations, or [this game built using js-coroutines](https://codesandbox.io/s/condescending-waterfall-v8mxq), for more.
+
+
 
 
 ## Commonly required asynchronous operations
@@ -136,7 +147,32 @@ async function asyncFunctions() {
 
 ## Getting Started With Function Pipelines
 
-You can use some helper functions to 
+You can also create pure functional pipelines using pipe, tap, branch, repeat and call
+
+```js
+      import {pipe, parseAsync, tap, mapAsync} from 'js-coroutines'
+
+      const process = pipe(
+             parseAsync,
+             function * (data) {
+                let i = 0
+                let output = []
+                for(let item of data) {
+                    output.push({...item, total: item.units * item.price})
+                    if((i++ % 100)==0) yield
+                }
+                return output
+             },
+             mapAsync.with(v=>({value: v.total, item: v.item})),
+             tap(console.log),
+             stringifyAsync
+         )
+         
+      ...
+      
+      console.log(await process(data))
+ ```               
+                    
 
 
 ## Getting Started Writing Your Own Generators
