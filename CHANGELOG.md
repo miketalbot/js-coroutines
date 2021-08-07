@@ -1,4 +1,4 @@
-### 2.4.33
+### 2.4.34
 
 -   Make @babel/runtime a peer dep
 
