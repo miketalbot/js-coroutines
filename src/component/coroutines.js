@@ -33,6 +33,8 @@
  * @returns {IteratorResult}
  */
 
+import run from './run'
+
 /**
  * A coroutine to be used in high priority to animate.
  *
@@ -42,214 +44,6 @@
  * @generator
  * @returns the result of the function if any to be returned to the caller
  */
-
-import {getCallback, getNodeCallback} from './polyfill'
-
-const minRemainingTime = 1.75
-
-let request = typeof window === 'undefined' ? getNodeCallback() : window.requestIdleCallback
-
-/**
- * Call with true to use the polyfilled version of
- * the idle callback, can be more stable in certain
- * circumstances
- * @param {Boolean} internal
- */
-export function useInternalEngine(internal) {
-    request = internal ? getCallback() : request
-}
-
-/**
- * <p>
- *     Starts an idle time coroutine and returns a promise for its completion and
- *      any value it might return.
- * </p>
- * <p>
- *     You may pass a coroutine function or the result of calling such a function.  The
- *     latter helps when you must provide parameters to the coroutine.
- * </p>
- * @param {Coroutine|Iterator|Generator<*, *, *>} coroutine the routine to run or an iterator for an already started coroutine
- * @param {number} [loopWhileMsRemains=2 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
- * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
- * @returns {Promise<any>} the result of the coroutine
- * <strong>The promise returned by <code>run</code> has a <code>terminate()</code> method
- * that can be used to stop the routine.</strong>
- * @example
- * async function process() {
- *     let answer = await run(function * () {
- *         let total = 0
- *         for(let i=1; i < 10000000; i++) {
- *            total += i
- *            if((i % 100) === 0) yield
- *         }
- *         return total
- *     })
- *     ...
- * }
- *
- * // Or
- *
- * async function process(param) {
- *     let answer = await run(someCoroutine(param))
- * }
- */
-export function run(coroutine, loopWhileMsRemains = 1, timeout) {
-    let terminated = false
-    let resolver = null
-    const result = new Promise(function (resolve, reject) {
-        resolver = resolve
-        const iterator = coroutine.next ? coroutine : coroutine()
-        // Request a callback during idle
-        request(run)
-        // Handle background processing when tab is not active
-        let id = 0
-        let parameter = undefined
-        let running = false
-
-
-
-        async function run(api) {
-            if (running) return
-            try {
-                running = true
-                clearTimeout(id)
-                // Stop the timeout version
-                if (terminated) {
-                    iterator.return()
-                    return
-                }
-                let minTime = Math.max(minRemainingTime, loopWhileMsRemains)
-                try {
-                    while (api.timeRemaining() > minTime) {
-                        const {value, done} = iterator.next(await parameter)
-                        parameter = undefined
-                        if (done) {
-                            resolve(value)
-                            return
-                        }
-                        if (value === true) {
-                            break
-                        } else if (typeof value === 'number') {
-                            minTime = +value
-                            if (isNaN(minTime)) minTime = minRemainingTime
-                        } else if (value && value.then) {
-                            parameter = value
-                        }
-                    }
-                } catch (e) {
-                    console.error(e)
-                    reject(e)
-                    return
-                }
-                // Request an idle callback
-                request(run)
-                // Request again on timeout
-                if (timeout) {
-                    id = setTimeout(runFromTimeout, timeout)
-                }
-            } finally {
-                running = false
-            }
-
-        }
-
-        function runFromTimeout() {
-            const budget = 12.5
-            const start = Date.now()
-            run({
-                timeout: true,
-                timeRemaining() {
-                    return budget - (Date.now() - start)
-                },
-            })
-        }
-    })
-
-    result.terminate = function (result) {
-        terminated = true
-        if (resolver) {
-            resolver(result)
-        }
-    }
-    return result
-}
-
-
-let requested = false
-let animationCallbacks = []
-
-function nextAnimationFrame(fn) {
-    if (typeof window === 'undefined') throw new Error('Cannot run without a browser')
-    if (animationCallbacks.length === 0 && !requested) {
-        requested = true
-        requestAnimationFrame(process)
-    }
-    animationCallbacks.push(fn)
-    if (animationCallbacks.length > 10000) animationCallbacks = animationCallbacks.slice(-9000)
-}
-
-function process() {
-    let callbacks = animationCallbacks
-    if (callbacks.length) {
-        requestAnimationFrame(process)
-    } else {
-        requested = false
-    }
-    animationCallbacks = []
-    for (let callback of callbacks) {
-        callback()
-    }
-}
-
-/**
- * Start an animation coroutine, the animation will continue until
- * you return and will be broken up between frames by using a
- * <code>yield</code>.
- *
- * @param {AnimationCoroutine|Iterator} coroutine - The animation to run
- * @param {...*} [params] - Parameters to be passed to the animation function
- * @returns {Promise<any>} a value that will be returned to the caller
- * when the animation is complete.
- * <strong>The promise returned by <code>update</code> has a <code>terminate()</code> method
- * that can be used to stop the routine.</strong>
- */
-export function update(coroutine, ...params) {
-    if (typeof window === 'undefined') throw new Error('Requires a browser to run')
-    let terminated = false
-    let resolver = null
-    const result = new Promise(function (resolve, reject) {
-        resolver = resolve
-        const iterator = coroutine.next ? coroutine : coroutine(...params)
-        nextAnimationFrame(run)
-
-        function run() {
-            if (terminated) {
-                iterator.return()
-                return
-            }
-
-            try {
-                const {value, done} = iterator.next()
-                if (done) {
-                    resolve(value)
-                    return
-                }
-            } catch (e) {
-                reject(e)
-                return
-            }
-
-            nextAnimationFrame(run)
-        }
-    })
-    result.terminate = function (result) {
-        terminated = true
-        if (resolver) {
-            resolver(result)
-        }
-    }
-    return result
-}
 
 
 /**
@@ -400,7 +194,7 @@ export function repeat(fn, times) {
     }
 }
 
-export default run
+
 
 /**
  * Creates a singleton executor of a generator function.

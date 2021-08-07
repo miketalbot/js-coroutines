@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.yielder=yielder;var yieldCount=0;function yielder(){return!!(100<yieldCount++)&&(yieldCount=0,!0)}

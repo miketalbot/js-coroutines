@@ -1,3 +1,7 @@
+#### 2.4.31
+
+-   Make all functions individually importable
+
 #### 2.4.30
 
 -   Update NPM license info

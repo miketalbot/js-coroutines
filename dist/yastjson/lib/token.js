@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.TokenType=void 0;var TokenType={LeftBrace:"{",RightBrace:"}",LeftBracket:"l",RightBracket:"r",Comma:"c",Colon:"n",Null:"0",Boolean:"t",Number:"n",String:"s"};exports.TokenType=TokenType;
