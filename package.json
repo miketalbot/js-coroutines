@@ -3,7 +3,7 @@
   "sideEffects": [
     "./dist/polyfill.js"
   ],
-  "version": "2.4.31",
+  "version": "2.4.32",
   "private": false,
   "files": [
     "dist",
@@ -74,6 +74,6 @@
     ]
   },
   "dependencies": {
-    "@babel/runtime": "^7.13.10"
+    "@babel/runtime": "^7.14.8"
   }
 }

@@ -1,4 +1,4 @@
-#### 2.4.31
+#### 2.4.32
 
 -   Make all functions individually importable
 

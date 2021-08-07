@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.concatAsync=void 0;var _wrappers=require("./wrappers"),_concat=require("./concat"),concatAsync=(0,_wrappers.wrapAsPromise)(_concat.concat);exports.concatAsync=concatAsync;

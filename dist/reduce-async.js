@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.reduceAsync=void 0;var _asyncWrapperUtils=require("./async-wrapper-utils"),_reduce=require("./reduce"),reduceAsync=(0,_asyncWrapperUtils.wrapAsPromiseAndYieldFn)(_reduce.reduce);exports.reduceAsync=reduceAsync;
