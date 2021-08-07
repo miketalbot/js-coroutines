@@ -3,7 +3,7 @@
   "sideEffects": [
     "./dist/polyfill.js"
   ],
-  "version": "2.4.32",
+  "version": "2.4.33",
   "private": false,
   "files": [
     "dist",
@@ -73,7 +73,7 @@
       "last 1 safari version"
     ]
   },
-  "dependencies": {
-    "@babel/runtime": "^7.14.8"
+  "peerDependencies": {
+    "@babel/runtime": ">=7.4.8"
   }
 }

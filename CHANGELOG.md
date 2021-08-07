@@ -1,3 +1,7 @@
+### 2.4.33
+
+-   Make @babel/runtime a peer dep
+
 #### 2.4.32
 
 -   Make all functions individually importable
