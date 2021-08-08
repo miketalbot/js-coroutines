@@ -1,7 +1,7 @@
 
 
-import {call} from './coroutines'
 import run from './run'
+import {call} from './call'
 
 /**
  * Wraps a normal function into a generator function

@@ -1,3 +1,7 @@
+### 2.4.36
+
+-   Split out core coroutine functions to reduce bundle sizes
+
 ### 2.4.35
 
 -   Make @babel/runtime a peer dep

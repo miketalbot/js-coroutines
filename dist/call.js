@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.call=call;function call(a){for(var b=arguments.length,c=Array(1<b?b-1:0),d=1;d<b;d++)c[d-1]=arguments[d];return function(){for(var b=arguments.length,d=Array(b),e=0;e<b;e++)d[e]=arguments[e];return a.apply(this,[].concat(d,c))}}

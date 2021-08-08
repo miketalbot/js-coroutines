@@ -1,0 +1,1 @@
+"use strict";var _interopRequireDefault=require("@babel/runtime/helpers/interopRequireDefault");var _run=_interopRequireDefault(require("./run"));Object.defineProperty(exports,"__esModule",{value:!0}),exports.branch=branch;function branch(a){return function(b){var c=a.call(this,b);return c&&(c.next?(0,_run.default)(c).catch(console.error):c.then&&c.catch(console.error)),b}}

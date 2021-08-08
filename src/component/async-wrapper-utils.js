@@ -1,6 +1,6 @@
-import {call} from './coroutines'
 import {yielding} from './wrappers'
 import run from './run'
+import {call} from './call'
 
 /**
  * Create a promised function
