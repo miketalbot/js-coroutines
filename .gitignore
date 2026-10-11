@@ -19,3 +19,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Generated demo bundle
+/demo-dist

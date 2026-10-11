@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+
     <meta charset="utf-8">
     <title>coroutines.js - js-coroutines</title>
-    
-    
-    
-    
-    
+
+
+
+
+
     <meta property="og:title" content="js-coroutines"/>
     <meta property="og:type" content="website"/>
     <meta property="og:image" content=""/>
     <meta property="og:site_name" content="js-coroutines"/>
     <meta property="og:url" content="http://js-coroutines.com"/>
-    
+
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
@@ -23,6 +23,7 @@
     <link type="text/css" rel="stylesheet" href="styles/prettify.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
     <script src="scripts/nav.js" defer></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -35,20 +36,22 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav >
-    
-    <h2><a href="index.html">Home</a></h2><h2><a href="http://js-coroutines.com" >JS-COROUTINES</a></h2><h3>Global</h3><ul><li><a href="global.html#append">append</a></li><li><a href="global.html#appendAsync">appendAsync</a></li><li><a href="global.html#base64CompressAsync">base64CompressAsync</a></li><li><a href="global.html#base64CompressToUTF16Async">base64CompressToUTF16Async</a></li><li><a href="global.html#base64Decompress">base64Decompress</a></li><li><a href="global.html#base64decompressFromUTF16Async">base64decompressFromUTF16Async</a></li><li><a href="global.html#branch">branch</a></li><li><a href="global.html#call">call</a></li><li><a href="global.html#compressAsync">compressAsync</a></li><li><a href="global.html#compressToBase64Async">compressToBase64Async</a></li><li><a href="global.html#compressToEncodedURIComponentAsync">compressToEncodedURIComponentAsync</a></li><li><a href="global.html#compressToUint8ArrayAsync">compressToUint8ArrayAsync</a></li><li><a href="global.html#compressToUTF16Async">compressToUTF16Async</a></li><li><a href="global.html#concat">concat</a></li><li><a href="global.html#concatAsync">concatAsync</a></li><li><a href="global.html#decompressAsync">decompressAsync</a></li><li><a href="global.html#decompressFromEncodedURIComponentAsync">decompressFromEncodedURIComponentAsync</a></li><li><a href="global.html#decompressFromUint8ArrayAsync">decompressFromUint8ArrayAsync</a></li><li><a href="global.html#decompressFromUTF16Async">decompressFromUTF16Async</a></li><li><a href="global.html#every">every</a></li><li><a href="global.html#everyAsync">everyAsync</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#filterAsync">filterAsync</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAsync">findAsync</a></li><li><a href="global.html#findIndex">findIndex</a></li><li><a href="global.html#findIndexAsync">findIndexAsync</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#forEachAsync">forEachAsync</a></li><li><a href="global.html#groupBy">groupBy</a></li><li><a href="global.html#groupByAsync">groupByAsync</a></li><li><a href="global.html#includes">includes</a></li><li><a href="global.html#includesAsync">includesAsync</a></li><li><a href="global.html#indexOf">indexOf</a></li><li><a href="global.html#indexOfAsync">indexOfAsync</a></li><li><a href="global.html#keyBy">keyBy</a></li><li><a href="global.html#keyByAsync">keyByAsync</a></li><li><a href="global.html#lastIndexOf">lastIndexOf</a></li><li><a href="global.html#lastIndexOfAsync">lastIndexOfAsync</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mapAsync">mapAsync</a></li><li><a href="global.html#parseAsync">parseAsync</a></li><li><a href="global.html#pipe">pipe</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#reduceAsync">reduceAsync</a></li><li><a href="global.html#repeat">repeat</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#singleton">singleton</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#someAsync">someAsync</a></li><li><a href="global.html#sortAsync">sortAsync</a></li><li><a href="global.html#stringifyAsync">stringifyAsync</a></li><li><a href="global.html#tap">tap</a></li><li><a href="global.html#uniqueBy">uniqueBy</a></li><li><a href="global.html#uniqueByAsync">uniqueByAsync</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#useInternalEngine">useInternalEngine</a></li><li><a href="global.html#wrapAsPromise">wrapAsPromise</a></li><li><a href="global.html#wrapAsPromiseAndYieldFn">wrapAsPromiseAndYieldFn</a></li><li><a href="global.html#yielding">yielding</a></li></ul>
+
+
+    <h2><a href="index.html">Home</a></h2><h2><a href="http://js-coroutines.com" >JS-COROUTINES</a></h2>
+
 </nav>
 
 <div id="main">
-    
+
     <h1 class="page-title">coroutines.js</h1>
-    
-
-    
 
 
 
-    
+
+
+
+
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
@@ -96,197 +99,6 @@
  * @returns the result of the function if any to be returned to the caller
  */
 
-import {getCallback, getNodeCallback} from './polyfill'
-
-let request = typeof window === 'undefined' ? getNodeCallback() : window.requestIdleCallback
-
-/**
- * Call with true to use the polyfilled version of
- * the idle callback, can be more stable in certain
- * circumstances
- * @param {Boolean} internal
- */
-export function useInternalEngine(internal) {
-    request = internal ? getCallback() : request
-}
-
-/**
- * &lt;p>
- *     Starts an idle time coroutine and returns a promise for its completion and
- *      any value it might return.
- * &lt;/p>
- * &lt;p>
- *     You may pass a coroutine function or the result of calling such a function.  The
- *     latter helps when you must provide parameters to the coroutine.
- * &lt;/p>
- * @param {Coroutine|Iterator|Generator&lt;*, *, *>} coroutine the routine to run or an iterator for an already started coroutine
- * @param {number} [loopWhileMsRemains=2 (ms)] - if less than the specified number of milliseconds remain the coroutine will continue in the next idle frame
- * @param {number} [timeout=160 (ms)] - the number of milliseconds before the coroutine will run even if the system is not idle
- * @returns {Promise&lt;any>} the result of the coroutine
- * &lt;strong>The promise returned by &lt;code>run&lt;/code> has a &lt;code>terminate()&lt;/code> method
- * that can be used to stop the routine.&lt;/strong>
- * @example
- * async function process() {
- *     let answer = await run(function * () {
- *         let total = 0
- *         for(let i=1; i &lt; 10000000; i++) {
- *            total += i
- *            if((i % 100) === 0) yield
- *         }
- *         return total
- *     })
- *     ...
- * }
- *
- * // Or
- *
- * async function process(param) {
- *     let answer = await run(someCoroutine(param))
- * }
- */
-export function run(coroutine, loopWhileMsRemains = 1, timeout = 32 * 10) {
-    let terminated = false
-    let resolver = null
-    const result = new Promise( function (resolve, reject) {
-        resolver = resolve
-        const iterator = coroutine.next ? coroutine : coroutine()
-        // Request a callback during idle
-        request(run)
-        // Handle background processing when tab is not active
-        let id = setTimeout(runFromTimeout, timeout)
-        let parameter = undefined
-
-        async function run(api) {
-            clearTimeout(id)
-            // Stop the timeout version
-            if (terminated) {
-                iterator.return()
-                return
-            }
-            let minTime = Math.max(0.5, loopWhileMsRemains)
-            try {
-                do {
-                    const {value, done} = iterator.next(await parameter)
-                    parameter = undefined
-                    if (done) {
-                        resolve(value)
-                        return
-                    }
-                    if (value === true) {
-                        break
-                    } else if (typeof value === 'number') {
-                        minTime = +value
-                        if (isNaN(minTime)) minTime = 1
-                    } else if (value &amp;&amp; value.then) {
-                        parameter = value
-                    }
-                } while (api.timeRemaining() > minTime)
-            } catch (e) {
-                reject(e)
-                return
-            }
-            // Request an idle callback
-            request(run)
-            // Request again on timeout
-            id = setTimeout(runFromTimeout, timeout)
-        }
-
-        function runFromTimeout() {
-            const budget = 8.5
-            const start = performance.now()
-            run({
-                timeRemaining() {
-                    return budget - (performance.now() - start)
-                },
-            })
-        }
-    })
-
-    result.terminate = function (result) {
-        terminated = true
-        if (resolver) {
-            resolver(result)
-        }
-    }
-    return result
-}
-
-
-let requested = false
-let animationCallbacks = []
-
-function nextAnimationFrame(fn) {
-    if(typeof window === 'undefined') throw new Error("Cannot run without a browser")
-    if(animationCallbacks.length === 0 &amp;&amp; !requested) {
-        requested = true
-        requestAnimationFrame(process)
-    }
-    animationCallbacks.push(fn)
-}
-
-function process() {
-    let callbacks = animationCallbacks
-    if (callbacks.length) {
-        requestAnimationFrame(process)
-    } else {
-        requested = false
-    }
-    animationCallbacks = []
-    for (let callback of callbacks) {
-        callback()
-    }
-}
-
-/**
- * Start an animation coroutine, the animation will continue until
- * you return and will be broken up between frames by using a
- * &lt;code>yield&lt;/code>.
- *
- * @param {AnimationCoroutine|Iterator} coroutine - The animation to run
- * @param {...*} [params] - Parameters to be passed to the animation function
- * @returns {Promise&lt;any>} a value that will be returned to the caller
- * when the animation is complete.
- * &lt;strong>The promise returned by &lt;code>update&lt;/code> has a &lt;code>terminate()&lt;/code> method
- * that can be used to stop the routine.&lt;/strong>
- */
-export function update(coroutine, ...params) {
-    if(typeof window === 'undefined') throw new Error("Requires a browser to run")
-    let terminated = false
-    let resolver = null
-    const result = new Promise(function (resolve, reject) {
-        resolver = resolve
-        const iterator = coroutine.next ? coroutine : coroutine(...params)
-        nextAnimationFrame(run)
-
-        function run() {
-            if (terminated) {
-                iterator.return()
-                return
-            }
-
-            try {
-                const {value, done} = iterator.next()
-                if (done) {
-                    resolve(value)
-                    return
-                }
-            } catch (e) {
-                reject(e)
-                return
-            }
-
-            nextAnimationFrame(run)
-        }
-    })
-    result.terminate = function (result) {
-        terminated = true
-        if (resolver) {
-            resolver(result)
-        }
-    }
-    return result
-}
-
 
 /**
  * @callback GeneratorFunction
@@ -302,160 +114,6 @@ export function update(coroutine, ...params) {
  * @returns {*} result of calling the function
  */
 
-/**
- * Create a function that executes a pipeline of
- * functions asynchronously
- * @param {...(Function|Promise|Array&lt;(Promise|Function|GeneratorFunction|AsyncFunction)>|GeneratorFunction|AsyncFunction)} fns - the pipeline to execute
- * @returns {AsyncFunction} an async function to execute the pipeline
- */
-export function pipe(...fns) {
-    return async function(params) {
-        let result = params
-        for(let fn of fns.flat(Infinity)) {
-            if(!fn) continue
-            let nextResult = fn.call(this, result)
-            if(nextResult) {
-                if(nextResult.next) {
-                    result = await run(nextResult)
-                } else if(nextResult.then) {
-                    result = await nextResult
-                } else {
-                    result = nextResult
-                }
-            }
-        }
-        return result
-    }
-}
-
-/**
- * Tap into a pipeline to call a function that will probably
- * perform side effects but should not modify the result, its
- * return value is ignored
- * @param {Function} fn - a function to be called at this point in
- * the pipeline
- * @returns {AsyncFunction} returning the passed in parameters
- */
-export function tap(fn) {
-    return async function(params) {
-        let result = fn.call(this, params)
-        if (result) {
-            if (result.next) {
-                await run(result)
-            } else if (result.then) {
-                await result
-            }
-        }
-        return params
-    }
-}
-
-/**
- * Branches a pipeline by starting another "continuation" with
- * the current parameters.  Starts a function but the pipeline
- * continues immediately creating two execution contexts
- * @param {Function} fn - the function to start - can be async or generator
- */
-export function branch(fn) {
-    return function (params) {
-        let result = fn.call(this, params)
-        if (result) {
-            if (result.next) {
-                run(result).catch(console.error)
-            } else if (result.then) {
-                result.catch(console.error)
-            }
-        }
-        return params
-    }
-}
-
-/**
- * Create a version of a function with its end
- * parameters supplied
- * @param {Function|GeneratorFunction|AsyncFunction} fn - the function to configure
- * @param {...any[]} config - the additional parameters to pass
- * @returns {Function}
- */
-export function call(fn, ...config) {
-    return function(...params) {
-        return fn.apply(this, [...params, ...config])
-    }
-}
-
-/**
- * Create a function that repeats a function multiple times
- * passing the output of each iteration as the input to the next
- * @param {Function} fn - the function to repeat
- * @param {Number} times - the number of times to repeat
- * @returns {AsyncFunction} - a async function that repeats the operation
- */
-export function repeat(fn, times) {
-    return async function(params) {
-        let result = params
-        for(let i = 0; i &lt; times; i++) {
-            result = fn.call(this, result)
-            if (result.next) {
-                result = await run(result)
-            } else if (result.then) {
-                result = await result
-            }
-        }
-        return result
-    }
-}
-
-export default run
-
-/**
- * Creates a singleton executor of a generator function.
- * If the function is currently running it will be
- * terminated with the defaultValue and a new one started.
- *
- * This would often be used with a UI to cancel a previous calculation
- * and begin updates on a new one.
- *
- * @param {Function} fn - the generator function to wrap
- * @param {any} [defaultValue] - a value to be returned if the current execution is
- * terminated by a new one starting
- * @returns {function(...[*]): Promise&lt;any>} a function to execute the
- * generator and return the value
- * @example
- *
- * const job = singleton(function * (array, value) {
- *      let output = []
- *      for(let item of array) {
- *         if(output.length % 100 === 0) yield
- *         output.push(complexCalculation(array, value))
- *      }
- *      return output
- * }, [])
- *
- * function doSomething(array) {
- *     job(array, 2002).then(console.log)
- * }
- *
- * doSomething(bigArray)
- * doSomething(otherArray) // -> console.log([]) from first one
- *
- */
-export function singleton(fn, defaultValue) {
-    let promise = null
-    let extraPromises = []
-    let result = (...params)=>{
-        if(promise) {
-            extraPromises.forEach(p=>p.terminate())
-            extraPromises = []
-            promise.terminate(defaultValue)
-        }
-        return promise = result._promise = run(fn(...params))
-    }
-    result.join = function(promise) {
-        extraPromises.push(promise)
-        return promise
-    }
-    return result
-}
 
 
 </code></pre>
@@ -465,14 +123,14 @@ export function singleton(fn, defaultValue) {
 
 
 
-    
-    
+
+
 </div>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jul 13 2020 08:00:10 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sun Oct 11 2026 16:26:12 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

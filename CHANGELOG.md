@@ -1,3 +1,14 @@
+## Unreleased
+
+- Upgrade development dependencies and remove unused tooling.
+- Move the demo from Create React App to Vite and React 19.
+- Target modern browsers and maintained Node versions; drop IE11 support.
+- Preserve CommonJS, ES module source, and TypeScript declarations, with no
+  external Babel runtime requirement.
+- Require Node 22.18+ (22.x) or 24.11+ for development tooling.
+- Fix library build failure handling and local documentation/declaration commands.
+- Make `npm run push` a Git-only command; npm releases remain explicit.
+
 ### 2.4.36
 
 -   Split out core coroutine functions to reduce bundle sizes

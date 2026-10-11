@@ -15,8 +15,7 @@
     "recurse": true,
     "encoding": "utf8",
     "template": "./node_modules/docdash",
-    "readme": "./README.md",
-    "tutorials": "./tutorials"
+    "readme": "./README.md"
   },
   "docdash": {
     "typedefs": false,

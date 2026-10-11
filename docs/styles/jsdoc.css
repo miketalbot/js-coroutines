@@ -162,10 +162,17 @@ h6 {
 }
 
 
-tt, code, kbd, samp {
+tt, code, kbd, samp, pre {
   font-family: Consolas, Monaco, 'Andale Mono', monospace;
   background: #f4f4f4;
+}
+
+tt, code, kbd, samp{
   padding: 1px 5px;
+}
+
+pre {
+  padding-bottom: 1em;
 }
 
 .class-description {
@@ -240,6 +247,10 @@ nav h3 {
   margin: 15px 0 10px;
   padding: 0;
   color: #000;
+}
+
+nav h3.collapsed_header {
+  cursor: pointer;
 }
 
 nav ul {

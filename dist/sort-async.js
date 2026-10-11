@@ -1,1 +1,1 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.sortAsync=void 0;var _wrappers=require("./wrappers"),_timsort=require("./timsort"),sortAsync=(0,_wrappers.wrapAsPromise)(_timsort.sort);exports.sortAsync=sortAsync;
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.sortAsync=void 0;var _wrappers=require("./wrappers");var _timsort=require("./timsort");const sortAsync=exports.sortAsync=(0,_wrappers.wrapAsPromise)(_timsort.sort);

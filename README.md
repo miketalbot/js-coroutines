@@ -5,7 +5,7 @@
    [![Stargazers repo roster for js-coroutines](https://reporoster.com/stars/miketalbot/js-coroutines)](https://github.com/miketalbot/js-coroutines/stargazers)
 
 
-**Supports all browsers and React Native**
+**Supports modern browsers and React Native; IE11 is no longer targeted**
 
 When is the right time to sort a massive array on the main thread of a Javascript app? Well any time you
 like if you don't mind the user seeing all of your animations and effects jank to hell. Even transferring
@@ -413,3 +413,30 @@ Timsort - MIT (c) 2015 Marco Ziccardi (c) 2020 Mike Talbot (Generator modificati
 JSON stringify - Public Domain (c) 2017 Douglas Crockford (c) 2020 Mike Talbot (Generator modifications)
 
 JSON Parse - yastjson - MIT (c) 2020 5u9ar (zhuyingda) (c) 2020 Mike Talbot (Optimisations and generator modifications)
+
+## Development
+
+Use Node.js 22.18+ (22.x) or 24.11+ and npm. These requirements apply to
+development tooling, not the published library's Node engine.
+
+```sh
+npm ci
+npm test
+npm run build
+npm start
+```
+
+The Vite demo runs at http://localhost:3012. `npm run build:demo` builds it
+into `demo-dist`. The library build retains CommonJS in `dist` and ES module
+source plus the hand-authored TypeScript declarations in `dist/es6`.
+The library targets modern browsers and maintained Node versions; IE11
+is no longer supported. Babel helpers are inlined when needed, so consumers
+no longer need an `@babel/runtime` peer dependency.
+
+`npm run dts` copies the maintained declarations; it does not infer types from
+JSDoc. `npm run document` generates documentation locally. The optional
+`npm run document:copy` also copies it to an adjacent `js-coroutines-web` checkout.
+The old custom template in `template` is inactive; documentation uses docdash.
+
+`npm run push` only performs a Git push. It does not increment the package
+version or publish to npm; releases must be performed explicitly.

@@ -1,1 +1,1 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.appendAsync=void 0;var _wrappers=require("./wrappers"),_append=require("./append"),appendAsync=(0,_wrappers.wrapAsPromise)(_append.append);exports.appendAsync=appendAsync;
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.appendAsync=void 0;var _wrappers=require("./wrappers");var _append=require("./append");const appendAsync=exports.appendAsync=(0,_wrappers.wrapAsPromise)(_append.append);

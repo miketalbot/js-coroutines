@@ -1,1 +1,1 @@
-"use strict";var _interopRequireDefault=require("@babel/runtime/helpers/interopRequireDefault");var _typeof2=_interopRequireDefault(require("@babel/runtime/helpers/typeof"));Object.defineProperty(exports,"__esModule",{value:!0}),exports.isObject=isObject;function isObject(a){return"object"===(0,_typeof2.default)(a)&&!Array.isArray(a)}
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.isObject=isObject;function isObject(v){return typeof v==='object'&&!Array.isArray(v);}
