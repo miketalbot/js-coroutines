@@ -1,4 +1,4 @@
-## Unreleased
+## 3.0.0 - 2026-10-12
 
 - Upgrade development dependencies and remove unused tooling.
 - Move the demo from Create React App to Vite and React 19.

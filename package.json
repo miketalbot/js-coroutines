@@ -3,14 +3,17 @@
   "sideEffects": [
     "./dist/polyfill.js"
   ],
-  "version": "2.4.36",
+  "version": "3.0.0",
   "private": false,
   "files": [
     "dist",
     "README.md",
     "LICENCE.txt"
   ],
-  "repository": "https://github.com/miketalbot/js-coroutines",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miketalbot/js-coroutines.git"
+  },
   "main": "dist/index.js",
   "devDependencies": {
     "@babel/cli": "^8.0.6",
